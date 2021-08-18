@@ -1,0 +1,27 @@
+Tipo busqueda buscli.p
+buscar_un_cliente
+codigo
+idcli
+
+buscar_rango
+fechaini
+fechafin
+codigoini
+codigofin
+
+
+Polizas:
+acceder_poliza
+fecha
+tda
+
+modo: buscar_codigos_polizas
+idusuario: idusuario
+
+modo: buscar_cobratario
+codprom: codigo del cobratario y si tiene -1 devuelve todos
+
+modo: agregar_pago
+
+modo: buscar_renpol
+idpoliza

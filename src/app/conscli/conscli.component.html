@@ -1,0 +1,53 @@
+<form (ngSubmit)='onSubmit()' #myForm="ngForm">
+    <label >Fecha Inicial:
+        <input type="date" id="fechaini" name="fechaini" [(ngModel)]="mimodelo.fechaini">
+    </label>
+    <label >Fecha Final:
+        <input type="date" id="fechafin" name="fechafin" [(ngModel)]="mimodelo.fechafin">
+    </label>
+    <label >Codigo Inicial:
+        <input type="text" id="codigoini"  name="codigoini" [(ngModel)]="mimodelo.codigoini">
+    </label>
+    <label >Codigo Final
+        <input type="text" id="codigofin"  name="codigofin" [(ngModel)]="mimodelo.codigofin">
+    </label>
+    <button type="submit" class="btn btn-primary" > Aceptar</button>
+
+</form>
+
+<table id="tbl_clientes" class="table table-striped table-bordered table-hover" >
+    <thead>
+        <tr>
+            <th>Codigo</th>
+            <th>Nombre</th>
+            <th>Direccion</th>
+            <th>Q/M</th>
+            <th>Enganche</th>
+            <th>P.LIsta</th>
+            <th>Saldo Enganche</th>
+            <th>Letras</th>
+            <th>Precio x Letra</th>
+            <th>Cargos</th>
+            <th>Abonos</th>
+            <th>Saldo</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let cliente of clientes">
+            <td>{{cliente.numcli}} </td>
+            <td>{{cliente.nombre}} </td>
+            <td>{{cliente.direc}} </td>
+            <td>{{cliente.qom}} </td>
+            <td align ="right">{{cliente.enganche | currency }} </td>
+            <td align ="right">{{cliente.preciolista | currency }} </td>
+            <td align ="right">{{cliente.letra1 | currency }} </td>
+            <td align ="right">{{cliente.nulet}} </td>
+            <td align ="right">{{cliente.canle | currency }} </td>
+            <td align ="right">{{cliente.cargos | currency }} </td>
+            <td align ="right">{{cliente.abonos | currency }} </td>
+            <td align ="right">{{ cliente.cargos - cliente.abonos | currency }}</td>
+        </tr>
+    
+    </tbody>
+</table>
+

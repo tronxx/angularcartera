@@ -1,0 +1,184 @@
+<div id="datospoliza">
+    <label for="tienda">
+        Codigo
+        <input  [disabled]="!datospolenabled_z" type="text" name="tienda" [(ngModel)]="tda_z" id="tienda" placeholder="tienda">
+    </label>
+    <label for="nomtda"> {{nomtda_z }} </label>
+    <label for="fecha">
+        Fecha
+        <input type="date"  [disabled]="!datospolenabled_z" name="fecha"  [(ngModel)]="fechapol_z" id="fecha">
+    </label>
+    <label for="cvepromo">
+        Iniciales
+        <input type="text" name="cvepromo" [(ngModel)]="cobratario.cvepromo" 
+          [disabled]="
+         polizaactiva_z" id="cvepromo" placeholder="Iniciales">
+       <label name="nombrepromo" id="nombrepromo" > {{cobratario.nombre}}  </label>
+    </label>
+    <button mat-raised-button color="primary" [hidden]="polizaactiva_z" (click)="aceptarpoliza()">Aceptar</button>
+    <div id="errorespoliza" [hidden]="!hayerrorpoliza()" >
+        <label for="errorespoliza" > {{errorespoliza}} </label>
+    </div>
+</div>
+<div [hidden]="!enespera" >
+    <img src="/assets/images/espera.gif" alt="">
+
+</div>
+<hr>
+<div id="datoscliente" [hidden]="!polizaactiva_z" >
+    <div [hidden]="clienteactivo_z" id="pedircodigo">
+        <label for="codcli">
+            Codigo Cliente
+            <input type="text" placeholder="Codigo Cliente" name="codcli" id="codcli" [(ngModel)]="codcli_z" >
+        </label>
+        <button mat-raised-button color="primary" (click)="buscarcliente()" >Aceptar</button>
+         
+        <button mat-raised-button color="primary" (click)="busqueda_por_nombre()">
+            <mat-icon aria-hidden="false" aria-label="Example home icon">search</mat-icon>
+            Buscar por Nombre
+        </button>
+        <br>
+        <label for="uuid">
+            Ultimo Uuid
+            <input type="text" placeholder="Uuid de la Ultima Bonificacion" [(ngModel)]="uuid_z" >
+        </label>
+        <button mat-raised-button color="primary" (click)="imprimir_txt()" >Imprimir</button>
+
+    </div>
+
+    <div *ngIf="cliente" id="complementocliente" [hidden]="!clienteactivo_z" >
+        <div class="card">
+            <div class="card">
+                <div class="card-body">
+                    Codigo: <b>{{cliente.numcli}}</b>  
+                    Nombre: <b>{{cliente.nombre}} </b>
+                    Direccion: <b>{{cliente.direc}} {{cliente.poblac}} </b> <br>
+                    Enganche: <b>{{cliente.enganche | currency }}</b> 
+                    lta 1/1 : <b>{{cliente.letra1  | currency}}</b>  
+                    N.Letras: <b>{{cliente.nulet}} </b>
+                    de <b>{{cliente.canle | currency}}</b> 
+                    Bonificacion: <b>{{cliente.bonificacion  | currency }} </b><br>
+                    Cargos: <b>{{cliente.cargos  | currency}}</b>  
+                    Abonos: <b>{{cliente.abonos  | currency }}</b> 
+                    Saldo: <b>{{ cliente.cargos - cliente.abonos  | currency }}</b>
+                    <br>
+                    <button mat-raised-button color="primary" (click)="genera_carta()" >Imprimir Carta Saldado</button>
+
+                </div>
+            </div>
+            <div>
+                <div class="card-body">
+                    <label for="tipopago">
+                        Pago
+                        <select name="tipopago" id="tipopago" (change)="calculaConcepto()" [(ngModel)]="tipopagosel_z" >
+                            <option *ngFor="let tipopago of tipospagos" 
+                                value="{{tipopago.clave}}"
+                                [selected]="tipopagosel_z == datospago.tipopago"
+                              >
+                                {{tipopago.descri}}
+                            </option>
+                        </select>
+                    </label>
+                    <label for="ltaini" >
+                        Letra Inicial
+                        <input id="ltaini" [disabled]="true" (blur)="calculaConcepto()" name = "ltaini" type="text" [(ngModel)]= "datospago.ltaini">
+                    </label>
+                    <label for="ltafin" [hidden]="ultltaoculto_z">
+                        Letra Final
+                        <select name="listapagos" id="listapagos" value="{{sigletra_z}}" 
+                            (change)="calculaConcepto()" [(ngModel)]= "datospago.ltafin" >
+                            <option *ngFor="let miltafin of listaletras" value="{{miltafin}}"
+                            (blur)="calcula_bonif_extra()"
+                            [selected]="miltafin == datospago.ltafin">
+                            {{miltafin}}
+                        </option>
+
+                        </select>
+                    </label>
+                    <label for="concepto">
+                        Concepto
+                        <input id="concepto" name = "concepto" [disabled]="true" type="text" [(ngModel)]= "datospago.concepto">
+                        Complemento del Concepto
+                        <input id="concepto2" name = "concepto2" type="text" [(ngModel)]= "datospago.conceptocompl">
+
+                    </label>
+                    <br>
+                    <label for="tipomov">
+                        Es con 
+                        <select name="tipomov" id="tipomov"  [(ngModel)]="tipomovsel_z" value="tipomovsel_z">
+                            <option *ngFor="let tipomov of tiposmov" value="{{tipomov.tipo}}" 
+                                [selected]="tipomovsel_z == tipomov.tipo">
+                                {{tipomov.descri}}
+                            </option>
+                        </select>
+                    </label>
+                    <label for="recobon">
+                        <input type="text" name="recobon" id="recobon" (blur)="calculaNeto()" [(ngModel)] = "datospago.recobon" >
+                    </label>
+                    <label for="importe">
+                        Importe
+                        <input type="text" name="importe" id="importe" (blur)="calculaNeto()" [(ngModel)] = "datospago.importe" >
+                    </label>
+                    <label for="neto">
+                        Neto:
+                        <input type="text" name="neto" id="neto" [disabled]="true"
+                        value="{{datospago.neto | currency}} ">
+                    </label>
+                    <br>
+                    <label for="mensaje"> {{msg_z}} </label>
+                    <div id="errores"  [hidden]="!errorespago()">
+                        <label for="errores" class="lbl danger" > {{errores_z}} </label>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button  mat-raised-button color="primary" (click)="clickaceptarpago()" [disabled]="!aceptarpago">Aceptar</button>
+                    <button  mat-raised-button color="warn" (click)="cancelarpago()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div [hidden]="clienteactivo_z"  id="despliegapoliza">
+        <table id="tbl_renpol" class="table table-striped table-bordered table-hover" >
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>Concepto</th>
+                    <th>Bonificacion</th>
+                    <th>Recargos</th>
+                    <th>Importe</th>
+                    <th>Neto</th>
+                    <th>Uuid</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let renglon of renglonesPoliza">
+                    <td>{{renglon.numcli}}</td>
+                    <td>{{renglon.nombre}} </td>
+                    <td>{{renglon.concep}} </td>
+                    <td align="right" *ngIf="renglon.bonificacion > 0"> {{renglon.bonificacion | currency}} </td>
+                    <td *ngIf="renglon.bonificacion <= 0">  </td>
+                    <td align="right" *ngIf="renglon.recargo > 0"> {{renglon.recargo | currency}} </td>
+                    <td *ngIf="renglon.recargo <= 0">  </td>
+                    <td align="right" >{{renglon.importe | currency}} </td>
+                    <td align="right" >{{renglon.importe - renglon.bonificacion + renglon.recargo | currency}} </td>
+                    <td> {{renglon.uuid}} </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td>Totales </td>
+                    <td> </td>
+                    <td align="right" > {{totalbonifcs_z | currency}} </td>
+                    <td align="right" > {{totalrecargs_z | currency}} </td>
+                    <td align="right" > {{totalimports_z | currency}} </td>
+                    <td align="right" > {{totalimports_z - totalbonifcs_z + totalrecargs_z | currency}} </td>
+                    <td> </td>
+                </tr>
+
+            </tfoot>
+        </table>
+    </div>
+
+</div>
