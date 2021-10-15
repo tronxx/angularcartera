@@ -1,0 +1,394 @@
+import { getAttrsForDirectiveMatching } from '@angular/compiler/src/render3/view/util';
+import { Component, OnInit } from '@angular/core';
+import { ClientesService } from '../services/clientes.service';
+import { PolizasService } from '../services/polizas.service';
+import { Cliente } from '../models/clientes';
+import { Poliza } from '../models/polizas';
+import { Renpol } from '../models/renpol';
+import { FormsModule } from '@angular/forms';
+import { formatNumber,  CommonModule,  CurrencyPipe, formatCurrency, formatDate, DatePipe } from '@angular/common';
+import { isEmpty } from 'rxjs/operators';
+import { MatButtonModule } from '@angular/material/button'; 
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { DialogBodyComponent } from '../dialog-body/dialog-body.component';
+import { DlgbuscliComponent } from '../common/dlgbuscli/dlgbuscli.component';
+import { MatIconModule } from '@angular/material/icon'; 
+import { stringify } from '@angular/compiler/src/util';
+import { Compania } from '../models/config';
+import { Observable } from 'rxjs';
+
+@Component({
+  selector: 'app-consupol',
+  templateUrl: './consupol.component.html',
+  styleUrls: ['./consupol.component.css']
+})
+export class ConsupolComponent implements OnInit {
+
+  poliza?: Poliza;
+  renpol?: Renpol;
+  renglonesPoliza : Renpol[] = [];
+  
+  codcli_z = "";
+  uuid_z = "";
+  cia_z ?: Compania;
+
+  xcia_z =     {
+    "Urldatos":"http://mds1/www/cgi/cartera/",
+    "Empresa": "Diaz y Solis SA de CV",
+    "Rfc": "MDS870209190",
+    "Direc": "Calle 67 x 60 y 62 Centro",
+    "CP": "97000",
+    "Logo":"",
+    "AplicarContingencia":"true",
+    "DiasContingencia":"90",
+    "FechaContingencia":"20200401",
+    "Clave":"MDS",
+    "PrecioListaMinimoCarta":"2300.00",
+    "MesesMinimoCarta": "9",
+    "CartaSaldadosMesesAntes": "2",
+    "DiasBonificacion":"5"
+  };
+
+  
+  clienteactivo_z = false;
+  polizaactiva_z = false;
+  aceptarpago = false;
+  ultltaoculto_z = true;
+  errores_z = [""];
+  sinerrores = true;
+  errorespoliza = [""]
+  listaletras = [""];
+  enespera = false;
+  uuidpol_z = "";
+  uuidrec_z = "";
+  poltimbrado_z = "";
+  rectimbrado_z = "";
+  statuspol_z = "";
+
+  
+  
+  cobratario = {
+    "idpromot": 0,
+    "cvepromo":"",
+    "poc":"",
+    "nombre":""
+  }
+  tda_z = "";
+  tdaspol_z? = {};
+  nomtda_z = "";
+  datospolenabled_z = false;
+  yesno_z = false;
+  tipopagosel_z = "";
+  tiporecobon_z = "";
+
+  usrreg_z = {
+    "idusuario":0,
+    "login":"",
+    "nombre":"",
+    "token":"",
+    "acceso": "false",
+    "iniciales":"",
+    "nivel":""
+  }
+
+  totalimports_z = 0;
+  totalrecargs_z = 0;
+  totalbonifcs_z = 0;
+  idpoliza = 0;
+  
+  
+  fechahoy_z  = new Date();
+  strfecha_z = this.fecha_a_str  (this.fechahoy_z, "YYYY-mm-dd");
+  vence_z  = new Date();
+  fechapol_z = this.strfecha_z;
+  
+
+  constructor(
+    private servicioclientes: ClientesService,
+    public dialog: MatDialog, 
+    public datepipe: DatePipe,
+     private serviciopolizas: PolizasService
+  ) { }
+
+  ngOnInit(): void {
+    var mistorage_z  = localStorage.getItem('token') || "{}";
+    this.usrreg_z =  JSON.parse(mistorage_z);
+    //console.log("Usuario:" + mistorage_z);
+    this.errorespoliza=[];
+    this.buscar_codigos_poliza();
+    this.cia_z =  this.serviciopolizas.obtendatoscia();
+    if (this.usrreg_z.nivel == "S") this.datospolenabled_z=true;
+  }
+
+  aceptarpoliza() {
+    this.buscar_poliza();
+ }
+
+ buscar_poliza() {
+
+  this.enespera = true;
+  this.renglonesPoliza = [];
+  this.totalimports_z = 0;
+  this.totalrecargs_z = 0;
+  this.totalbonifcs_z = 0;
+  this.idpoliza = -1;
+
+    //this.buscar_codigos_poliza();
+  var params = {
+      "modo":"acceder_poliza",
+      "fecha":this.fechapol_z,
+      "crearpoliza":"N",
+      "tda":this.tda_z
+  }
+  this.serviciopolizas.buscapoliza(JSON.stringify(params)).subscribe(
+    respu => {
+      this.errorespoliza=[];
+      console.log("Debug: buscar_poliza ", respu);
+      this.poliza = respu;
+      this.polizaactiva_z = true;
+      this.tda_z = this.poliza.tda;
+      this.fechapol_z = this.poliza.fecha;
+      this.polizaactiva_z = true;
+      this.idpoliza = this.poliza.idpoliza;
+      this.buscar_renpol();
+    }
+  )
+  this.datos_poliza();
+  
+}
+
+
+  buscar_codigos_poliza() {
+    var params = {
+      "modo":"buscar_codigos_polizas",
+      "idusuario": this.usrreg_z.idusuario
+    };
+    //console.log("idusuario:" + this.usrreg_z.idusuario);
+    this.cobratario.cvepromo = this.usrreg_z.iniciales;
+
+    this.serviciopolizas.busca_codigos_poliza(JSON.stringify(params)).subscribe(
+      respu => {
+        this.tda_z = respu[0].clave;
+        this.nomtda_z = respu[0].nombre;
+        //console.log("Codigos:" + JSON.stringify(respu));
+        this.tdaspol_z = respu;
+        this.fechapol_z =  this.strfecha_z;
+      }
+    )
+}
+
+buscar_renpol() {
+  let params = {
+    "modo":"obtener_detalles_poliza",
+    "idpoliza": this.idpoliza
+  };
+  //console.log("idusuario:" + this.usrreg_z.idusuario);
+  this.serviciopolizas.buscar_renpol(JSON.stringify(params)).subscribe(
+    respu => {
+      this.renglonesPoliza = respu;
+      if(this.poliza) {
+         this.totalbonifcs_z = this.renglonesPoliza.reduce(( acc,
+          obj,
+        ) => acc + (obj.bonificacion),
+        0);
+        this.totalrecargs_z = this.renglonesPoliza.reduce(( acc,
+          obj,
+        ) => acc + (obj.recargo),
+        0);
+        this.totalimports_z = this.renglonesPoliza.reduce(( acc,
+          obj,
+        ) => acc + (obj.importe),
+        0);
+
+      }
+
+    }
+  )
+}
+
+imprimirdespacho() {
+  let params = {
+    "modo":"obtener_datos_poliza",
+    "fechapoliza":this.fechapol_z,
+    "tdapol":this.tda_z
+  };
+  this.serviciopolizas.obtener_datos_poliza(JSON.stringify(params)).subscribe(
+    respu => {
+      let mirespu_z = respu;
+      console.log("Debug: 216 mirespu_z.status", mirespu_z.status);
+      if(mirespu_z.status != "C") {
+        this.checa_si_cerrar_poliza("Poliza Abierta, Se va a Cerrar al Imprimir el despacho, seguro de continuar ?");
+      } else {
+        this.serviciopolizas.obten_impresion_despacho_caja(JSON.stringify(params));
+      }
+    }
+  );
+ 
+}
+
+
+imprimirpoliza() {
+  let params = {
+    "modo":"obtener_datos_poliza",
+    "fechapoliza":this.fechapol_z,
+    "tdapol":this.tda_z
+  };
+  this.serviciopolizas.obtener_datos_poliza(JSON.stringify(params)).subscribe(
+    respu => {
+      let mirespu_z = respu;
+      console.log("Debug: 216 mirespu_z.status", mirespu_z.status);
+      if(mirespu_z.status != "C") {
+        this.checa_si_cerrar_poliza("Poliza Abierta, Se va a Cerrar al Imprimir, seguro de continuar ?");
+      } else {
+        this.serviciopolizas.obten_impresion_poliza_caja(JSON.stringify(params));
+      }
+    }
+  );
+ 
+}
+
+
+checa_si_cerrar_poliza(mensaje_z : string) {
+  const dialogref = this.dialog.open(DialogBodyComponent, {
+    width:'350px',
+    data: mensaje_z
+  });
+  dialogref.afterClosed().subscribe(res => {
+    //console.log("Debug", res);
+    if(res) {
+      this.checa_fecha_timbre("");
+    }
+  });
+
+}
+
+checa_fecha_timbre(mensaje: string) {
+  let mifecpol_z = new Date(this.fechapol_z.replace(/-/g, '\/'));
+  let dias = this.fechahoy_z.getTime()  - mifecpol_z.getTime();
+  dias = Math.floor ( dias / (86400 * 1000));
+  let fectimbre_z = this.fechapol_z;
+  let timbrarpolizafechaespecial = "Poliza";
+  let fecminima_z = new Date ( new Date().getTime() - ( 86400*1000*3 - 7200*1000 ));
+  let params = {
+    "modo":"cerrar_poliza",
+    "fechapoliza":this.fechapol_z,
+    "tdapol":this.tda_z,
+    "timbrarpolizafechaespecial":timbrarpolizafechaespecial,
+    "fechatimbrepol":fectimbre_z
+  };
+  if(dias > 3) {
+    mensaje = "Fecha de Timbrado minimo es " + this.fecha_a_str(fecminima_z, "dd-mmm-YYYY");
+    mensaje += " Desea Timbrar con esta fecha ?: ";
+    const dialogref = this.dialog.open(DialogBodyComponent, {
+      width:'350px',
+      data: mensaje
+    });
+    dialogref.afterClosed().subscribe(res => {
+      //console.log("Debug", res);
+      if(res) {
+        params.fechatimbrepol = this.fecha_a_str(fecminima_z, "YYYY-mm-dd");
+        params.timbrarpolizafechaespecial = "Especial";
+        this.cierra_poliza(JSON.stringify(params));
+      }
+    });
+  } else {
+    this.cierra_poliza(JSON.stringify(params));
+  }
+}
+
+cierra_poliza( params_z: string) {
+  let params = JSON.parse (params_z);
+  console.log("Debug: Estoy en cerrar poliza:", params_z);
+  this.serviciopolizas.cierra_poliza(JSON.stringify(params)).subscribe(
+    respu => {
+      let mirespu_z = respu;
+      this.uuidpol_z = mirespu_z.uuidpol;
+      this.uuidrec_z = mirespu_z.uuidrec;
+      this.poltimbrado_z = mirespu_z.timbradopoliza;
+      this.rectimbrado_z = mirespu_z.timbradorecargo;
+      this.statuspol_z =  mirespu_z.status;
+      if(this.uuidpol_z && this.uuidpol_z != "-1") {
+          let paramcompl_z = { "uuid": this.uuidpol_z };
+          this.serviciopolizas.obtentxtcomplmentopol(JSON.stringify(paramcompl_z));  
+      }
+      if(this.uuidrec_z && this.uuidrec_z != "-1" ) {
+        let paramrec_z = { "uuid": this.uuidrec_z };
+        this.serviciopolizas.obten_pdf_cfdi(JSON.stringify(paramrec_z));  
+      }
+      let params = {
+        "modo":"obtener_datos_poliza",
+        "fechapoliza":this.fechapol_z,
+        "tdapol":this.tda_z
+      };
+      this.serviciopolizas.obten_impresion_poliza_caja(JSON.stringify(params));
+  }
+  );
+
+}
+
+datos_poliza() {
+  let params = {
+    "modo":"obtener_datos_poliza",
+    "fechapoliza":this.fechapol_z,
+    "tdapol":this.tda_z
+  };
+  this.serviciopolizas.obtener_datos_poliza(JSON.stringify(params)).subscribe(
+    respu => {
+      console.log("Debug: ", respu);
+      let mirespu_z = respu;
+      this.uuidpol_z = mirespu_z.uuidpol;
+      this.uuidrec_z = mirespu_z.uuidrec;
+      this.poltimbrado_z = mirespu_z.timbradopoliza;
+      this.rectimbrado_z = mirespu_z.timbradorecargo;
+      this.statuspol_z =  mirespu_z.status;
+    }
+  );
+
+}
+
+
+fecha_a_str  (fecha : Date, formato:string)  {
+  let strfecha_z = "";
+  let anu_z = "";
+  let mes_z = "";
+  let dia_z = "";
+  let meses_z = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+  anu_z = fecha.getFullYear().toString();
+  mes_z = ((fecha.getMonth()+101).toString()).substring(1,3);
+  dia_z = ((fecha.getDate()+100).toString()).substring(1,3);
+  if(formato == "YYYY-mm-dd") {
+    strfecha_z = anu_z + "-" + mes_z + "-" + dia_z;
+  }
+  if(formato == "YYYYmmdd") {
+    strfecha_z = anu_z + mes_z +  dia_z;
+  }
+
+  if(formato == "dd-mm-YYYY") {
+    strfecha_z = dia_z +  "-" + mes_z + "-" + anu_z ;
+  }
+  if(formato == "dd-mmm-YYYY") {
+    strfecha_z = dia_z +  "-" + meses_z[fecha.getMonth()] + "-" + anu_z ;
+  }
+  return (strfecha_z);
+}
+
+alerta(mensaje: string)  {
+  let yesno_z = true;
+  const dialogref = this.dialog.open(DialogBodyComponent, {
+    width:'350px',
+    data: mensaje
+  });
+  dialogref.afterClosed().subscribe(res => {
+    //console.log("Debug", res);
+    if(res) {
+      yesno_z = true;
+    } else {
+      yesno_z = false;
+    }
+  });
+  return (yesno_z);
+
+}
+
+
+}

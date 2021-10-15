@@ -25,6 +25,7 @@
                 <th>Direccion</th>
                 <th>Q/M</th>
                 <th>Saldo</th>
+                <th>Compra</th>
             </tr>
         </thead>
         <tbody>
@@ -34,6 +35,7 @@
                 <td>{{cliente.direc}} </td>
                 <td>{{cliente.qom}} </td>
                 <td align ="right">{{ cliente.cargos - cliente.abonos | currency }}</td>
+                <td>{{cliente.compra}} </td>
             </tr>
         </tbody>
                 

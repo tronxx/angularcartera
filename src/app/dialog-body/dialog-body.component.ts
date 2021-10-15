@@ -17,7 +17,7 @@ export class DialogBodyComponent implements OnInit {
   }
 
   close() {
-    
+    this.dialogRef.close(true);
   }
 
   closeno() {

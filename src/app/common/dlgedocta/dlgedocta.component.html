@@ -1,0 +1,25 @@
+<div mat-dialog-content>{{message}} <br>
+    <label for="chk_condatsol">
+        <input type="checkbox" name="chk_condatsol" id="chk_condatsol" [(ngModel)]="datossol">
+        Con Datos Solicitud
+    </label><br>
+    <label for="chk_conobservs">
+        <input type="checkbox" name="chk_conobservs" id="chk_conobservs" [(ngModel)]="observaciones">
+        Con Observaciones
+        <div *ngIf="observaciones">
+            <label  for="edt_numobs">
+                Numero Maximo de Observaciones
+                <input  type="text" name="edt_numobs" [(ngModel)]="numobs">
+            </label>
+        </div>
+    </label><br>
+    <mat-radio-group aria-label="Seleccione el Tipo de Impresion" [(ngModel)]="tipoimpresion">
+        <mat-radio-button value="pdf">Modo pdf</mat-radio-button>
+        <mat-radio-button value="txt">Modo Matriz Puntos</mat-radio-button>
+    </mat-radio-group><br>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>
+    <button mat-raised-button  color="primary"   (click)="closeyes()">Aceptar</button>
+</div>
+

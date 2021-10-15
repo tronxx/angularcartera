@@ -16,6 +16,7 @@ export class PolizasService {
   url = 'http://mds1/www/cgi/carterax/';
   //url = 'http://mds1/www/cgi/cartera/';
   cia ?:Compania;
+  claveemp = "";
   
 
   constructor( private http: HttpClient ,private configuracion: ConfiguracionService ) { 
@@ -26,6 +27,7 @@ export class PolizasService {
 
   obtenurl () {
     this.url = this.configuracion.obtenurl();
+    this.cia = this.configuracion.obtendatoscia();
   }
 
   busca_codigos_poliza ( params: string): Observable<any> {
@@ -63,20 +65,22 @@ export class PolizasService {
 
 
   buscapoliza ( params: string): Observable<Poliza> {
-    var misparamold_z = {
+    let misparamold_z = {
       "modo":"",
       "fecha":"",
+      "crearpoliza":"S",
       "tda":""
     };
     misparamold_z = JSON.parse(params);
-    var misparams = {
+    let misparams = {
       "modo":"acceder_poliza",
       "fechapoliza": misparamold_z.fecha,
+      "crearpoliza":misparamold_z.crearpoliza,
       "tdapol":  misparamold_z.tda
     }
     
     
-    var miurl = this.url + "polizas/servicios.php"
+    let miurl = this.url + "polizas/servicios.php"
     const headers = { 'content-type': 'text/plain'};
     const body=JSON.stringify(misparams);
     
@@ -146,9 +150,8 @@ export class PolizasService {
   }
 
   obtentxtcfdi(params:string) {
-    let empresa = "MDS";
+    let empresa = "";
     if (this.cia) {
-       this.obtendatoscia();
        empresa = this.cia.Clave;
     }
     let misparams = JSON.parse(params);
@@ -158,9 +161,8 @@ export class PolizasService {
   }
 
   obtencarta(params:string) {
-    let empresa = "MDS";
+    let empresa = "xx";
     if (this.cia) {
-       this.obtendatoscia();
        empresa = this.cia.Clave;
     }
     let misparams = JSON.parse(params);
@@ -191,6 +193,69 @@ export class PolizasService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
 
   }
+
+  obtener_datos_poliza ( params: string): Observable<any> {
+    let misparams = JSON.parse(params);
+    
+    var miurl = this.url + "polizas/servicios.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=JSON.stringify(misparams);
+    
+    return this.http.post<any>(miurl, misparams, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched datos_poliza')),
+      catchError(this.handleError<any>('Ocurrio un error en obtener_datos_poliza'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+
+  }
+
+  cierra_poliza ( params: string): Observable<any> {
+    let misparams = JSON.parse(params);
+    
+    var miurl = this.url + "polizas/servicios.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=JSON.stringify(misparams);
+    
+    return this.http.post<any>(miurl, misparams, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched cierra_poliza')),
+      catchError(this.handleError<any>('Ocurrio un error en obtener_datos_poliza'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+
+  }
+
+
+  obtentxtcomplmentopol(params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Debug: Estoy en obtentxtcomplmentopol ", params);
+    var miurl = this.url + "polizas/servicios.php?modo=obtener_txt_complemento_pol&uuid="+misparams.uuid;
+    window.open(miurl, "_blank");
+  }
+
+  obten_impresion_poliza_caja(params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Debug: Estoy en obtentxtcomplmentopol ", params);
+    var miurl = this.url + "polizas/servicios.php?modo=obtener_txt_poliza_caja&fechapoliza="+misparams.fechapoliza+"&tdapol="+misparams.tdapol;
+    window.open(miurl, "_blank");
+  }
+
+  obten_impresion_despacho_caja(params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Debug: Estoy en obtentxtcomplmentopol ", params);
+    var miurl = this.url + "polizas/servicios.php?modo=obtener_despacho_poliza_caja&fechapoliza="+misparams.fechapoliza+"&tdapol="+misparams.tdapol;
+    window.open(miurl, "_blank");
+  }
+
+
+  obten_pdf_cfdi(params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Debug: Estoy en obtenpdfcfdi ", params);
+    var miurl = this.url + "polizas/servicios.php?modo=descarga_pdf_cfdi&uuid="+misparams.uuid;
+    window.open(miurl, "_blank");
+  }
+
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

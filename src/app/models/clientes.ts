@@ -8,6 +8,10 @@ export interface Cliente {
     fechavta: string;
     qom: string;
     ticte: string;
+    ubica: string;
+    promotor: string;
+    opcion: string;
+    comisionprom: number;
     enganche: number;
     servicio: number;
     letra1: number;
@@ -17,5 +21,6 @@ export interface Cliente {
     cargos: number;
     abonos: number;
     preciolista: number;
+    compra: string;
     piva: number;
 }

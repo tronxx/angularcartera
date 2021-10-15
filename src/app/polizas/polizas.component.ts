@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ClientesService } from '../services/clientes.service';
 import { PolizasService } from '../services/polizas.service';
 import { Cliente } from '../models/clientes';
+import { Aval } from '../models/aval'
 import { Poliza } from '../models/polizas';
 import { Renpol } from '../models/renpol';
 import { FormsModule } from '@angular/forms';
@@ -26,29 +27,14 @@ export class PolizasComponent implements OnInit {
 
   clientes : Cliente [] = [];
   cliente?: Cliente;
+  aval? : Aval;
   poliza?: Poliza;
   renpol?: Renpol;
   renglonesPoliza : Renpol[] = [];
   
   codcli_z = "";
   uuid_z = "";
-  cia_z =     {
-    "Urldatos":"http://mds1/www/cgi/cartera/",
-    "Empresa": "Diaz y Solis SA de CV",
-    "Rfc": "MDS870209190",
-    "Direc": "Calle 67 x 60 y 62 Centro",
-    "CP": "97000",
-    "Logo":"",
-    "AplicarContingencia":"true",
-    "DiasContingencia":"90",
-    "FechaContingencia":"20200401",
-    "Clave":"MDS",
-    "PrecioListaMinimoCarta":"2300.00",
-    "MesesMinimoCarta": "9",
-    "CartaSaldadosMesesAntes": "2",
-    "DiasBonificacion":"5"
-  };
-
+  cia_z?: Compania;
   
   clienteactivo_z = false;
   polizaactiva_z = false;
@@ -84,6 +70,7 @@ export class PolizasComponent implements OnInit {
   CartaSaldadosMesesAntes = 0;
   PrecioListaMinimoCarta = 0;
   sdoparacarta_z = 0;
+  compracli_z = "";
 
 
   tipospagos =[ 
@@ -166,7 +153,7 @@ export class PolizasComponent implements OnInit {
   dia_z = ((this.fechahoy_z.getDate()+100).toString()).substring(1,3);
   strfecha_z = this.anu_z + "-" + this.mes_z + "-" + this.dia_z;
   vence_z  = new Date();
-
+  strfechavta = "";
 
   constructor(private servicioclientes: ClientesService,
     public dialog: MatDialog, 
@@ -206,6 +193,7 @@ export class PolizasComponent implements OnInit {
       var params = {
         "modo":"acceder_poliza",
         "fecha":this.fechahoy_z,
+        "crearpoliza":"S",
         "tda":this.tda_z
       }
       this.datospolenabled_z = false;
@@ -276,7 +264,7 @@ export class PolizasComponent implements OnInit {
 
   buscarcliente() {
     var params_z = {
-      modo : "buscar",
+      modo : "buscar_un_cliente",
       codigo: this.codcli_z,
       idcli : -1
     }
@@ -327,6 +315,16 @@ export class PolizasComponent implements OnInit {
        this.pivacli_z = this.cliente.piva;
        this.sdoparacarta_z = this.prlet_z * this.CartaSaldadosMesesAntes;
        if(this.qom_z == "Q") this.sdoparacarta_z / 2;
+       this.tasarecargo_z = 10;
+       this.strfechavta = this.cliente.numcli.substr(2,6);
+       if( this.strfechavta >= "210901" && 
+           this.qom_z == "Q" && 
+           ( this.cliente.nulet == 4 || this.cliente.nulet == 10  )
+        ) {
+           this.tasarecargo_z = 20;
+       }
+
+       this.busca_aval(this.cliente.idcli);
 
        if(this.abonos_z >= (this.engan_z + this.serv_z) ) {
           this.ltpag_z = Math.floor ((this.abonos_z - this.engan_z - this.serv_z  ) / this.prlet_z);
@@ -389,7 +387,7 @@ export class PolizasComponent implements OnInit {
         this.datospago.dias = Math.floor( ( this.fechahoy_z.getTime() - this.vence_z.getTime()  ) / (86400000));
         //console.log("Debug: dias", this.datospago.dias, " Hoy:", this.fechahoy_z.getTime(), " Vence:", this.vence_z.getTime() );
         if(this.datospago.dias > this.diasbon ) {
-          this.datospago.recobon = Math.round( this.prlet_z * .10);
+          this.datospago.recobon = Math.round( this.prlet_z * this.tasarecargo_z / 100);
           this.tiporecobon_z = "RECARGO"
           this.tipomovsel_z = "R";
           this.msg_z += " Con Recargo";
@@ -651,10 +649,6 @@ export class PolizasComponent implements OnInit {
 
   }
 
-  xfecha_a_str(fecha: Date, formato: string) {
-    this.datepipe.transform(fecha, formato);
-  }
-
   fecha_a_str  (fecha : Date, formato:string)  {
     let strfecha_z = "";
     let anu_z = "";
@@ -682,10 +676,24 @@ export class PolizasComponent implements OnInit {
 
   clickaceptarpago() {
     if(this.validarpago()) {
-      this.si_aceptarpago();
+      this.confirma_aceptar_pago();
     } else {
       this.alerta("Hay Errores en el pago");
     }
+  }
+
+  confirma_aceptar_pago() {
+    const dialogref = this.dialog.open(DialogBodyComponent, {
+      width:'350px',
+      data: 'Seguro de aceptar este Pago?'
+    });
+    dialogref.afterClosed().subscribe(res => {
+      //console.log("Debug", res);
+      if(res) {
+        this.si_aceptarpago();
+      }
+    });
+  
   }
 
   si_aceptarpago() {
@@ -786,11 +794,31 @@ export class PolizasComponent implements OnInit {
       dialogref.afterClosed().subscribe(res => {
         if (res) {
           this.codcli_z = res.numcli;
+          this.buscarcliente();
         }
         console.log("Debug: Regrese de busqueda por Nombre", res);
       });
     
   
+  }
+
+  busca_aval(idcli_z : number) {
+    var params_z = {
+      modo : "buscar_aval",
+      codigo: this.codcli_z,
+      idcli : idcli_z
+    }
+    console.log("Debug: Estoy en busca Aval ", idcli_z);
+  
+    this.servicioclientes.buscaaval(JSON.stringify(params_z)).subscribe(
+      respu => {
+        if(respu) {
+          this.aval = respu;
+          this.compracli_z = this.aval.compra;
+        } 
+      }
+    );
+
   }
 
 

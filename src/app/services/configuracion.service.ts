@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { catchError, map, mapTo, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { Compania } from '../models/config'
 
 
 @Injectable({
@@ -11,10 +12,13 @@ export class ConfiguracionService {
 
   config = {
     "estado":"-1",
-    "cia": 0,
+    "cia": 0
   }
 
-  cias = [
+  cias : Compania[] = [];
+  cia ?: Compania;
+
+  xzcias = [
     {
       "Urldatos":"http://mds1/www/cgi/cartera/",
       "Empresa": "Diaz y Solis SA de CV",

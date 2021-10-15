@@ -15,7 +15,9 @@ export class AppComponent {
   menus_z = [
     { link: "/conscli", titulo: "Clientes", active:"active" },
     { link: "/login", titulo: "Acceso", active:""  },
-    { link: "/polizas", titulo: "Poliza de Cobranza", active:"active"  }
+    { link: "/polizas", titulo: "Poliza de Cobranza", active:"active"  },
+    { link: "/consupol", titulo: "Consulta de Polizas", active:"active"  },
+    { link: "/detallescli", titulo: "Detalles Cliente", active:"active"  }
   ];
 
   constructor(private matDialog: MatDialog, private configuracion: ConfiguracionService) {

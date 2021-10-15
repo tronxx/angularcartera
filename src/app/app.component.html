@@ -5,7 +5,9 @@
   <span>My App</span>
   <span class="example-spacer"></span>
   <button ><a routerLink="/main">Cartera</a></button>
-  <button mat-raised-button *ngFor="let opcion of menus_z" > <a routerLink="{{opcion.link}}"> {{opcion.titulo}} </a>  </button>
+  <button mat-raised-button *ngFor="let opcion of menus_z" > 
+    <a routerLink="{{opcion.link}}"> {{opcion.titulo}} </a> 
+  </button>
   <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
     <mat-icon>favorite</mat-icon>
   </button>

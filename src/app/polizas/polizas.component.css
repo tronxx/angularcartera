@@ -77,3 +77,8 @@
     }
   }
   
+  .label {
+    padding: 3px;
+    padding-left: 3px;
+    margin: 10px;
+  }

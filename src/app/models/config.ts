@@ -5,7 +5,7 @@ export interface Compania  {
     Direc: string;
     CP: string;
     Logo:string;
-    AplicarContingencia:boolean;
+    AplicarContingencia:string;
     DiasContingencia:number;
     FechaContingencia:string;
     Clave : string;

@@ -22,7 +22,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { DlgbuscliComponent } from './common/dlgbuscli/dlgbuscli.component';
-
+import { DetallescliComponent } from './detallescli/detallescli.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { DlgedoctaComponent } from './common/dlgedocta/dlgedocta.component';
+import {MatRadioModule} from '@angular/material/radio';
+import { ConsupolComponent } from './consupol/consupol.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +37,10 @@ import { DlgbuscliComponent } from './common/dlgbuscli/dlgbuscli.component';
     MainComponent,
     PolizasComponent,
     DialogBodyComponent,
-    DlgbuscliComponent
+    DlgbuscliComponent,
+    DetallescliComponent,
+    DlgedoctaComponent,
+    ConsupolComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +50,9 @@ import { DlgbuscliComponent } from './common/dlgbuscli/dlgbuscli.component';
     MatDialogModule,
     MatButtonModule,
     MatToolbarModule,
+    MatTabsModule,
     MatIconModule,
+    MatRadioModule,
     BrowserAnimationsModule
   ],
   providers: [ UsuariosService, 

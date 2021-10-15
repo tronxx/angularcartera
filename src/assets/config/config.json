@@ -7,13 +7,13 @@
       "CP": "97000",
       "Logo":"",
       "AplicarContingencia":"true",
-      "DiasContingencia":"90",
+      "DiasContingencia":90,
       "FechaContingencia":"20200401",
       "Clave":"MDS",
-      "PrecioListaMinimoCarta":"2300.00",
-      "MesesMinimoCarta": "9",
-      "CartaSaldadosMesesAntes": "2",
-      "DiasBonificacion":"5"
+      "PrecioListaMinimoCarta":2300.00,
+      "MesesMinimoCarta": 9,
+      "CartaSaldadosMesesAntes": 2,
+      "DiasBonificacion":5
     },
     {
       "Urldatos":"http://mds1/www/cgi/cartera/",
@@ -23,12 +23,12 @@
       "CP": "97000",
       "Logo":"",
       "AplicarContingencia":"true",
-      "DiasContingencia":"90",
+      "DiasContingencia":90,
       "FechaContingencia":"20200401",
       "Clave":"EC",
-      "PrecioListaMinimoCarta":"2300.00",
-      "MesesMinimoCarta": "8",
-      "CartaSaldadosMesesAntes": "1",
-      "DiasBonificacion":"5"
+      "PrecioListaMinimoCarta":2300.00,
+      "MesesMinimoCarta": 8,
+      "CartaSaldadosMesesAntes": 1,
+      "DiasBonificacion":5
     }
 ]
