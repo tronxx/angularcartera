@@ -20,13 +20,19 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { DialogBodyComponent } from './dialog-body/dialog-body.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card'; 
 import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSelectModule  } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+
+import { DlgedoctaComponent } from './common/dlgedocta/dlgedocta.component';
 import { DlgbuscliComponent } from './common/dlgbuscli/dlgbuscli.component';
 import { DetallescliComponent } from './detallescli/detallescli.component';
-import { MatTabsModule } from '@angular/material/tabs';
-import { DlgedoctaComponent } from './common/dlgedocta/dlgedocta.component';
-import {MatRadioModule} from '@angular/material/radio';
 import { ConsupolComponent } from './consupol/consupol.component';
+import { AltacliComponent } from './altacli/altacli.component';
+import { RelvtasComponent } from './relvtas/relvtas.component';
+import { DlgdatoscliComponent } from './altacli/dlgdatoscli/dlgdatoscli.component';
 
 @NgModule({
   declarations: [
@@ -39,8 +45,12 @@ import { ConsupolComponent } from './consupol/consupol.component';
     DialogBodyComponent,
     DlgbuscliComponent,
     DetallescliComponent,
+    DlgdatoscliComponent,
     DlgedoctaComponent,
-    ConsupolComponent
+    ConsupolComponent,
+    AltacliComponent,
+    RelvtasComponent,
+    DlgdatoscliComponent
   ],
   imports: [
     BrowserModule,
@@ -53,6 +63,8 @@ import { ConsupolComponent } from './consupol/consupol.component';
     MatTabsModule,
     MatIconModule,
     MatRadioModule,
+    MatCardModule,
+    MatSelectModule,
     BrowserAnimationsModule
   ],
   providers: [ UsuariosService, 

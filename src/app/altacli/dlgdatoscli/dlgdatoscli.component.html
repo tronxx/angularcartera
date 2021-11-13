@@ -1,0 +1,166 @@
+<div mat-dialog-content>
+<form #formularioCliente="ngForm" (ngSubmit)="formularioEnviado()">
+    <label for="codigo">Codigo
+        <input [disabled]="codigodisabled" type="text" name="codigo" id="codigo" size="12" [(ngModel)]="numcli_z">
+    </label>
+    
+    
+    <div name="datoscliente">
+            <mat-card>
+                <mat-card-title>Nombre del Cliente</mat-card-title>
+                <label for="appat" size="10">Apellido Paterno
+                    <input type="text" name="appat" id="appat" size="30" [(ngModel)]="nvocli.appat" 
+                    oninput="this.value = this.value.toUpperCase()">
+    
+                </label> <br>
+                <label for="apmat" size="10" >Apellido Materno
+                    <input type="text" name="apmat" id="apmat" size="30" [(ngModel)]="nvocli.apmat" 
+                    oninput="this.value = this.value.toUpperCase()">
+                </label>
+                <br> <br>
+                <label for="nombre1" size="10">Nombre1
+                    <input type="text" name="nombre1" id="nombre1" size="30" [(ngModel)]="nvocli.nompil1"
+                    oninput="this.value = this.value.toUpperCase()" >
+                </label> <br>
+                <label for="nombre2"  size="10">Nombre2
+                    <input type="text" name="nombre2" id="nombre2" size="30" [(ngModel)]="nvocli.nompil2"
+                    oninput="this.value = this.value.toUpperCase()" >
+                </label>
+                
+            </mat-card>
+        <mat-card>
+            <mat-card-title>Direccion del Cliente</mat-card-title>
+            <label for="calle">Calle y Cruzamientos
+                <input type="text" name="calle" id="calle" size="30" [(ngModel)]="nvocli.calle"
+                oninput="this.value = this.value.toUpperCase()" >
+            </label> <br>
+            <label for="predio">Num.Predio
+                <input type="text" name="predio" id="predio" size="30" [(ngModel)]="nvocli.numpred"
+                oninput="this.value = this.value.toUpperCase()" >
+            </label> 
+            <br>
+            <label for="colonia">Colonia
+                <input type="text" name="colonia" id="colonia" size="30" [(ngModel)]="nvocli.colonia" 
+                oninput="this.value = this.value.toUpperCase()">
+            </label> <br>
+            <label for="codpost">Codigo Postal
+                <input type="text" name="codpost" id="codpost" size="30" [(ngModel)]="nvocli.codpost"
+                oninput="this.value = this.value.toUpperCase()" >
+            </label> 
+            <br>
+            <label for="poblacion">Poblacion
+                <input type="text" name="poblacion" id="poblacion" size="30" [(ngModel)]="nvocli.poblac" >
+            </label> <br>
+            <label for="emailcli">Email Cliente
+                <input type="text" name="emailcli" id="emailcli" size="30" [(ngModel)]="nvocli.email" >
+            </label>
+        </mat-card>
+        <br>
+        <label for="qom">Periodicidad Pago
+            <select name="qom" id="qom" [(ngModel)]="nvocli.qom" (blur)="selecciona_letras_cliente()">
+                <option value="Q">Quincenal</option>
+                <option value="C">Contado</option>
+            </select>
+    
+        </label>
+        <label for="opcion">Opcion
+            <select name="opcion" id="opcion" value="{{nvocli.opcion}}" 
+             [(ngModel)]= "nvocli.opcion" >
+            <option *ngFor="let miopcion of cartaspro" value="{{miopcion.clave}}"
+              [selected]="nvocli.opcion == miopcion.clave">
+              {{miopcion.descri}}
+              </option>
+        </select>
+        </label>
+        <label for="pordesc">% Descto
+            <input type="number" name="pordesc" id="pordesc" size="10" [(ngModel)]="nvocli.pdsc" >
+        </label>
+        <label for="ubicacion">Ubicacion 
+            <select name="ubicacion" id="ubicacion" value="{{nvocli.ubica}}" 
+             [(ngModel)]= "nvocli.ubica" >
+            <option *ngFor="let miubica of ubivta" value="{{miubica.ubica}}"
+              [selected]="nvocli.ubica == miubica.ubica">
+              {{miubica.ubica}} {{miubica.nombre}}
+              </option>
+            </select>
+        </label>
+        <br>
+        <label for="ticte">Tipo Cte
+            <select name="ticte" id="ticte" value="{{nvocli.ticte}}" 
+             [(ngModel)]= "nvocli.ticte" >
+            <option *ngFor="let miticte of tictes_z" value="{{miticte.clave}}"
+              [selected]="nvocli.ticte == miticte.clave">
+              {{miticte.clave}} {{miticte.descri}}
+              </option>
+            </select>
+        </label>
+        <br>
+        <label for="jefgpo">Jefe de Grupo
+            <select name="jefgpo" id="jefgpo" value="{{nvocli.promotor}}" 
+             [(ngModel)]= "nvocli.promotor" >
+            <option *ngFor="let mipromo of promotor" value="{{mipromo.cvepromo}}"
+              [selected]="nvocli.promotor == mipromo.cvepromo">
+              {{mipromo.cvepromo}} {{mipromo.nombre}}
+              </option>
+            </select>
+        </label>
+        <label for="comjef">Comision Jefe Grupo
+            <input type="number" name="comjef" id="comjef" size="10" [(ngModel)]="nvocli.comisionprom">
+        </label> 
+        <br>
+        <label for="fpagcom">Fecha Pago Comision
+            <input type="text" name="fpagcom" id="fpagcom" size="10" [(ngModel)]="nvocli.pgocom" >
+        </label>
+        <label for="tasaiva">Tasa Iva
+            <input type="number" name="tasaiva" id="tasaiva" size="10" [(ngModel)]="nvocli.piva" >
+        </label>
+
+        <br>
+        <label for="servicio">Servicio
+            <input type="number" name="servicio" id="servicio" size="10" [(ngModel)]="nvocli.servicio">
+        </label>
+        <label for="enganche">Enganche
+            <input type="number" name="enganche" id="enganche" size="10" 
+            (blur)="calcu_precio_lista()" [(ngModel)]="nvocli.enganche">
+        </label>
+        <label for="precon">Precio.Lista
+            <input type="number" name="precon" id="precon" size="10" 
+             [(ngModel)]="nvocli.preciolista">
+        </label>
+        <label for="letra1">Letra 1/1
+            <input type="number" [disabled]="letra1disabled" name="letra1" id="letra1" size="10" [(ngModel)]="nvocli.letra1">
+        </label>
+        <br>
+        <label for="nulets">Numero Letras
+            <select name="nulets" id="nulets" value="{{nvocli.nulet}}" 
+             [(ngModel)]= "nvocli.nulet" >
+            <option *ngFor="let miletra of nulets" value="{{miletra.nulets}}"
+              [selected]="nvocli.nulet == miletra.nulets">
+              {{miletra.nulets}}
+              </option>
+            </select>
+        </label>
+        <label for="canle">Precio x Letra
+            <input type="number" [disabled]="canledisabled" name="canle" id="canle" size="10" [(ngModel)]="nvocli.canle">
+        </label>
+        <label for="bonif">Bonificacion
+            <input type="number" [disabled]="bonifdisabled" name="bonif" id="bonif" size="10" [(ngModel)]="nvocli.bonificacion">
+        </label>
+        <br>
+        <label for="mescum">Cumpleaños
+            <select name="mescum" id="mescum" value="{{nvocli.mescum}}" 
+             [(ngModel)]= "nvocli.mescum" >
+            <option *ngFor="let mimes of meses_z" value="{{mimes.clave}}"
+              [selected]="nvocli.mescum == mimes.clave">
+              {{mimes.descri}}
+              </option>
+            </select>
+            <input type="number" size="5" name="diacum" id="diacum"   min="1" max="31" [(ngModel)]= "nvocli.diacum" >
+        </label>
+    </div>    
+</form>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>
+    <button mat-raised-button  color="primary"   (click)="closeyes()">Aceptar</button>
+</div>

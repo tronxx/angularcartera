@@ -7,13 +7,19 @@ import { PolizasComponent } from './polizas/polizas.component';
 import { AuthGuard } from './guards/auth.guard'; 
 import { DetallescliComponent } from './detallescli/detallescli.component';
 import { ConsupolComponent } from './consupol/consupol.component';
+import { AltacliComponent } from './altacli/altacli.component';
+import { RelvtasComponent  } from './relvtas/relvtas.component';
 
 const routes: Routes = [
   { path: 'conscli', component: ConscliComponent, canActivate : [AuthGuard]  },
   { path: 'detallescli', component: DetallescliComponent, canActivate : [AuthGuard]  },
+  { path: 'detallescli/:numcli', component: DetallescliComponent, canActivate : [AuthGuard]  },
   { path: 'login', component: LoginComponent },
   { path: 'polizas', component: PolizasComponent, canActivate : [AuthGuard] },
   { path: 'consupol', component: ConsupolComponent, canActivate : [AuthGuard] },
+  { path: 'altacli/:numcli', component: AltacliComponent, canActivate : [AuthGuard] },
+  { path: 'nuevocli', component: AltacliComponent,  canActivate : [AuthGuard]},
+  { path: 'listaaltas', component: RelvtasComponent, canActivate : [AuthGuard] },
   { path: 'main', component: MainComponent },
   {path: '', redirectTo: 'main', pathMatch: 'full'}
 ];

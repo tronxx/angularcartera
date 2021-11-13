@@ -1,0 +1,130 @@
+<form #formularioMascota="ngForm" (ngSubmit)="formularioEnviado()">
+    <label for="codigo">Codigo
+        <input type="text" name="codigo" id="codigo" size="12" [(ngModel)]="numcli_z">
+    </label>
+    <button mat-raised-button color="primary" (click)="buscarcliente()" >Aceptar</button>
+    
+    <div name="datoscliente">
+            <mat-card>
+                <mat-card-title>Nombre del Cliente</mat-card-title>
+                <label for="appat" size="10">Apellido Paterno
+                    <input type="text" name="appat" id="appat" size="30" [(ngModel)]="nvocli.appat" >
+    
+                </label>
+                <label for="apmat" size="10" >Apellido Materno
+                    <input type="text" name="apmat" id="apmat" size="30" [(ngModel)]="nvocli.apmat" >    
+                </label>
+                <br>
+                <label for="nombre1" size="10">Nombre1
+                    <input type="text" name="nombre1" id="nombre1" size="30" [(ngModel)]="nvocli.nompil1" >
+                </label>
+                <label for="nombre2"  size="10">Nombre2
+                    <input type="text" name="nombre2" id="nombre2" size="30" [(ngModel)]="nvocli.nompil2" >
+                </label>
+                
+            </mat-card>
+        <mat-card>
+            <mat-card-title>Direccion del Cliente</mat-card-title>
+            <label for="calle">Calle y Cruzamientos
+                <input type="text" name="calle" id="calle" size="30" [(ngModel)]="nvocli.calle" >
+            </label>
+            <label for="predio">Num.Predio
+                <input type="text" name="predio" id="predio" size="30" [(ngModel)]="nvocli.numpred" >
+            </label>
+            <br>
+            <label for="colonia">Colonia
+                <input type="text" name="colonia" id="colonia" size="30" [(ngModel)]="nvocli.colonia" >
+            </label>
+            <label for="codpost">Codigo Postal
+                <input type="text" name="codpost" id="codpost" size="30" [(ngModel)]="nvocli.codpost" >
+            </label>
+            <br>
+            <label for="poblacion">Poblacion
+                <input type="text" name="poblacion" id="poblacion" size="30" [(ngModel)]="nvocli.poblac" >
+            </label>
+            <label for="emailcli">Email Cliente
+                <input type="text" name="emailcli" id="emailcli" size="30" [(ngModel)]="nvocli.email" >
+            </label>
+        </mat-card>
+        <br>
+        <label for="opcion">Opcion
+            <select name="opcion" id="opcion" value="{{nvocli.opcion}}" 
+             [(ngModel)]= "nvocli.opcion" >
+            <option *ngFor="let miopcion of cartaspro" value="{{miopcion.clave}}"
+              [selected]="nvocli.opcion == miopcion.clave">
+              {{miopcion.descri}}
+              </option>
+        </select>
+        </label>
+        <label for="pordesc">% Descto
+            <input type="number" name="pordesc" id="pordesc" size="10" [(ngModel)]="nvocli.pdsc" >
+        </label>
+        <label for="ubicacion">Ubicacion 
+            <input type="text" id="ubicacion" name="ubicacion" size="5" [(ngModel)]="nvocli.ubica" >
+        </label>
+        <br>
+        <label for="ticte">Tipo Cte
+            <select name="ticte" id="ticte" value="{{nvocli.ticte}}" 
+             [(ngModel)]= "nvocli.ticte" >
+            <option *ngFor="let miticte of tictes_z" value="{{miticte.clave}}"
+              [selected]="nvocli.ticte == miticte.clave">
+              {{miticte.descri}}
+              </option>
+            </select>
+        </label>
+        <label for="mescum">Cumpleaños
+            <input type="number" size="5" name="mescum" id="mescum" [(ngModel)]= "nvocli.mescum" >
+            <input type="number" size="5" name="diacum" id="diacum" [(ngModel)]= "nvocli.diacum" >
+        </label>
+        <br>
+        <label for="jefgpo">Jefe de Grupo
+            <input type="text" name="jefgpo" id="jefgpo" size="10" [(ngModel)]="nvocli.promotor">
+        </label>
+        <label for="comjef">Comision Jefe Grupo
+            <input type="number" name="comjef" id="comjef" size="10" [(ngModel)]="nvocli.comisionprom">
+        </label>
+        <label for="fpagcom">Fecha Pago Comision
+            <input type="text" name="fpagcom" id="fpagcom" size="10" [(ngModel)]="nvocli.pgocom" >
+        </label>
+
+        <label for="tasaiva">Tasa Iva
+            <input type="number" name="tasaiva" id="tasaiva" size="10" [(ngModel)]="nvocli.piva" >
+        </label>
+
+        <br>
+        <label for="servicio">Servicio
+            <input type="number" name="servicio" id="servicio" size="10" [(ngModel)]="nvocli.servicio">
+        </label>
+        <label for="enganche">Enganche
+            <input type="number" name="enganche" id="enganche" size="10" [(ngModel)]="nvocli.enganche">
+        </label>
+        <label for="precon">Precio.Lista
+            <input type="number" name="precon" id="precon" size="10" [(ngModel)]="nvocli.preciolista">
+        </label>
+        <label for="letra1">Letra 1/1
+            <input type="number" name="precon" id="precon" size="10" [(ngModel)]="nvocli.preciolista">
+        </label>
+        <br>
+        <label for="qom">Periodicidad Pago
+            <select name="qom" id="qom" [(ngModel)]="nvocli.qom" >
+                <option value="Q" [selected]="nvocli.qom == Q">Quincenal</option>
+                <option value="C" [selected]="nvocli.qom == C">Contado</option>
+            </select>
+    
+        </label>
+        <label for="nulet">Numero Letras
+            <input type="number" name="nulet" id="nulet" size="5" [(ngModel)]="nvocli.nulet">
+        </label>
+        <label for="canle">Precio x Letra
+            <input type="number" name="canle" id="canle" size="10" [(ngModel)]="nvocli.canle">
+        </label>
+        <label for="bonif">Bonificacion
+            <input type="number" name="bonif" id="bonif" size="10" [(ngModel)]="nvocli.bonificacion">
+        </label>
+        <br>
+        <label for="compra">Compra
+            <input type="text" name="compra" id="compra" size="70" [(ngModel)]="nvocli.compra">
+        </label>
+
+    </div>    
+</form>

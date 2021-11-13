@@ -79,3 +79,17 @@ datospago.dias:
 
 modo: buscar_renpol
 idpoliza
+
+
+serviciosclientes:
+url + "clientes/servicios.php"
+
+modo=obtener_estado_cuenta_cliente" + 
+codigo:numcli			-> Codigo del Cliente
+modopdf:modopdf			-> Si/No
+consolicitud:consolicitud	-> Si/no
+conobservaciones:conobservaciones	-> Si/no
+nummaximoobservaciones:nummaximoobservaciones	-> Número máximo de Observaciones
+estadocuentaespecial:estadocuentaespecial	-> Si/No
+
+

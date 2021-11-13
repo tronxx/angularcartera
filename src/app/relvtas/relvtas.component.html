@@ -1,3 +1,4 @@
+Ventas
 <form (ngSubmit)='onSubmit()' #myForm="ngForm">
     <label >Fecha Inicial:
         <input type="date" id="fechaini" name="fechaini" [(ngModel)]="mimodelo.fechaini">
@@ -11,14 +12,21 @@
     <label >Codigo Final
         <input type="text" id="codigofin" size="10" name="codigofin" [(ngModel)]="mimodelo.codigofin">
     </label>
-    <button mat-raised-button color="primary" type="submit" > Aceptar</button>
+    <button mat-raised-button color="primary"  type="submit" class="btn btn-primary" > Aceptar</button>
 
 </form>
+<a routerLink="/nuevocli">
+<button mat-raised-button color="primary" >
+    <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
+    Nuevo Cliente
+</button>
+</a>
+
 
 <table id="tbl_clientes" border="1" >
     <thead>
         <tr>
-            <th>Detalles</th>
+            <th>Accion</th>
             <th>Codigo</th>
             <th>Nombre</th>
             <th>Direccion</th>
@@ -35,7 +43,7 @@
     </thead>
     <tbody>
         <tr *ngFor="let cliente of clientes">
-            <td> <a routerLink="/detallescli/{{cliente.numcli}}"><button mat-raised-button color="primary" > Detalles</button></a> </td>
+            <td> <a routerLink="/altacli/{{cliente.numcli}}"><button mat-raised-button color="primary" > Detalles</button></a> </td>
             <td>{{cliente.numcli}} </td>
             <td>{{cliente.nombre}} </td>
             <td>{{cliente.direc}} </td>
@@ -52,4 +60,5 @@
     
     </tbody>
 </table>
+
 

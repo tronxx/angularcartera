@@ -7,12 +7,12 @@ import { Cliente } from '../models/clientes';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-conscli',
-  templateUrl: './conscli.component.html',
-  styleUrls: ['./conscli.component.css']
+  selector: 'app-relvtas',
+  templateUrl: './relvtas.component.html',
+  styleUrls: ['./relvtas.component.css']
 })
+export class RelvtasComponent implements OnInit {
 
-export class ConscliComponent implements OnInit {
 
   fechahoy_z  = new Date();
   anu_z = this.fechahoy_z.getFullYear().toString();
@@ -31,14 +31,14 @@ export class ConscliComponent implements OnInit {
     codigofin: '23'
   }
 
+
   constructor(public dialog: MatDialog, private servicioclientes: ClientesService) { }
 
   ngOnInit(): void {
-    
   }
 
   onSubmit() {
-    this.servicioclientes.obtenclientes(JSON.stringify(this.mimodelo)).subscribe(
+    this.servicioclientes.obtenrelvtas(JSON.stringify(this.mimodelo)).subscribe(
       respu => {
         this.clientes = respu;
       }
@@ -48,5 +48,6 @@ export class ConscliComponent implements OnInit {
   onNoClick() {
 
   }
+
 
 }

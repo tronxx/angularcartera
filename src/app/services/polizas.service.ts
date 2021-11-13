@@ -210,6 +210,19 @@ export class PolizasService {
 
   }
 
+  obten_fecha_servidor ( ): Observable<any> {
+    
+    var miurl = this.url + "polizas/servicios.php?modo=obtenerFechaServidor";
+    const headers = { 'content-type': 'text/plain'};
+    return this.http.get<any>(miurl).
+    pipe(
+      tap(_ => this.log('fetched Fecha Servidor')),
+      catchError(this.handleError<any>('Ocurrio un error en obtener_Fecha Servidor'))
+    );
+
+  }
+
+
   cierra_poliza ( params: string): Observable<any> {
     let misparams = JSON.parse(params);
     
@@ -247,7 +260,6 @@ export class PolizasService {
     var miurl = this.url + "polizas/servicios.php?modo=obtener_despacho_poliza_caja&fechapoliza="+misparams.fechapoliza+"&tdapol="+misparams.tdapol;
     window.open(miurl, "_blank");
   }
-
 
   obten_pdf_cfdi(params:string) {
     let misparams = JSON.parse(params);

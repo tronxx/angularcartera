@@ -3,16 +3,17 @@
         Codigo
         <input size="5" [disabled]="!datospolenabled_z" type="text" name="tienda" [(ngModel)]="tda_z" id="tienda" placeholder="tienda">
     </label>
-    <label for="nomtda"> {{nomtda_z }} </label>
+    <label for="nomtda"> <b>{{nomtda_z }} </b> </label>
     <label for="fecha">
         Fecha
         <input size="20" type="date"  [disabled]="!datospolenabled_z" name="fecha"  [(ngModel)]="fechapol_z" id="fecha">
     </label>
+
     <label for="cvepromo">
         Iniciales
         <input size="5" type="text" name="cvepromo" [(ngModel)]="cobratario.cvepromo" 
           [disabled]="polizaactiva_z" id="cvepromo" placeholder="Iniciales">
-       <label name="nombrepromo" id="nombrepromo" > {{cobratario.nombre}}  </label>
+       <label name="nombrepromo" id="nombrepromo" > <b> {{cobratario.nombre}} </b> </label>
     </label>
     <button mat-raised-button color="primary" [hidden]="polizaactiva_z" (click)="aceptarpoliza()">Aceptar</button>
     <div id="errorespoliza" [hidden]="!hayerrorpoliza()" >
@@ -49,20 +50,41 @@
         <div class="card">
             <div class="card">
                 <div class="card-body">
-                    Codigo: <b>{{cliente.numcli}}</b>  
-                    Nombre: <b>{{cliente.nombre}} </b>
-                    Direccion: <b>{{cliente.direc}} {{cliente.poblac}} </b> <br>
-                    Enganche: <b>{{cliente.enganche | currency }}</b> 
-                    lta 1/1 : <b>{{cliente.letra1  | currency}}</b>  
-                    N.Letras: <b>{{cliente.nulet}} </b>
-                    de <b>{{cliente.canle | currency}}</b> 
-                    Bonificacion: <b>{{cliente.bonificacion  | currency }} </b><br>
-                    Cargos: <b>{{cliente.cargos  | currency}}</b>  
-                    Abonos: <b>{{cliente.abonos  | currency }}</b> 
-                    Saldo: <b>{{ cliente.cargos - cliente.abonos  | currency }}</b><br>
-                    Compra: <b>{{cliente.compra}} </b>
-                    <br>
-                    Fecha Vta:{{strfechavta}} TasaRecargo: {{tasarecargo_z | currency}}
+                    <table>
+                        <tr>
+                            <td>                       
+                                Codigo: <b>{{cliente.numcli}}</b>  
+                                Nombre: <b>{{cliente.nombre}} </b><br>
+                                Direccion: <b>{{cliente.direc}} {{cliente.poblac}} </b> <br>
+                                Enganche: <b>{{cliente.enganche | currency }}</b> 
+                                lta 1/1 : <b>{{cliente.letra1  | currency}}</b>  
+                                N.Letras: <b>{{cliente.nulet}} </b>
+                                de <b>{{cliente.canle | currency}}</b> 
+                                Bonificacion: <b>{{cliente.bonificacion  | currency }} </b><br>
+                                Cargos: <b>{{cliente.cargos  | currency}}</b>  
+                                Abonos: <b>{{cliente.abonos  | currency }}</b> 
+                                Saldo: <b>{{ cliente.cargos - cliente.abonos  | currency }}</b><br>
+                                Compra: <b>{{cliente.compra}} </b>
+                                <br>
+                                Fecha Vta:{{strfechavta}} TasaRecargo: {{tasarecargo_z | currency}}
+            
+                            </td>
+                            <td>
+                                Vencimientos:<br>
+                                <div class="boxscroll">
+
+                                    <ul>
+                                        <li for="" *ngFor="let mivencimiento of listavencimientos_z" >
+                                            Letra: {{mivencimiento.letra}}/{{cliente.nulet}}
+                                            Vence: {{mivencimiento.vence}}
+                                        </li>
+        
+                                    </ul>
+    
+                                </div>
+                            </td>
+                    </tr>
+                </table>
 
                 </div>
             </div>
@@ -138,7 +160,7 @@
         </div>
     </div>
     <div [hidden]="clienteactivo_z"  id="despliegapoliza">
-        <table id="tbl_renpol" class="table table-striped table-bordered table-hover" >
+        <table id="tbl_renpol" border="1">
             <thead>
                 <tr>
                     <th>Codigo</th>
@@ -181,4 +203,10 @@
         </table>
     </div>
 
+</div>
+<div class="mifooter">
+ Fecha y Hora Local:   <label for="nadie"> {{fechaactual_z}} </label> <br>
+ 
+ FechaHoy Servidor: <label for="">  {{fechahoy_z}} </label><br>
+ FechaHoy Str Servidor: <label for="">  {{fechahoy_z}} </label>
 </div>

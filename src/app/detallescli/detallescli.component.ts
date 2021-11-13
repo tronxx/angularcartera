@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientesService } from '../services/clientes.service'
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { formatNumber,  CommonModule,  CurrencyPipe, formatCurrency, formatDate, DatePipe } from '@angular/common';
 import { isEmpty } from 'rxjs/operators';
@@ -14,6 +15,7 @@ import { Aval } from '../models/aval'
 import { Movclis } from '../models/movclis'
 import { Observcli } from '../models/observcli';
 import { Plazos } from '../models/plazos';
+import { Solicitud } from '../models/solicitud'
 import { DlgedoctaComponent  } from '../common/dlgedocta/dlgedocta.component';
 
 
@@ -27,6 +29,7 @@ export class DetallescliComponent implements OnInit {
   clientes : Cliente[] = [];
   cliente? : Cliente;
   aval? : Aval;
+  solicitud?: Solicitud;
   mismovclis : Movclis[] = [];
   mimovcli? : Movclis;
   observs: Observcli[] = [];
@@ -41,6 +44,12 @@ export class DetallescliComponent implements OnInit {
   tipocontado_z = "C";
   yaobscli_z = false;
   plazoscli_z = false;
+  solicitudcli_z = false;
+  listavencimientos_z = [ {
+      "letra" : "",
+      "vence" : ""
+    }
+  ]
 
   strfecha_z = "";
   mimodelo = {
@@ -50,10 +59,24 @@ export class DetallescliComponent implements OnInit {
   }
 
 
-  constructor(public dialog: MatDialog, private servicioclientes: ClientesService) { }
+  constructor(public dialog: MatDialog, 
+    private route: ActivatedRoute,
+    private servicioclientes: ClientesService) { }
 
   ngOnInit(): void {
+    this.buscarclienteinicial();
   }
+  
+  buscarclienteinicial() {
+    let parnumcli_z = this.route.snapshot.paramMap.get('numcli');
+    if(parnumcli_z) {
+      this.codcli_z = parnumcli_z;
+      this.buscarcliente();
+    }
+
+  }
+
+
 
   buscarcliente() {
     var params_z = {
@@ -68,8 +91,10 @@ export class DetallescliComponent implements OnInit {
           this.cliente = respu;
           this.busca_aval(this.cliente.idcli);
           this.busca_movclis(this.cliente.idcli);
+          this.mostrar_vencimientos();
           this.yaobscli_z = false;
           this.plazoscli_z = false;
+          this.solicitudcli_z = false;
         } else {
           this.alerta("Cliente Inexistente");
         }
@@ -157,6 +182,27 @@ export class DetallescliComponent implements OnInit {
 
   }
 
+  busca_solicitud(idcli_z : number) {
+    if (!this.solicitudcli_z) {
+      var params_z = {
+        modo : "buscar_solicitud_cliente",
+        codigo: this.codcli_z,
+        idcli : idcli_z
+      }
+      console.log("Debug: Estoy en busca solicitud ", idcli_z);
+      this.servicioclientes.buscasolicitud(JSON.stringify(params_z)).subscribe(
+        respu => {
+          if(respu) {
+            this.solicitud = respu;
+          } 
+        }
+      );
+      this.solicitudcli_z = true;
+    }
+
+  }
+
+
   impresion_edocta() {
     let message = "Opciones de Estado de Cuenta";
     const dialogref = this.dialog.open(DlgedoctaComponent, {
@@ -171,11 +217,13 @@ export class DetallescliComponent implements OnInit {
           "modopdf": "N",
           "consolicitud":"N",
           "conobservaciones":"N",
-          "nummaximoobservaciones":0
+          "nummaximoobservaciones":0,
+          "edoctaespecial":"N"
         }
         console.log("Debug: Con Solicitud:", params.datosol, " Numero:", params.numobs);
         if(params.tipoimpresion == "pdf")  paramsedocta.modopdf="S";
         if(params.datosol)   paramsedocta.consolicitud="S";
+        if(params.edoctaespecial) paramsedocta.edoctaespecial="S";
         if(params.observaciones) {
            paramsedocta.conobservaciones="S";
            paramsedocta.nummaximoobservaciones=params.numobs;
@@ -185,6 +233,19 @@ export class DetallescliComponent implements OnInit {
       console.log("Debug: Regrese de Impresion Estado de Cuenta", res);
     });
 
+  }
+
+  mostrar_vencimientos() {
+    let inicial = 1;
+    let misven_z = "";
+    if (this.cliente) {
+      misven_z = this.servicioclientes.busca_vencimientos(
+        this.cliente.fechavta, this.cliente.qom, inicial, this.cliente.nulet
+      );
+      this.listavencimientos_z = JSON.parse(misven_z);
+      // console.log("Debug: Mis vencimientos", misven_z);
+
+    }
   }
 
 

@@ -13,10 +13,13 @@ h1 {
   }
   
   nav a:hover {
-    color: white;
-    background-color: #42545C;
+    color: blue;
+    background-color: white;
   }
   nav a.active {
     background-color: black;
   }
   
+  .derecha {
+    flex: 1 1;
+  }
