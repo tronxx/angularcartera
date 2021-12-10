@@ -17,6 +17,7 @@ export class ConfiguracionService {
 
   cias : Compania[] = [];
   cia ?: Compania;
+  cvecia_z = "";
 
   xzcias = [
     {
@@ -70,6 +71,14 @@ export class ConfiguracionService {
       console.log("Debug: Ya hice llamado a configuracion:", this.config.estado);
     });
 
+  }
+
+  getcvecia () {
+    let micvecia_z="";
+    if(this.cia) {
+      micvecia_z = this.cia.Clave;
+    }
+    return (micvecia_z);
   }
 
   obtenurl () {

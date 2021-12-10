@@ -40,5 +40,6 @@ export interface Cliente {
     numpred: string;
     codpost: string;
     colonia: string;
+    email: string;
 
 }

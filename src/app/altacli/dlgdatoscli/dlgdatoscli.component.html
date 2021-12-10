@@ -3,78 +3,117 @@
     <label for="codigo">Codigo
         <input [disabled]="codigodisabled" type="text" name="codigo" id="codigo" size="12" [(ngModel)]="numcli_z">
     </label>
-    
-    
     <div name="datoscliente">
+        <label for="status">Status
+            <select name="status" id="status" value="{{nvocli.status}}" 
+             [(ngModel)]= "nvocli.status" >
+             <option *ngFor="let mistatus of statuscli" value="{{mistatus.clave}}"
+              [selected]="nvocli.status == mistatus.clave">
+              {{mistatus.descri}}
+             </option>
+            </select>
+
+        </label>
+        <label for="qom">Periodicidad Pago
+            <select name="qom" id="qom" value="{{nvocli.qom}}" (blur)="selecciona_letras_cliente()" [(ngModel)]= "nvocli.qom" >
+                <option *ngFor="let miqom of tipoqom" value="{{miqom.clave}}"
+                  [selected]="nvocli.qom == miqom.clave">
+                  {{miqom.descri}}
+                </option>
+            </select>
+        </label>
+
             <mat-card>
                 <mat-card-title>Nombre del Cliente</mat-card-title>
-                <label for="appat" size="10">Apellido Paterno
+                <label class="ancho80" for="appat" size="10">Apellido Paterno</label>
                     <input type="text" name="appat" id="appat" size="30" [(ngModel)]="nvocli.appat" 
                     oninput="this.value = this.value.toUpperCase()">
     
-                </label> <br>
-                <label for="apmat" size="10" >Apellido Materno
+                <br>
+                <label class="ancho80" for="apmat" size="10" >Apellido Materno</label>
                     <input type="text" name="apmat" id="apmat" size="30" [(ngModel)]="nvocli.apmat" 
                     oninput="this.value = this.value.toUpperCase()">
-                </label>
-                <br> <br>
-                <label for="nombre1" size="10">Nombre1
+                <br> 
+                <label class="ancho80" for="nombre1" size="10">Nombre1</label>
                     <input type="text" name="nombre1" id="nombre1" size="30" [(ngModel)]="nvocli.nompil1"
                     oninput="this.value = this.value.toUpperCase()" >
-                </label> <br>
-                <label for="nombre2"  size="10">Nombre2
+                <br>
+                <label class="ancho80" for="nombre2"  size="10">Nombre2</label>
                     <input type="text" name="nombre2" id="nombre2" size="30" [(ngModel)]="nvocli.nompil2"
                     oninput="this.value = this.value.toUpperCase()" >
-                </label>
-                
             </mat-card>
         <mat-card>
             <mat-card-title>Direccion del Cliente</mat-card-title>
-            <label for="calle">Calle y Cruzamientos
+            <label class="ancho80" for="calle">Calle y Cruzamientos</label>
                 <input type="text" name="calle" id="calle" size="30" [(ngModel)]="nvocli.calle"
                 oninput="this.value = this.value.toUpperCase()" >
-            </label> <br>
-            <label for="predio">Num.Predio
+            <br>
+            <label class="ancho80" for="predio">Num.Predio</label>
                 <input type="text" name="predio" id="predio" size="30" [(ngModel)]="nvocli.numpred"
                 oninput="this.value = this.value.toUpperCase()" >
-            </label> 
             <br>
-            <label for="colonia">Colonia
+            <label class="ancho80" for="colonia">Colonia</label>
                 <input type="text" name="colonia" id="colonia" size="30" [(ngModel)]="nvocli.colonia" 
                 oninput="this.value = this.value.toUpperCase()">
-            </label> <br>
-            <label for="codpost">Codigo Postal
+            <br>
+            <label class="ancho80" for="codpost">Codigo Postal</label>
                 <input type="text" name="codpost" id="codpost" size="30" [(ngModel)]="nvocli.codpost"
                 oninput="this.value = this.value.toUpperCase()" >
-            </label> 
             <br>
-            <label for="poblacion">Poblacion
-                <input type="text" name="poblacion" id="poblacion" size="30" [(ngModel)]="nvocli.poblac" >
-            </label> <br>
-            <label for="emailcli">Email Cliente
-                <input type="text" name="emailcli" id="emailcli" size="30" [(ngModel)]="nvocli.email" >
-            </label>
+            <label class="ancho80" for="poblacion">Poblacion</label>
+                <select name="poblacion" id="poblacion" value="{{nvocli.poblac}}" 
+                 [(ngModel)]= "nvocli.poblac" >
+                 <option *ngFor="let mipoblacs of poblaciones" value="{{mipoblacs.ciudad}}"
+                  [selected]="nvocli.poblac == mipoblacs.ciudad">
+                  {{mipoblacs.ciudad}}
+                 </option>
+                </select>
+            <br>
+            <label class="ancho80" for="emailcli">Email Cliente</label>
+            <input type="text" name="emailcli" id="emailcli" size="30" [(ngModel)]="nvocli.email" >
         </mat-card>
         <br>
-        <label for="qom">Periodicidad Pago
-            <select name="qom" id="qom" [(ngModel)]="nvocli.qom" (blur)="selecciona_letras_cliente()">
-                <option value="Q">Quincenal</option>
-                <option value="C">Contado</option>
-            </select>
-    
-        </label>
+        <mat-card *ngIf="conaval && aval" >
+            <mat-card-title>Datos del Aval</mat-card-title>
+            <label class="ancho80" for="appataval" size="10">Apellido Paterno</label>
+            <input type="text" name="appataval" id="appataval" size="30" [(ngModel)]="aval.appat" 
+                oninput="this.value = this.value.toUpperCase()">
+
+            <br>
+            <label class="ancho80" for="apmataval" size="10" >Apellido Materno</label>
+            <input type="text" name="apmataval" id="apmataval" size="30" [(ngModel)]="aval.apmat" 
+                oninput="this.value = this.value.toUpperCase()">
+            <br> 
+            <label class="ancho80" for="nombre1aval" size="10">Nombre1</label>
+            <input type="text" name="nombre1aval" id="nombre1aval" size="30" [(ngModel)]="aval.nompil1"
+                oninput="this.value = this.value.toUpperCase()" >
+            <br>
+            <label class="ancho80" for="nombre2aval"  size="10">Nombre2</label>
+            <input type="text" name="nombre2aval" id="nombre2aval" size="30" [(ngModel)]="aval.nompil2"
+                oninput="this.value = this.value.toUpperCase()" >
+            <br>
+            <label class="ancho80" for="dir1aval"  size="10">Direccion</label>
+            <input type="text" name="dir1aval" id="dir1aval" size="30" [(ngModel)]="aval.dirav1"
+                    oninput="this.value = this.value.toUpperCase()" >
+            <br>
+            <label class="ancho80" for="dir2aval"  size="10">Direccion 2</label>
+            <input type="text" name="dir2aval" id="dir2aval" size="30" [(ngModel)]="aval.dirav2"
+                            oninput="this.value = this.value.toUpperCase()" >
+        </mat-card>
+
         <label for="opcion">Opcion
             <select name="opcion" id="opcion" value="{{nvocli.opcion}}" 
              [(ngModel)]= "nvocli.opcion" >
-            <option *ngFor="let miopcion of cartaspro" value="{{miopcion.clave}}"
+             <option *ngFor="let miopcion of cartaspro" value="{{miopcion.clave}}"
               [selected]="nvocli.opcion == miopcion.clave">
               {{miopcion.descri}}
-              </option>
-        </select>
+             </option>
+            </select>
         </label>
         <label for="pordesc">% Descto
             <input type="number" name="pordesc" id="pordesc" size="10" [(ngModel)]="nvocli.pdsc" >
         </label>
+        <br>
         <label for="ubicacion">Ubicacion 
             <select name="ubicacion" id="ubicacion" value="{{nvocli.ubica}}" 
              [(ngModel)]= "nvocli.ubica" >
@@ -84,7 +123,6 @@
               </option>
             </select>
         </label>
-        <br>
         <label for="ticte">Tipo Cte
             <select name="ticte" id="ticte" value="{{nvocli.ticte}}" 
              [(ngModel)]= "nvocli.ticte" >
@@ -119,6 +157,10 @@
         <label for="servicio">Servicio
             <input type="number" name="servicio" id="servicio" size="10" [(ngModel)]="nvocli.servicio">
         </label>
+        <label for="letra1">Letra 1/1
+            <input type="number" [disabled]="letra1disabled" name="letra1" id="letra1" size="10" [(ngModel)]="nvocli.letra1">
+        </label>
+        <br>
         <label for="enganche">Enganche
             <input type="number" name="enganche" id="enganche" size="10" 
             (blur)="calcu_precio_lista()" [(ngModel)]="nvocli.enganche">
@@ -126,9 +168,6 @@
         <label for="precon">Precio.Lista
             <input type="number" name="precon" id="precon" size="10" 
              [(ngModel)]="nvocli.preciolista">
-        </label>
-        <label for="letra1">Letra 1/1
-            <input type="number" [disabled]="letra1disabled" name="letra1" id="letra1" size="10" [(ngModel)]="nvocli.letra1">
         </label>
         <br>
         <label for="nulets">Numero Letras

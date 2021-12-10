@@ -45,6 +45,7 @@ export class PolizasComponent implements OnInit {
   errorespoliza = [""]
   listaletras = [""];
   enespera = false;
+  ultimo_z = "";
   
   cobratario = {
     "idpromot": 0,
@@ -171,7 +172,11 @@ export class PolizasComponent implements OnInit {
   ngOnInit(): void {
     var mistorage_z  = localStorage.getItem('token') || "{}";
     this.usrreg_z =  JSON.parse(mistorage_z);
+    this.fechapol_z = this.strfecha_z;
     //console.log("Usuario:" + mistorage_z);
+    this.fechaactual_z = new Date();
+    this.datospolenabled_z = (this.usrreg_z.nivel == "S");
+    
     this.errorespoliza=[];
     this.buscar_codigos_poliza();
     this.cia_z =  this.serviciopolizas.obtendatoscia();
@@ -197,7 +202,6 @@ export class PolizasComponent implements OnInit {
         }
       }
     );
-    this.fechaactual_z = new Date();
   }
 
   hayerrorpoliza () {
@@ -207,7 +211,6 @@ export class PolizasComponent implements OnInit {
   buscar_poliza() {
 
     this.enespera = true;
-    if(this.usrreg_z.nivel =="N") {
       //this.buscar_codigos_poliza();
       var params = {
         "modo":"acceder_poliza",
@@ -215,7 +218,6 @@ export class PolizasComponent implements OnInit {
         "crearpoliza":"S",
         "tda":this.tda_z
       }
-      this.datospolenabled_z = false;
       this.serviciopolizas.buscapoliza(JSON.stringify(params)).subscribe(
         respu => {
           this.errorespoliza=[];
@@ -233,8 +235,8 @@ export class PolizasComponent implements OnInit {
           }
           this.enespera = false;
         }
-      )
-    }
+      );
+
 
   }
 
@@ -721,14 +723,16 @@ export class PolizasComponent implements OnInit {
   }
 
   clickaceptarpago() {
+    let estemov_z = this.codcli_z + ":" + this.datospago.concepto + " " + this.datospago.conceptocompl +  ":" + this.datospago.importe.toString;
     if(this.validarpago()) {
-      this.confirma_aceptar_pago();
+        this.confirma_aceptar_pago();
     } else {
       this.alerta("Hay Errores en el pago");
     }
   }
 
   confirma_aceptar_pago() {
+    let estemov_z = this.codcli_z + ":" + this.datospago.concepto + " " + this.datospago.conceptocompl +  ":" + this.datospago.importe.toString();
     const dialogref = this.dialog.open(DialogBodyComponent, {
       width:'350px',
       data: 'Seguro de aceptar este Pago?'
@@ -736,7 +740,12 @@ export class PolizasComponent implements OnInit {
     dialogref.afterClosed().subscribe(res => {
       //console.log("Debug", res);
       if(res) {
-        this.si_aceptarpago();
+        if (this.ultimo_z == estemov_z) {
+          this.alerta("Está seguro de cobrar el mismo movimiento dos veces ?");
+        } else {
+          this.si_aceptarpago();
+          this.ultimo_z = estemov_z;
+        }
       }
     });
   

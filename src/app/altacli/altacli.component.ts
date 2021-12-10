@@ -21,6 +21,7 @@ import { DlgedoctaComponent  } from '../common/dlgedocta/dlgedocta.component';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { DlgdatoscliComponent } from './dlgdatoscli/dlgdatoscli.component';
+import { DlgdatosmovcliComponent } from './dlgdatosmovcli/dlgdatosmovcli.component';
 
 @Component({
   selector: 'app-altacli',
@@ -39,6 +40,9 @@ export class AltacliComponent implements OnInit {
   observs: Observcli[] = [];
   miobserv? : Observcli;
   ubivta : Ubivta[] = [];
+  solicitudcli_z = false;
+  conaval = true;
+  modoqom_z = [ { clave:"C", descri:"CONTADO"}];
 
   tictes_z = [
     { clave:"PC", descri:"PRIMER CREDITO"},
@@ -64,12 +68,15 @@ export class AltacliComponent implements OnInit {
   ]
   
   diasmes_z = [ {dia: 1}];
+  mescum = "";
 
   numcli_z = "";
   nvocli = {
     modo : "agregar_cliente",
     idcli: 0,
     numcli: "",
+    nombre:"",
+    direc:"",
     appat:"",
     apmat:"",
     nompil1:"",
@@ -110,6 +117,17 @@ export class AltacliComponent implements OnInit {
     mescum: 1
   }
 
+  usrreg_z = {
+    "idusuario":0,
+    "login":"",
+    "nombre":"",
+    "token":"",
+    "acceso": "false",
+    "iniciales":"",
+    "nivel":""
+  }
+
+
   constructor(public dialog: MatDialog, 
     private route: ActivatedRoute,
     private location: Location,
@@ -117,6 +135,8 @@ export class AltacliComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    var mistorage_z  = localStorage.getItem('token') || "{}";
+    this.usrreg_z =  JSON.parse(mistorage_z);
     this.buscarclienteinicial();
   }
 
@@ -127,7 +147,6 @@ export class AltacliComponent implements OnInit {
   buscarclienteinicial() {
     let parnumcli_z = this.route.snapshot.paramMap.get('numcli');
     this.obtencatalogos();
-    this.creadiasmes();
     if(parnumcli_z && parnumcli_z != "nuevocli" ) { 
       this.numcli_z = String(parnumcli_z ); 
       this.nvocli.modo = "agregar_cliente";
@@ -164,16 +183,34 @@ export class AltacliComponent implements OnInit {
           });
           dialogref.afterClosed().subscribe(res => {
             if(res) {
-
               this.pidedatosnuevocliente();
             }
           });
-      
+     
         }
       }
     );
 
   }
+
+  busca_aval(idcli: number) {
+    var params_z = {
+      modo : "buscar_aval",
+      codigo: this.numcli_z,
+      idcli : idcli
+    }
+    this.servicioclientes.buscaavalaltas(JSON.stringify(params_z)).subscribe(
+      respu => {
+        if(respu) {
+          this.aval = respu;
+          console.log("Debug:", this.aval);
+         }
+      }
+    );
+
+  }
+
+
 
   obtencatalogos() {
     var params_z = {
@@ -198,6 +235,8 @@ export class AltacliComponent implements OnInit {
     if(this.cliente) {
       this.nvocli.idcli = this.cliente.idcli;
       this.nvocli.numcli = this.cliente.numcli;
+      this.nvocli.nombre = this.cliente.nombre;
+      this.nvocli.direc = this.cliente.direc;
       this.nvocli.appat = this.cliente.appat;
       this.nvocli.apmat = this.cliente.apmat;
       this.nvocli.nompil1 = this.cliente.nompil1;
@@ -221,28 +260,54 @@ export class AltacliComponent implements OnInit {
       this.nvocli.servicio = this.cliente.servicio;
       this.nvocli.enganche = this.cliente.enganche;
       this.nvocli.preciolista = this.cliente.preciolista;
+      this.nvocli.letra1 = this.cliente.letra1;
       this.nvocli.qom = this.cliente.qom;
       this.nvocli.nulet = this.cliente.nulet;
       this.nvocli.canle = this.cliente.canle;
+      this.nvocli.cargos = this.cliente.cargos;
+      this.nvocli.abonos = this.cliente.abonos;
       this.nvocli.bonificacion = this.cliente.bonificacion;
       this.nvocli.compra = this.cliente.compra;
       this.nvocli.calle = this.cliente.calle;
       this.nvocli.numpred = this.cliente.numpred;
       this.nvocli.codpost = this.cliente.codpost;
       this.nvocli.colonia = this.cliente.colonia;
-    }
+      this.nvocli.email = this.cliente.email;
+      this.mescum = this.meses_z[this.nvocli.mescum].descri;
+      this.modoqom_z = [];
+      if(this.nvocli.qom == "C") this.modoqom_z .push({clave:"C", descri:"CONTADO"})
+      if(this.nvocli.qom == "Q") this.modoqom_z .push({clave:"Q", descri:"QUINCENAL"})
+      if(this.nvocli.qom == "M") this.modoqom_z .push({clave:"M", descri:"MENSUAL"})
+      this.busca_movclis(this.nvocli.idcli);
+      if(this.nvocli.qom != "C") {
+        this.conaval = true;
+        this.busca_aval(this.nvocli.idcli);
+      } else {
+        this.conaval = false;
+        this.aval = <Aval> {};
+      }
+      this.busca_movclis(this.nvocli.idcli);
+}
 
   }
 
-  creadiasmes() {
-    let ii_z = 1;
-    let minumlet_z = "";
-    this.diasmes_z=[];
-    for (ii_z = 1; ii_z <= 31; ii_z++) {
-      this.diasmes_z.push({ dia: ii_z});
+  busca_movclis(idcli_z : number) {
+    var params_z = {
+      modo : "buscar_movtos_cliente",
+      codigo: this.numcli_z,
+      idcli : idcli_z
     }
+    console.log("Debug: Estoy en busca movclis ", idcli_z);
+    this.servicioclientes.buscamovtos_altas(JSON.stringify(params_z)).subscribe(
+      respu => {
+        if(respu) {
+          this.mismovclis = respu;
+        } 
+      }
+    );
   }
 
+  
   pidedatosnuevocliente () {
     const dialogcli = this.dialog.open(DlgdatoscliComponent, {
       width:'650px',
@@ -250,12 +315,46 @@ export class AltacliComponent implements OnInit {
     });
     dialogcli.afterClosed().subscribe(res => {
       if (res) {
-        this.nvocli = res;
-        this.agrega_nuevo_cliente();
+        res.modo = "agregar_cliente";
+        res.clienterespu.modo="agregar_cliente";
+        this.servicioclientes.agrega_nuevo_cliente(JSON.stringify(res)).subscribe(
+          respu => {
+            if(respu) {
+              this.buscarcliente();
+    
+            } else {
+              this.alerta("Ocurrió un error en alta");
+            }
+          }
+        );
       }
       console.log("Debug: Regrese de Asignar datos", res);
     });
-}
+  }
+
+  modificarcliente () {
+    const dialogcli = this.dialog.open(DlgdatoscliComponent, {
+      width:'650px',
+      data:this.numcli_z
+    });
+    dialogcli.afterClosed().subscribe(res => {
+      if (res) {
+        res.modo = "modificar_cliente";
+        res.clienterespu.modo="modificar_cliente";
+        this.servicioclientes.agrega_nuevo_cliente(JSON.stringify(res)).subscribe(
+          respu => {
+            if(respu) {
+              this.buscarcliente();
+            } else {
+              this.alerta("Ocurrió un error en alta");
+            }
+          }
+        );
+
+      }
+      console.log("Debug: Regrese de Asignar datos", res);
+    });
+  }
 
   alerta(mensaje: string) {
     const dialogref = this.dialog.open(DialogBodyComponent, {
@@ -269,9 +368,172 @@ export class AltacliComponent implements OnInit {
   }
 
   agrega_nuevo_cliente() {
+    
+    this.servicioclientes.agrega_nuevo_cliente(JSON.stringify(this.nvocli)).subscribe(
+      respu => {
+        if(respu) {
+          this.buscarcliente();
+
+        } else {
+          this.alerta("Ocurrió un error en alta");
+        }
+      }
+    );
+  }
+
+  agregar_movto() {
+    this.pidedatos_movcli();
+  }
+
+  pidedatos_movcli () {
+    const dialogmov = this.dialog.open(DlgdatosmovcliComponent, {
+      width:'650px',
+      data:"NUEVO"
+    });
+    dialogmov.afterClosed().subscribe(res => {
+      if (res) {
+        this.mimovcli = res;
+        this.si_agregar_movto();
+      }
+      console.log("Debug: Regrese de Asignar datos", res);
+    });
+  }
+
+  si_agregar_movto() {
+    let params_z = {
+      modo:"agregar_movimiento",
+      idcli:0,
+      numcli:"",
+      fecha:"",
+      concepto:"",
+      tipag:"",
+      recobon:0,
+      importe:0,
+      iniciales:""
+    }
+    let nvoabono_z = 0;
+    if(this.cliente) {
+      params_z.idcli = this.cliente.idcli;
+      params_z.numcli = this.cliente.numcli;
+    }
+    if(this.mimovcli) {
+      params_z.fecha = this.mimovcli.fechamov;
+      params_z.concepto = this.mimovcli.concep;
+      params_z.tipag = this.mimovcli.tipag;
+      if(params_z.tipag == "AB") {
+        params_z.recobon = this.mimovcli.bonificacion;
+      } else {
+        params_z.recobon = this.mimovcli.recargo;
+      }
+      params_z.importe = this.mimovcli.importe;
+      nvoabono_z = this.mimovcli.importe;
+
+      params_z.iniciales = this.usrreg_z.iniciales;
+    }
+    this.servicioclientes.agrega_nuevo_movimiento(JSON.stringify(params_z)).subscribe(
+      respu => {
+        console.log("Debug:" , respu);
+        if(respu) {
+          this.busca_movclis(params_z.idcli);
+          this.actualizacliente(nvoabono_z);
+        } else {
+          this.alerta("Ocurrió un error en agregar Movimientos");
+        }
+      }
+    );
+
 
   }
-  
 
+  actualizacliente (abono: number) {
+    if(this.cliente) {
+      this.cliente.abonos += abono;
+    }
+    if(this.nvocli) {
+      this.nvocli.abonos += abono;
+    }
+  }
+
+  modificar_movto(movcli: Movclis) {
+    let idcli_z = movcli.idcli;
+    let miabono_z = movcli.importe;
+    const dialogmov = this.dialog.open(DlgdatosmovcliComponent, {
+      width:'650px',
+      data:JSON.stringify(movcli)
+    });
+    dialogmov.afterClosed().subscribe(res => {
+      if (res) {
+        this.mimovcli = res;
+        let params_z = {
+          idcli:idcli_z,
+          numcli:this.numcli_z,
+          idmvcli:res.idmvcli,
+          fecha:res.fechamov,
+          concepto:res.concep,
+          tipag:res.tipag,
+          recobon:0,
+          importe:res.importe,
+          iniciales:this.usrreg_z.iniciales
+        }
+        miabono_z = res.importe - miabono_z;
+        if(params_z.tipag == "AB") {
+          params_z.recobon = res.bonificacion;
+        } else {
+          params_z.recobon = res.recargo;
+        }
+    
+        this.servicioclientes.modificar_movimiento(JSON.stringify(params_z)).subscribe(
+          respu => {
+            respu.iniciales = this.usrreg_z.iniciales;
+            console.log("Debug:" , respu);
+            if(respu) {
+              this.busca_movclis(idcli_z);
+              this.actualizacliente(miabono_z);
+
+            } else {
+              this.alerta("Ocurrió un error en agregar Movimientos");
+            }
+          }
+        );
+      }
+    });
+  }
+
+  eliminar_movto(movcli: Movclis) {
+    let idcli_z = movcli.idcli;
+    let miabono_z = movcli.importe * -1;
+    const dialogref = this.dialog.open(DialogBodyComponent, {
+      width:'350px',
+      data: 'Seguro de Eliminar Movimiento: ' + movcli.fechamov + 
+      " " + movcli.concep 
+    });
+    dialogref.afterClosed().subscribe(res => {
+      if(res) {
+        this.servicioclientes.eliminar_movimiento(JSON.stringify(movcli)).subscribe(
+          respu => {
+            respu.iniciales = this.usrreg_z.iniciales;
+            console.log("Debug:" , respu);
+            if(respu) {
+              this.busca_movclis(idcli_z);
+              this.actualizacliente(miabono_z);
+            } else {
+              this.alerta("Ocurrió un error en agregar Movimientos");
+            }
+          }
+        );
+
+      }
+      //console.log("Debug", res);
+    });
+
+  }
+
+  modificar_agente(miagente) {
+
+  }
+
+  eliminar_agente(miagente) {
+    
+  }
 
 }

@@ -19,6 +19,7 @@ import { Cartapro } from '../../models/cartapro';
 import { Ubivta } from '../../models/ubivta';
 import { Promotor } from '../../models/promotor';
 import { Nulets } from '../../models/nulets';
+import { Poblacs } from '../../models/poblacs';
 import { DlgedoctaComponent  } from '../../common/dlgedocta/dlgedocta.component';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -35,7 +36,6 @@ export class DlgdatoscliComponent implements OnInit {
   clientes : Cliente[] = [];
   cliente? : Cliente;
   cartaspro : Cartapro[] = [];
-  aval? : Aval;
   solicitud?: Solicitud;
   mismovclis : Movclis[] = [];
   mimovcli? : Movclis;
@@ -44,6 +44,8 @@ export class DlgdatoscliComponent implements OnInit {
   ubivta : Ubivta[] = [];
   promotor : Promotor[] = [];
   nulets : Nulets[] = [];
+  poblaciones : Poblacs[] = [];
+  conaval = false;
 
   tictes_z = [
     { clave:"PC", descri:"PRIMER CREDITO"},
@@ -53,6 +55,18 @@ export class DlgdatoscliComponent implements OnInit {
     { clave:"TC", descri:"TARJETA CREDITO"}
 
   ]
+
+  tipoqom = [
+    { clave:"Q", descri:"Quincenal"},
+    { clave:"C", descri:"Contado"}
+  ]
+
+  statuscli = [
+    { clave:"*", descri:"Status1"},
+    { clave:"", descri:"Status2" }
+
+  ]
+
   meses_z = [
     { clave:1, descri:"ENERO"},
     { clave:2, descri:"FEBRERO"},
@@ -79,6 +93,8 @@ export class DlgdatoscliComponent implements OnInit {
     modo: "agregar_cliente",
     idcli: 0,
     numcli: "",
+    nombre:"",
+    direc:"",
     appat:"",
     apmat:"",
     nompil1:"",
@@ -88,7 +104,7 @@ export class DlgdatoscliComponent implements OnInit {
     codpost:"",
     colonia: "",
     poblac: "",
-    status: "",
+    status: "*",
     fechavta: "",
     qom: "Q",
     ticte: "",
@@ -119,6 +135,8 @@ export class DlgdatoscliComponent implements OnInit {
     mescum: 1
   }
 
+  aval? : Aval;
+
 
   constructor(public dialog: MatDialog, 
     public dialogRef: MatDialogRef<DlgdatoscliComponent>,
@@ -142,12 +160,11 @@ export class DlgdatoscliComponent implements OnInit {
       if(parnumcli_z && parnumcli_z != "nuevocli" ) { 
         this.numcli_z = String(parnumcli_z ); 
         this.nvocli.modo = "agregar_cliente";
+        this.nvocli.numcli = this.numcli_z;
         this.buscarcliente();
       } else {
         this.nvocli.modo = "modificar_cliente";
       }
-      
-  
     }
   
     buscarcliente() {
@@ -161,6 +178,8 @@ export class DlgdatoscliComponent implements OnInit {
         respu => {
           if(respu) {
             this.cliente = respu;
+            this.nvocli.qom = this.cliente.qom;
+            this.buscanulets() ;
             this.asignaclienteanuevocli();
             //this.busca_aval(this.cliente.idcli);
             //this.busca_movclis(this.cliente.idcli);
@@ -197,6 +216,15 @@ export class DlgdatoscliComponent implements OnInit {
       this.servicioclientes.busca_promotores(JSON.stringify(paramspromo_z)).subscribe(
         respu => {
           this.promotor = respu;
+        }
+      );
+      let parampoblac_z = {
+        modo :"buscar_poblacs",
+        codprom : "-1"
+      }
+      this.servicioclientes.obtenpoblacs(JSON.stringify(parampoblac_z)).subscribe(
+        respu => {
+          this.poblaciones = respu;
         }
       );
       this.buscanulets();
@@ -251,10 +279,31 @@ export class DlgdatoscliComponent implements OnInit {
         this.nvocli.numpred = this.cliente.numpred;
         this.nvocli.codpost = this.cliente.codpost;
         this.nvocli.colonia = this.cliente.colonia;
+        this.selecciona_letras_cliente()
+        this.busca_aval(this.nvocli.idcli);
       }
   
     }
 
+    busca_aval(idcli: number) {
+      var params_z = {
+        modo : "buscar_aval",
+        codigo: this.numcli_z,
+        idcli : idcli
+      }
+      this.servicioclientes.buscaavalaltas(JSON.stringify(params_z)).subscribe(
+        respu => {
+          if(respu) {
+            this.aval = respu;
+          } else {
+            this.aval = <Aval> {}
+            this.aval.idcli = -1;
+          }
+        }
+      );
+  
+    }
+  
     calcu_precio_lista() {
        if(this.nvocli.qom == "C") {
          this.nvocli.preciolista = (.01) * Math.round( this.nvocli.enganche /  ( this.nvocli.piva / 100 + 1) * 100);
@@ -271,11 +320,13 @@ export class DlgdatoscliComponent implements OnInit {
         this.canledisabled = true;
         this.bonifdisabled = true;
         this.letra1disabled = true;
+        this.conaval=false;
 
       } else {
         this.canledisabled = false;
         this.bonifdisabled = false;
         this.letra1disabled = false;
+        this.conaval=true;
 
       }
       this.buscanulets();
@@ -290,10 +341,7 @@ export class DlgdatoscliComponent implements OnInit {
       }
     }
   
-    pidedatosnuevocliente () {
-      
-    }
-  
+    
     alerta(mensaje: string) {
       const dialogref = this.dialog.open(DialogBodyComponent, {
         width:'350px',
@@ -306,7 +354,12 @@ export class DlgdatoscliComponent implements OnInit {
     }
   
     closeyes() {
-      this.dialogRef.close(this.nvocli);
+      let respuesta = {
+        modo:"",
+        clienterespu: this.nvocli,
+        avalrespu: this.aval
+      }
+      this.dialogRef.close(respuesta);
     }
   
     closeno() {

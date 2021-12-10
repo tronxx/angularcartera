@@ -13,6 +13,7 @@ import { Cartapro } from '../models/cartapro';
 import { Ubivta } from '../models/ubivta';
 import { Promotor } from '../models/promotor';
 import { Nulets } from '../models/nulets';
+import { Poblacs } from '../models/poblacs';
 
 @Injectable({
   providedIn: 'root'
@@ -98,8 +99,23 @@ export class ClientesService {
     
     return this.http.post<Ubivta[]>(miurl, parametros, {'headers':headers}).
     pipe(
-      tap(_ => this.log('fetched CartasProm')),
+      tap(_ => this.log('fetched Ubivta')),
       catchError(this.handleError<Ubivta[]>('Ocurrio un error en Post obten Ubivta'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  obtenpoblacs ( parametros: string): Observable<Poblacs[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    
+    return this.http.post<Poblacs[]>(miurl, parametros, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Ciudades')),
+      catchError(this.handleError<Poblacs[]>('Ocurrio un error en Post obten Ubivta'))
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
@@ -113,14 +129,82 @@ export class ClientesService {
     
     return this.http.post<any>(miurl, misparams, {'headers':headers}).
     pipe(
-      tap(_ => this.log('agregar pago ok')),
+      tap(_ => this.log('agregar cliente ok')),
       catchError(this.handleError<Cliente>('Ocurrio un error en agregar_cliente'))
+
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  agrega_nuevo_movimiento( parametros:string): Observable<any> {
+    let misparams = parametros;
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=JSON.stringify(misparams);
+    console.log("Debug: misparams", misparams);
+    
+    return this.http.post<any>(miurl, misparams, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('agregar movimiento ok')),
+      catchError(this.handleError<Cliente>('Ocurrio un error en agregar_movimiento'))
 
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
 
 
   }
+
+  modificar_movimiento( parametros:string): Observable<any> {
+    let mispar_z = JSON.parse(parametros);
+    let misparams = {
+        modo:"modificar_movimiento",
+        idcli: mispar_z.idcli,
+        coa: 'A',
+        tipag: mispar_z.tipag,
+        recobon: mispar_z.recobon,
+        importe: mispar_z.importe,
+        ace: 'E',
+        iniciales: mispar_z.iniciales,
+        fecha: mispar_z.fecha,
+        idmvcli: mispar_z.idmvcli,
+        numcli: mispar_z.numcli,
+        concepto: mispar_z.concepto
+    };
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=JSON.stringify(misparams);
+    console.log("Debug: misparams", misparams);
+    
+    return this.http.post<any>(miurl, JSON.stringify(misparams), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('modificar movimiento ok')),
+      catchError(this.handleError<Cliente>('Ocurrio un error en modifcar_movimiento'))
+
+    );
+  }
+
+  eliminar_movimiento( parametros:string): Observable<any> {
+    let mispar_z = JSON.parse(parametros);
+    let misparams = {
+        modo:"eliminar_movimiento",
+        idcli: mispar_z.idcli,
+        importe: mispar_z.importe,
+        fecha: mispar_z.fechamov,
+        idmvcli: mispar_z.idmvcli
+    };
+    let miurl = this.url + "altas/serviciosaltas.php";
+    const headers = { 'content-type': 'text/plain'};
+    const body=JSON.stringify(misparams);
+    console.log("Debug: misparams", misparams);
+    
+    return this.http.post<any>(miurl, JSON.stringify(misparams), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('eliminar movimiento ok')),
+      catchError(this.handleError<Cliente>('Ocurrio un error en eliminar_movimiento'))
+
+    );
+  }
+
 
   obtennulets ( parametros: string): Observable<Nulets[]> {
     
@@ -170,6 +254,28 @@ export class ClientesService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  buscaavalaltas( parametros: string): Observable<Aval> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "buscar_aval",
+      idcli: misparams.idcli
+    }
+
+    console.log("Debug: Estoy en busca Aval Altas", parametros);
+  
+    return this.http.post<Aval>(miurl, JSON.stringify(misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Aval')),
+      catchError(this.handleError<Aval>('Ocurrio un error en Post obten aval altas'))
+    );
+  }
+
+
   buscamovtos( parametros: string): Observable<Movclis[]> {
     
     let respu_z = "";
@@ -185,6 +291,23 @@ export class ClientesService {
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
+
+  buscamovtos_altas( parametros: string): Observable<Movclis[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: Estoy en busca movtos altas", parametros);
+  
+    return this.http.post<Movclis[]>(miurl, parametros, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Movtos Altas')),
+      catchError(this.handleError<Movclis[]>('Ocurrio un error en Post obten movtos_altas'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
 
   buscaobservs( parametros: string): Observable<Observcli[]> {
     

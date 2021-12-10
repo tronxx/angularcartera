@@ -6,4 +6,8 @@ export interface Aval {
     dirav2: string;
     compra: string;
     linea: string;
+    appat: string;
+    apmat: string;
+    nompil1: string;
+    nompil2: string;
 }

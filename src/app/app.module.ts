@@ -33,6 +33,12 @@ import { ConsupolComponent } from './consupol/consupol.component';
 import { AltacliComponent } from './altacli/altacli.component';
 import { RelvtasComponent } from './relvtas/relvtas.component';
 import { DlgdatoscliComponent } from './altacli/dlgdatoscli/dlgdatoscli.component';
+import { DlgdatosmovcliComponent } from './altacli/dlgdatosmovcli/dlgdatosmovcli.component';
+import { DatossolicitComponent } from './altacli/datossolicit/datossolicit.component';
+import { DlgdatosavalComponent } from './altacli/dlgdatosaval/dlgdatosaval.component';
+import { DlgdatosvendedorComponent } from './altacli/dlgdatosvendedor/dlgdatosvendedor.component';
+import { DlgDatosSolicComponent } from './altacli/dlg-datos-solic/dlg-datos-solic.component';
+import { DlgDatosVndComponent } from './altacli/dlg-datos-vnd/dlg-datos-vnd.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +56,13 @@ import { DlgdatoscliComponent } from './altacli/dlgdatoscli/dlgdatoscli.componen
     ConsupolComponent,
     AltacliComponent,
     RelvtasComponent,
-    DlgdatoscliComponent
+    DlgdatoscliComponent,
+    DlgdatosmovcliComponent,
+    DatossolicitComponent,
+    DlgdatosavalComponent,
+    DlgdatosvendedorComponent,
+    DlgDatosSolicComponent,
+    DlgDatosVndComponent
   ],
   imports: [
     BrowserModule,
