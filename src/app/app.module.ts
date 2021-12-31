@@ -39,6 +39,8 @@ import { DlgdatosavalComponent } from './altacli/dlgdatosaval/dlgdatosaval.compo
 import { DlgdatosvendedorComponent } from './altacli/dlgdatosvendedor/dlgdatosvendedor.component';
 import { DlgDatosSolicComponent } from './altacli/dlg-datos-solic/dlg-datos-solic.component';
 import { DlgDatosVndComponent } from './altacli/dlg-datos-vnd/dlg-datos-vnd.component';
+import { DlgfacturaComponent } from './altacli/dlgfactura/dlgfactura.component';
+import { DlgrenfacComponent } from './altacli/dlgrenfac/dlgrenfac.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +64,9 @@ import { DlgDatosVndComponent } from './altacli/dlg-datos-vnd/dlg-datos-vnd.comp
     DlgdatosavalComponent,
     DlgdatosvendedorComponent,
     DlgDatosSolicComponent,
-    DlgDatosVndComponent
+    DlgDatosVndComponent,
+    DlgfacturaComponent,
+    DlgrenfacComponent
   ],
   imports: [
     BrowserModule,

@@ -1,1 +1,27 @@
-<p>dlg-datos-vnd works!</p>
+<div mat-dialog-content>
+    <form #formularioCliente="ngForm" (ngSubmit)="formularioEnviado()" *ngIf= "cliagente">
+        <div name="datosagentecli">
+            <mat-card>
+                <mat-card-title>Datos de Comision de Vendedor</mat-card-title>
+                <label class="ancho80" for="tipago">Vendedor</label>
+                <select name="codvnd" id="codvnd" value="{{cliagente.codvnd}}"
+                      [(ngModel)]= "cliagente.codvnd" >
+                     <option *ngFor="let mivendedor of vendedores" value="{{mivendedor.codvnd}}"
+                       [selected]="mivendedor.codvnd == cliagente.codvnd">
+                       {{mivendedor.nombre}}
+                       </option>
+                </select>
+                <br>
+
+                <label class="ancho80" for="comision">Comision</label>
+                <input type="number" name="comision" id="comision" size="10"    [(ngModel)]= "cliagente.comis" >
+            </mat-card>
+        </div>
+
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>
+    <button mat-raised-button  color="primary"   (click)="closeyes()">Aceptar</button>
+</div>
+

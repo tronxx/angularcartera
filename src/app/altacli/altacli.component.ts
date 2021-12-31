@@ -17,11 +17,17 @@ import { Observcli } from '../models/observcli';
 import { Solicitud } from '../models/solicitud';
 import { Cartapro } from '../models/cartapro';
 import { Ubivta } from '../models/ubivta';
+import { Cliagentes } from '../models/cliagentes';
+import { Factura } from '../models/facturas';
+import { Renfacfo } from '../models/renfacfo';
+import { Tarjetatc } from '../models/tipostarjetastc';
 import { DlgedoctaComponent  } from '../common/dlgedocta/dlgedocta.component';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { DlgdatoscliComponent } from './dlgdatoscli/dlgdatoscli.component';
 import { DlgdatosmovcliComponent } from './dlgdatosmovcli/dlgdatosmovcli.component';
+import { DlgDatosVndComponent } from './dlg-datos-vnd/dlg-datos-vnd.component';
+import { DlgfacturaComponent } from './dlgfactura/dlgfactura.component';
 
 @Component({
   selector: 'app-altacli',
@@ -37,11 +43,17 @@ export class AltacliComponent implements OnInit {
   solicitud?: Solicitud;
   mismovclis : Movclis[] = [];
   mimovcli? : Movclis;
+  factura? : Factura;
+  renfacfo : Renfacfo[] = [];
   observs: Observcli[] = [];
   miobserv? : Observcli;
   ubivta : Ubivta[] = [];
+  cliagentes : Cliagentes[]=[];
   solicitudcli_z = false;
+  facturacli_z = false;
   conaval = true;
+  contarjetatc = false;
+  yaagentes_z = false;
   modoqom_z = [ { clave:"C", descri:"CONTADO"}];
 
   tictes_z = [
@@ -65,7 +77,18 @@ export class AltacliComponent implements OnInit {
     { clave:10, descri:"OCTUBRE"},
     { clave:11, descri:"NOVIEMBRE"},
     { clave:12, descri:"DICIEMBRE"}
-  ]
+  ];
+
+  edoscivil = [
+    {clave:"C", descri:"Casado"},
+    {clave:"S", descri:"Soltero"}
+  ];
+
+  sexos = [
+    {clave:"F", descri:"Femenino"},
+    {clave:"M", descri:"Masculino"}
+  ];
+
   
   diasmes_z = [ {dia: 1}];
   mescum = "";
@@ -114,7 +137,8 @@ export class AltacliComponent implements OnInit {
     fecsal: "",
     email: "",
     diacum: 1,
-    mescum: 1
+    mescum: 1,
+    tarjetatc:""
   }
 
   usrreg_z = {
@@ -170,6 +194,10 @@ export class AltacliComponent implements OnInit {
         if(respu) {
           this.cliente = respu;
           this.asignaclienteanuevocli();
+          this.yaagentes_z = false;
+          this.solicitudcli_z = false;
+          this.facturacli_z = false;
+
           //this.busca_aval(this.cliente.idcli);
           //this.busca_movclis(this.cliente.idcli);
           //this.mostrar_vencimientos();
@@ -209,8 +237,6 @@ export class AltacliComponent implements OnInit {
     );
 
   }
-
-
 
   obtencatalogos() {
     var params_z = {
@@ -279,15 +305,22 @@ export class AltacliComponent implements OnInit {
       if(this.nvocli.qom == "Q") this.modoqom_z .push({clave:"Q", descri:"QUINCENAL"})
       if(this.nvocli.qom == "M") this.modoqom_z .push({clave:"M", descri:"MENSUAL"})
       this.busca_movclis(this.nvocli.idcli);
+      //this.busca_cliagentes(this.nvocli.idcli);
       if(this.nvocli.qom != "C") {
         this.conaval = true;
         this.busca_aval(this.nvocli.idcli);
       } else {
         this.conaval = false;
         this.aval = <Aval> {};
+        if(this.nvocli.ticte == "TC") {
+          this.busca_mi_tc(this.nvocli.idcli);
+          this.contarjetatc = true;
+        } else {
+          this.contarjetatc = false;
+        }
+        console.log("Debug: contarjetatc:", this.contarjetatc);
       }
-      this.busca_movclis(this.nvocli.idcli);
-}
+    }
 
   }
 
@@ -302,6 +335,22 @@ export class AltacliComponent implements OnInit {
       respu => {
         if(respu) {
           this.mismovclis = respu;
+        } 
+      }
+    );
+  }
+
+  busca_mi_tc(idcli_z : number) {
+    var params_z = {
+      modo : "buscar_cli_tarjeta_tc",
+      codigo: this.numcli_z,
+      idcli : idcli_z
+    }
+    console.log("Debug: Estoy en busca tarjeta tc cliente ", idcli_z);
+    this.servicioclientes.buscar_cli_tarjetas_tc(JSON.stringify(params_z)).subscribe(
+      respu => {
+        if(respu) {
+          this.nvocli.tarjetatc = respu.clave;
         } 
       }
     );
@@ -528,12 +577,218 @@ export class AltacliComponent implements OnInit {
 
   }
 
-  modificar_agente(miagente) {
-
+  busca_cliagentes(idcli_z : number) {
+    if(!this.yaagentes_z) {
+      var params_z = {
+        modo : "buscar_cli_agentes",
+        codigo: this.numcli_z,
+        idcli : idcli_z
+      }
+      console.log("Debug: Estoy en busca cliagentes ", idcli_z);
+      this.servicioclientes.busca_cliagentes_altas(JSON.stringify(params_z)).subscribe(
+        respu => {
+          if(respu) {
+            this.cliagentes = respu;
+          } 
+        }
+      );
+      this.yaagentes_z = true;
+  
+    }
   }
 
-  eliminar_agente(miagente) {
-    
+  agregar_agente() {
+      let cliagente = <Cliagentes> {};
+      let idcli_z = this.nvocli.idcli;
+      const dialogmov = this.dialog.open(DlgDatosVndComponent, {
+        width:'650px',
+        data:"NUEVO"
+      });
+      dialogmov.afterClosed().subscribe(res => {
+        if (res) {
+          cliagente = res;
+          cliagente.idcli = idcli_z;
+          this.servicioclientes.agregar_cli_agente(JSON.stringify(cliagente)).subscribe(
+            respu => {
+              if(respu) {
+                this.yaagentes_z = false;
+                this.busca_cliagentes(this.nvocli.idcli);
+  
+              } else {
+                this.alerta("Ocurrió un error en agregar cli_agente");
+              }
+            }
+          );
+        }
+
+      });
+ 
   }
+
+  modificar_agente(miagente : Cliagentes ) {
+    let idcli_z = this.nvocli.idcli;
+    const dialogmov = this.dialog.open(DlgDatosVndComponent, {
+      width:'650px',
+      data:JSON.stringify(miagente)
+    });
+    dialogmov.afterClosed().subscribe(res => {
+      if (res) {
+        miagente = res;
+        miagente.idcli = idcli_z;
+        this.servicioclientes.modificar_cli_agente(JSON.stringify(miagente)).subscribe(
+          respu => {
+            if(respu) {
+              this.yaagentes_z = false;
+              this.busca_cliagentes(this.nvocli.idcli);
+
+            } else {
+              this.alerta("Ocurrió un error en modificar cli_agente");
+            }
+          }
+        );
+      }
+
+    });
+
+}
+
+eliminar_agente(miagente: Cliagentes) {
+  let idcli_z = miagente.idcli;
+  const dialogref = this.dialog.open(DialogBodyComponent, {
+    width:'350px',
+    data: 'Seguro de Eliminar Comision de : ' + miagente.codvnd 
+  });
+  dialogref.afterClosed().subscribe(res => {
+    if(res) {
+      this.servicioclientes.eliminar_cli_agente(JSON.stringify(miagente)).subscribe(
+        respu => {
+          if(respu) {
+            this.yaagentes_z = false;
+            this.busca_cliagentes(this.nvocli.idcli);
+          } else {
+            this.alerta("Ocurrió un error en eliminar cli_agente");
+          }
+        }
+      );
+    }
+    //console.log("Debug", res);
+  });
+
+}
+
+busca_solicitud(idcli_z : number) {
+  if(!this.solicitudcli_z) {
+    var params_z = {
+      modo : "buscar_solicitud",
+      codigo: this.numcli_z,
+      idcli : idcli_z
+    }
+    console.log("Debug: Estoy en busca_solicit ", idcli_z);
+    this.servicioclientes.busca_solicitud_altas(JSON.stringify(params_z)).subscribe(
+      respu => {
+        if(respu) {
+          this.solicitud = respu;
+        } 
+      }
+    );
+    this.solicitudcli_z = true;
+
+  }
+}
+
+busca_factura(idcli_z : number) {
+  if(!this.facturacli_z) {
+    var params_z = {
+      modo : "buscar_cli_facturas",
+      codigo: this.numcli_z,
+      idcli : idcli_z
+    }
+    console.log("Debug: Estoy en busca_factura ", idcli_z);
+    this.servicioclientes.busca_factura_altas(JSON.stringify(params_z)).subscribe(
+      respu => {
+        if(respu) {
+          this.factura = respu[0];
+          if(this.factura) {
+            let precon = ( this.nvocli.preciolista * ( this.nvocli.piva / 100 + 1 )) -  this.nvocli.servicio;
+            precon = this.nvocli.cargos - precon 
+            if(precon < 0) precon = 0;
+            this.factura.prodfin = precon ;
+            this.busca_renfacfo(this.factura.idfac);
+          }
+        } 
+      }
+    );
+    this.facturacli_z = true;
+
+  }
+}
+
+busca_renfacfo(idfacfon_z : number) {
+    var params_z = {
+      modo : "buscar_renfac",
+      codigo: this.numcli_z,
+      idfacfon : idfacfon_z
+    }
+    console.log("Debug: Estoy en busca_renfacfo ", idfacfon_z);
+    this.servicioclientes.busca_renfac_altas(JSON.stringify(params_z)).subscribe(
+      respu => {
+        if(respu) {
+          this.renfacfo = respu;
+        } 
+      }
+    );
+}
+
+factura_cli(idcli: number) {
+  let idcli_z = idcli;
+  let params = {
+    idcli: idcli,
+    precon: this.nvocli.preciolista,
+    servic: this.nvocli.servicio,
+    cargos: this.nvocli.cargos,
+    modo: "MODIFICAR"
+  }
+  const dialogmov = this.dialog.open(DlgfacturaComponent, {
+    width:'700px',
+    data: JSON.stringify( params)
+  });
+  dialogmov.afterClosed().subscribe(res => {
+    if (res) {
+      let params_z = {
+        idcli:idcli_z,
+        iniciales:this.usrreg_z.iniciales
+      }
+  
+      this.servicioclientes.modificar_movimiento(JSON.stringify(params_z)).subscribe(
+        respu => {
+          respu.iniciales = this.usrreg_z.iniciales;
+          console.log("Debug:" , respu);
+          if(respu) {
+            this.busca_movclis(idcli_z);
+          } else {
+            this.alerta("Ocurrió un error en agregar Movimientos");
+          }
+        }
+      );
+    }
+  });
+}
+
+nueva_factura_cli(idcli: number) {
+  let idcli_z = idcli;
+  let params = {
+    idcli: idcli,
+    precon: this.nvocli.preciolista,
+    servic: this.nvocli.servicio,
+    cargos: this.nvocli.cargos,
+    modo: "NUEVO"
+  }
+  const dialogmov = this.dialog.open(DlgfacturaComponent, {
+    width:'700px',
+    data: JSON.stringify( params)
+
+  });
+}
+
 
 }

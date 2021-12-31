@@ -20,13 +20,28 @@
     <div name="datoscliente">
             <label class="ancho80"  for="nomcli" size="10">Nombre</label>
             <input readonly type="text" name="nombre" id="nombre" size="40" [(ngModel)]="nvocli.nombre" >
+            <label for="emailcli">Email Cliente</label>
+            <input readonly type="text" name="emailcli" id="emailcli" size="30" [(ngModel)]="nvocli.email" >
+            <br>
             <label class="ancho80" for="direc">Direccion</label>
             <input readonly type="text" name="direc" id="direc" size="50" [(ngModel)]="nvocli.direc" >
+            <label for="pordesc">% Descto
+            <input readonly type="number" name="pordesc" id="pordesc" size="10" [(ngModel)]="nvocli.pdsc" >
+            </label>
+            <label for="ubicacion">Ubicacion 
+                <input readonly type="text" id="ubicacion" name="ubicacion" size="5" [(ngModel)]="nvocli.ubica" >
+            </label>
             <br>
             <label class="ancho80" for="poblacion">Poblacion</label>
             <input readonly type="text" name="poblacion" id="poblacion" size="30" [(ngModel)]="nvocli.poblac" >
-            <label for="emailcli">Email Cliente</label>
-            <input readonly type="text" name="emailcli" id="emailcli" size="30" [(ngModel)]="nvocli.email" >
+            <label class="ancho80" for="opcion">Opcion</label>
+            <select name="opcion" id="opcion" value="{{nvocli.opcion}}" 
+             [(ngModel)]= "nvocli.opcion" >
+                <option *ngFor="let miopcion of cartaspro" value="{{miopcion.clave}}"
+                [selected]="nvocli.opcion == miopcion.clave">
+                {{miopcion.descri}}
+                </option>
+            </select>
         <br>
         <div *ngIf="conaval && aval">
             <label class="ancho80"  for="nomaval" size="10">Aval</label>
@@ -35,21 +50,7 @@
             <input readonly type="text" name="diraval" id="diraval" size="50" value="{{aval.dirav1 + aval.dirav2}}" >
             <br>
         </div>
-        <label class="ancho80" for="opcion">Opcion</label>
-            <select name="opcion" id="opcion" value="{{nvocli.opcion}}" 
-             [(ngModel)]= "nvocli.opcion" >
-            <option *ngFor="let miopcion of cartaspro" value="{{miopcion.clave}}"
-              [selected]="nvocli.opcion == miopcion.clave">
-              {{miopcion.descri}}
-              </option>
-        </select>
-        <label for="pordesc">% Descto
-            <input readonly type="number" name="pordesc" id="pordesc" size="10" [(ngModel)]="nvocli.pdsc" >
-        </label>
-        <label for="ubicacion">Ubicacion 
-            <input readonly type="text" id="ubicacion" name="ubicacion" size="5" [(ngModel)]="nvocli.ubica" >
-        </label>
-        <br>
+
         <label class="ancho80" for="ticte">Tipo Cte</label>
             <select name="ticte" id="ticte" value="{{nvocli.ticte}}" 
              [(ngModel)]= "nvocli.ticte" >
@@ -57,7 +58,10 @@
               [selected]="nvocli.ticte == miticte.clave">
               {{miticte.descri}}
               </option>
-            </select>
+        </select>
+        <label for="tipotarjetatc" *ngIf="contarjetatc">Tarjeta TC
+            <input type="text" readonly name="tipotarjetatc" value="{{nvocli.tarjetatc}}">
+        </label>
         <label for="mescum">Cumpleaños
             <input readonly type="text" size="10" name="mescum" id="mescum" [(ngModel)]= "mescum" > /
             <input readonly type="text" size="5" name="diacum" id="diacum" [(ngModel)]= "nvocli.diacum" >
@@ -117,6 +121,9 @@
         <br>
         <label class="ancho80" for="compra">Compra</label>
         <input readonly type="text" name="compra" id="compra" size="70" [(ngModel)]="nvocli.compra">
+        <label for="idcli">Idcli
+            <input readonly type="text" name="idcli" id="idcli" size="10" [(ngModel)]="nvocli.idcli" >
+        </label>
 
     </div>    
     <div id="movimientos" *ngIf="cliente">
@@ -172,7 +179,11 @@
                 </table>   
         
             </mat-tab>
-            <mat-tab label="Agentes">
+            <mat-tab label="Agentes" >
+                <ng-template mat-tab-label>
+                    <span (click)="busca_cliagentes(nvocli.idcli)">Agentes</span>
+                </ng-template>
+
                 <button mat-raised-button color="primary" (click)="agregar_agente()" >
                     <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
                     Agregar Agente
@@ -188,17 +199,17 @@
                         <th> Acciones </th>
                     </tr>
                     <tr *ngFor="let miagente of cliagentes" >
-                        <td> {{miagente.codigo}} </td>
+                        <td> {{miagente.codvnd}} </td>
                         <td> {{miagente.nombre}} </td>
                         <td  align="right"> 
-                            <label for="" *ngIf="mimov.recargo > 0">{{miagente.comision | currency}}</label> 
+                            {{miagente.comis | currency}}
                         </td>
                         <td>
                             <button mat-raised-button color="primary" (click)="modificar_agente(miagente)" >
                                 <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
                                 Modificar
                             </button>
-                            <button mat-raised-button color="warn" (click)="eliminar_movto(mimov)" >
+                            <button mat-raised-button color="warn" (click)="eliminar_agente(miagente)" >
                                 <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
                                 Eliminar
                             </button>
@@ -206,6 +217,244 @@
                     </tr>
                 </table>   
         
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <span (click)="busca_factura(nvocli.idcli)">Factura</span>
+                </ng-template>
+
+                <button *ngIf="factura" mat-raised-button color="primary" (click)="factura_cli(nvocli.idcli)" >
+                    <mat-icon aria-hidden="false" aria-label="Example new icon">receipt</mat-icon>
+                    Detalles Factura
+                </button>
+                <button *ngIf="!factura" mat-raised-button color="primary" (click)="nueva_factura_cli(nvocli.idcli)" >
+                    <mat-icon  aria-hidden="false" aria-label="Example new icon">add</mat-icon>
+                    Agregar Factura
+                </button>
+                <br>
+
+
+                <table *ngIf="factura">
+                    <tr>
+                        <td>
+                                <label class="ancho80" for="seriefac">Serie</label> 
+                                <input type="text" size="5" readonly name="serifac" id="seriefac" value=" {{factura.serie}}"> 
+                                <label for="numfac">Numero</label> 
+                                <input type="text" size="8" name="numfac" id="numfac" value = "{{factura.numero}}" > 
+                                <label for="fechafac">Fecha</label> 
+                                <input type="text" size="10" name="fechafac" id="fechafac" value ="{{factura.fecha}}"> 
+                                <br>
+                                <label class="ancho80" for="prodfin">Prod.F</label>
+                                <input type="text" size="10" name="prodfin" id="prodfin" value =" {{factura.prodfin | currency }}" >
+                                <label for="impfac"> Importe</label> 
+                                <input type="text" size="10" name="impfac" id="impfac" value ="{{factura.subtot | currency}}" >
+                                <label for="ivafac">Iva</label>
+                                <input type="text" size="10" name="ivafac" id="ivafac" value = "{{factura.iva | currency}}" >
+                                <label for="totalfac">Total</label> 
+                                <input type="text" size="10" name="totalfac" id="totalfac" value ="{{factura.total | currency}}">
+                                 <br>
+                                <label class="ancho80" for="uuidfac">UUID</label> 
+                                <input type="text" size="40" name="uuidfac" id="uuidfac" value ="{{factura.uuid}}">
+                                <br>
+                                <label class="ancho80" for="metpag">Met.Pago</label> 
+                                <input type="text" size="20" name="matpag" id="metpag" value ="{{factura.metodopago}} ">
+                                <label for="usocfdi">Uso CFDI</label>
+                                <input type="text" size="20" name="usocfdi" id="usocfdi" value ="{{factura.cveusocfdi}}">
+                                <br>
+                                <label class="ancho80" for="rfcfac">RFC</label>
+                                <input type="text" size="15"  name="rfcfac" id="rfcfac" value ="{{factura.rfc}}">
+                                <label for="emailfac">Correo</label>
+                                <input type="text" size="50" name="emailfac" id="emailfac" value ="{{factura.email}}">
+                    </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table border="1">
+                                <thead>
+                                    <tr>
+                                        <th>Codigo</th>
+                                        <th>Descripcion</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio.U</th>
+                                        <th>Importe</th>
+                                        <th>Folio</th>
+                                        <th>Serie</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let mirenfac of renfacfo">
+                                        <td>{{mirenfac.codigo}}</td>
+                                        <td>{{mirenfac.concepto}} </td>
+                                        <td> {{mirenfac.canti}} </td>
+                                        <td>{{mirenfac.preciou | currency}} </td>
+                                        <td> {{mirenfac.importe | currency}} </td>
+                                        <td> {{mirenfac.folio}} </td>
+                                        <td> {{mirenfac.serie}} </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </mat-tab>
+            <mat-tab label="Datos Solicitud">
+                <ng-template mat-tab-label>
+                    <span (click)="busca_solicitud(cliente.idcli)">Datos Solicitud</span>
+                </ng-template>
+                <div *ngIf="solicitud" >
+
+                    <table border="1">
+                        <tr>
+                            <td>
+                                <label for=""> <b> Cliente</b> </label> <br>
+                                <label for="ocupacion">Ocupacion </label> 
+                                <input size="30" type="text" name="ocupacion" id="ocupacion" 
+                                [(ngModel)]="solicitud.ocupacion" >
+                                <label for="ingresos">Ingresos</label>
+                                <input size="12" type="number" name="ingresos" id="ingresos"
+                                [(ngModel)]="solicitud.ingresos">
+                                <br>
+                                <label for="sexo">Sexo</label>
+                                <select name="sexo" id="sexo" [(ngModel)]="solicitud.sexo" >
+                                    <option *ngFor="let misexo of sexos"
+                                     value="{{misexo.clave}}" 
+                                     [selected]="misexo.clave == solicitud.sexo">
+                                        {{misexo.descri}}
+                                    </option>
+                                </select>
+                                <label for="edad">Edad</label>
+                                <input size="5" type="number" name="edad" id="edad" 
+                                [(ngModel)]="solicitud.edad">
+                                <label for="edocivil">Estado Civil </label>
+                                <select name="edocivil" id="edocivil" [(ngModel)]="solicitud.estadocivil" >
+                                    <option *ngFor="let miedocivil of edoscivil" 
+                                    value="{{miedocivil.clave}}"
+                                    [selected]="solicitud.estadocivil == miedocivil.clave"
+                                    > {{miedocivil.descri}} </option>
+                                </select>
+                                <br>
+                                <label for=""> <b>Datos del Trabajo del Cliente</b> </label><br>
+                                <label size="30" for="trabajo">Lugar</label>
+                                <input type="text" name="trabajo" id="trabajo"
+                                [(ngModel)]="solicitud.trabajo">
+                                <label for="telefono">Telefono</label>
+                                <input size="30" type="text" name="telefono" id="telefono"
+                                [(ngModel)]="solicitud.telefono">
+                                <br>
+                                <label for="dirtra">Direccion</label>
+                                <input size="30" type="text" name="dirtra" id="dirtra"
+                                [(ngModel)]="solicitud.direcciontrabajo">
+                                <label for="antigtra">Antigüead</label>
+                                <input size="5" type="number" name="antigtra" id="antigtra"
+                                [(ngModel)]="solicitud.antiguedad">
+                                <hr>
+                                <label for=""><b>Datos del Conyuge del Cliente</b></label>
+                                <br>
+                                <label for="conyuge">Nombre</label>
+                                <input size="30" type="text" name="conyuge" id="conyuge"
+                                [(ngModel)]="solicitud.conyuge">
+                                <label for="ocupacony">Ocupacion</label>
+                                <input size="30" type="text" name="ocupacony" id="ocupacony"
+                                [(ngModel)]="solicitud.ocupacionconyuge">
+                                <label for="ingcony">Ingresos</label>
+                                <input size="12" type="number" name="ingcony" id="ingcony"
+                                [(ngModel)]="solicitud.ingresosconyuge">
+                                <br>
+                                <label for="trabcony">Trabajo</label>
+                                <input size="30" type="text" name="trabcony" id="trabcony"
+                                [(ngModel)]="solicitud.trabajoconyuge">
+                                <label for="antigcony">Antigüedad</label>
+                                <input size="5" type="number" name="antigcony" id="antigcony"
+                                [(ngModel)]="solicitud.antiguedadconyuge">
+                                <label for="telefonocony">Telefono</label>
+                                <input size="30" type="text" name="telefonocony" id="telefonocony"
+                                [(ngModel)]="solicitud.telefonoconyuge">
+                            </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for=""> <b>Datos del Aval</b> </label>
+                                    <br>
+                                <label for="aval">Generales</label>
+                                <input size="30" type="text" name="aval" id="aval"
+                                [(ngModel)]="solicitud.aval">
+                                <label for="ocupaaval">Ocupacion</label>
+                                <input size="30" type="text" name="ocupaaval" id="ocupaaval"
+                                [(ngModel)]="solicitud.ocupacionaval">
+                                <label for="ingaval">Ingresos</label>
+                                <input size="12" type="number" name="ingaval" id="ingaval"
+                                [(ngModel)]="solicitud.ingresosaval">
+                                <br>
+                                <label for="trabaval">Trabajo</label>
+                                <input size="30" type="text" name="trabaval" id="trabaval"
+                                [(ngModel)]="solicitud.trabajoaval">
+                                <label for="antingaval">Anitgüedad</label>
+                                <input size="5" type="number" name="antingaval" id="antingaval"
+                                [(ngModel)]="solicitud.antiguedadaval">
+                                <br>
+                                <label for="telaval">Telefono</label>
+                                <input size="30" type="text" name="telaval" id="telaval"
+                                [(ngModel)]="solicitud.telefonoaval">
+                                <hr>
+                                <label for=""><b>Datos del Conyuge del Aval </b></label>
+                                <br>
+                                <label for="conyugval">Nombre</label>
+                                <input size="30" type="text" name="conyugaval" id="conyugaval"
+                                [(ngModel)]="solicitud.antiguedadaval">
+                                <label for="ocupaconyugval">Ocupacion</label>
+                                <input size="30" type="text" name="ocupaconyugaval" id="ocupconyugaval"
+                                [(ngModel)]="solicitud.ocupacionconyugeaval">
+                                <br>
+                                <label for="ingconyugval">Ingresos</label>
+                                <input size="12" type="number" name="ingconyugaval" id="ingconyugaval"
+                                [(ngModel)]="solicitud.ingresosconyugeaval">
+                                <label for="trabconyugval">Trabajo</label>
+                                <input size="30" type="text" name="trabconyugaval" id="trabconyugaval"
+                                [(ngModel)]="solicitud.trabajoconyugeaval">
+                                <label for="antigconyugval">Antiguedad</label>
+                                <input size="5" type="number" name="antigconyugaval" id="antigconyugaval"
+                                [(ngModel)]="solicitud.antiguedadconyugeaval">
+                                <label for="telconyugval">Telefono</label>
+                                <input size="30" type="text" name="telconyugaval" id="telconyugaval"
+                                [(ngModel)]="solicitud.telconyugeaval">
+                                <br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                <label for="familiar">Familiar</label>
+                                <input size="30" type="text" name="familiar" id="familiar"
+                                [(ngModel)]="solicitud.familiar">
+                                <label for="dirfamiliar">Direccion del Familiar</label>
+                                <input size="30" type="text" name="dirfamiliar" id="dirfamiliar"
+                                [(ngModel)]="solicitud.direccionfamiliar">
+                                <br>
+                                <label for="conocido">Conocido</label>
+                                <input size="30" type="text" name="conocido" id="conocido"
+                                [(ngModel)]="solicitud.conocido">
+                                <label for="dirconocido">Direccion del Conocido</label>
+                                <input type="text" name="dirconocido" id="dirconocido"
+                                [(ngModel)]="solicitud.direccionconocido">
+                                <br>
+                                <label for="referencia1">Referencia</label>
+                                <input size="70" type="text" name="referencia1" id="referencia1"
+                                [(ngModel)]="solicitud.referencia1">
+                                <br>
+                                <label for="referencia2">Referencia 2</label>
+                                <input size="70" type="text" name="referencia2" id="referencia2"
+                                [(ngModel)]="solicitud.referencia2">
+                                <br>
+                                <label for="observaciones">Observaciones</label>
+                                <input size="70" type="text" name="observaciones" id="observaciones"
+                                [(ngModel)]="solicitud.observaciones">
+                            </td>
+                        </tr>
+                      </table>
+                   
+                </div>
             </mat-tab>
 
         </mat-tab-group>

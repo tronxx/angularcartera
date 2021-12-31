@@ -20,6 +20,7 @@ import { Ubivta } from '../../models/ubivta';
 import { Promotor } from '../../models/promotor';
 import { Nulets } from '../../models/nulets';
 import { Poblacs } from '../../models/poblacs';
+import { Tarjetatc } from '../../models/tipostarjetastc'
 import { DlgedoctaComponent  } from '../../common/dlgedocta/dlgedocta.component';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -45,7 +46,9 @@ export class DlgdatoscliComponent implements OnInit {
   promotor : Promotor[] = [];
   nulets : Nulets[] = [];
   poblaciones : Poblacs[] = [];
+  tarjetastc : Tarjetatc[] = [];
   conaval = false;
+  contarjetatc = false;
 
   tictes_z = [
     { clave:"PC", descri:"PRIMER CREDITO"},
@@ -132,7 +135,8 @@ export class DlgdatoscliComponent implements OnInit {
     fecsal: "",
     email: "",
     diacum: 1,
-    mescum: 1
+    mescum: 1,
+    tarjetatc:""
   }
 
   aval? : Aval;
@@ -279,12 +283,20 @@ export class DlgdatoscliComponent implements OnInit {
         this.nvocli.numpred = this.cliente.numpred;
         this.nvocli.codpost = this.cliente.codpost;
         this.nvocli.colonia = this.cliente.colonia;
+        if(this.nvocli.ticte == "TC") {
+          this.contarjetatc = true;
+          this.busca_tipos_tarjetas();
+          this.busca_mi_tc(this.nvocli.idcli);
+        } else {
+          this.contarjetatc = false;
+        }
         this.selecciona_letras_cliente()
         this.busca_aval(this.nvocli.idcli);
       }
   
     }
 
+   
     busca_aval(idcli: number) {
       var params_z = {
         modo : "buscar_aval",
@@ -312,7 +324,6 @@ export class DlgdatoscliComponent implements OnInit {
 
     selecciona_letras_cliente() {
       if(this.nvocli.qom == "C") {
-        this.nvocli.ticte = "CC";
         this.nvocli.nulet = 0;
         this.nvocli.canle = 0;
         this.nvocli.bonificacion = 0;
@@ -321,17 +332,60 @@ export class DlgdatoscliComponent implements OnInit {
         this.bonifdisabled = true;
         this.letra1disabled = true;
         this.conaval=false;
-
       } else {
         this.canledisabled = false;
         this.bonifdisabled = false;
         this.letra1disabled = false;
         this.conaval=true;
-
       }
       this.buscanulets();
     }
+
+    selecciona_tarjetas_tc() {
+      if(this.nvocli.ticte == "TC") {
+        this.contarjetatc = true;
+        this.busca_tipos_tarjetas();
+      } else {
+        this.contarjetatc = false;
+      }
+    }
+    
+    busca_mi_tc(idcli: number) {
+      var params_z = {
+        modo : "buscar_mi_tc_cliente",
+        codigo: this.numcli_z,
+        idcli : idcli
+      }
+      this.servicioclientes.buscar_cli_tarjetas_tc(JSON.stringify(params_z)).subscribe(
+        respu => {
+          if(respu) {
+            this.nvocli.tarjetatc = respu.clave;
+          }
+        }
+      );
   
+    }
+  
+    busca_tipos_tarjetas() {
+      var params_z = {
+        modo : "buscar_tarjetas_tc",
+        ubiage : this.nvocli.ubica,
+        ticte: this.nvocli.ticte
+      }
+        this.servicioclientes.buscar_tarjetas_tc(JSON.stringify(params_z)).subscribe(
+        respu => {
+          if(respu) {
+            this.tarjetastc = respu;
+          } else {
+            this.tarjetastc = [];
+          }
+        }
+      );
+  
+    }
+  
+
+    
     creadiasmes() {
       let ii_z = 1;
       let minumlet_z = "";

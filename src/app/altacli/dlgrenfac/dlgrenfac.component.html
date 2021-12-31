@@ -1,0 +1,59 @@
+<div mat-dialog-content>
+    <form #formularioCliente="ngForm" *ngIf= "renfac">
+        <div name="factura">
+            <mat-card>
+                <mat-card-title>Datos de Renglon de Factura</mat-card-title>
+                <label class="ancho80" for="articulo">Articulo</label>
+                <input type="text" size="13" name="articulo" id="articulo" 
+                [(ngModel)] = "renfac.codigo"
+                oninput="this.value = this.value.toUpperCase()" >
+                <button mat-raised-button  color="primary"   (click)="busca_articulo()">Aceptar Articulo</button>
+                <br>
+                <label class="ancho80" for="descri">Descripcion</label>
+                <input type="text" name="descri" id="descri" size="30"
+                [(ngModel)] = "renfac.concepto"
+                oninput="this.value = this.value.toUpperCase()">
+                <br>
+                <label class="ancho80" for="folio">Folio</label>
+                <input type="number" size="5" name="folio" id="folio"
+                [(ngModel)] = "renfac.folio">
+                <label for="serie">Serie</label>
+                <input type="text" name="serie" id="serie" size="20"
+                [(ngModel)] = "renfac.serie"
+                oninput="this.value = this.value.toUpperCase()">
+                <br>
+                <label class="ancho80" for="preciou">Precio.U</label>
+                <input type="number" size="10" name="preciou" id="preciou">
+                <br>
+                <div *ngIf="esmoto">
+                    <label for="seriemotor" class="ancho80">Serie Motor</label>
+                    <input type="text" name="seriemotor" id="seriemotor" size="30"
+                    [(ngModel)] = "nuevorenfac.seriemotor"
+                    oninput="this.value = this.value.toUpperCase()"
+                    >
+                    <label for="pedimento" class="ancho80">Pedimento</label>
+                    <input type="text" name="pedimento" id="pedimento" size="30"
+                    [(ngModel)] = "nuevorenfac.pedimento"
+                    oninput="this.value = this.value.toUpperCase()"
+                    >
+                    <label for="aduana" class="ancho80">Aduana</label>
+                    <input type="text" name="aduana" id="aduana" size="30"
+                    [(ngModel)] = "nuevorenfac.aduana"
+                    oninput="this.value = this.value.toUpperCase()"
+                    >
+                    <label for="marca" class="ancho80">Marca</label>
+                    <input type="text" name="marca" id="marca" size="30"
+                    [(ngModel)] = "nuevorenfac.marca"
+                    oninput="this.value = this.value.toUpperCase()"
+                    >
+                </div>
+            </mat-card> 
+        </div> 
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>
+    <button mat-raised-button  color="primary"   (click)="closeyes()">Aceptar</button>
+</div>
+
+       

@@ -116,22 +116,33 @@
         <br>
         <label for="ubicacion">Ubicacion 
             <select name="ubicacion" id="ubicacion" value="{{nvocli.ubica}}" 
-             [(ngModel)]= "nvocli.ubica" >
+             [(ngModel)]= "nvocli.ubica" (blur)="selecciona_tarjetas_tc()"  >
             <option *ngFor="let miubica of ubivta" value="{{miubica.ubica}}"
               [selected]="nvocli.ubica == miubica.ubica">
               {{miubica.ubica}} {{miubica.nombre}}
               </option>
             </select>
         </label>
-        <label for="ticte">Tipo Cte
+        <br>
+        <label for="ticte">Tipo Cte {{nvocli.ticte}}
             <select name="ticte" id="ticte" value="{{nvocli.ticte}}" 
-             [(ngModel)]= "nvocli.ticte" >
+             [(ngModel)]= "nvocli.ticte" (blur)="selecciona_tarjetas_tc()" >
             <option *ngFor="let miticte of tictes_z" value="{{miticte.clave}}"
               [selected]="nvocli.ticte == miticte.clave">
               {{miticte.clave}} {{miticte.descri}}
               </option>
             </select>
         </label>
+        <div *ngIf="contarjetatc">
+            <label for="tipotc">Tarjeta</label>
+            <select name="tipotc" id="tipotc" value="{{nvocli.tarjetatc}" 
+             [(ngModel)]= "nvocli.tarjetatc" >
+            <option *ngFor="let mitipotc of tarjetastc" value="{{mitipotc.clave}}"
+              [selected]="nvocli.tarjetatc == mitipotc.clave">
+              {{mitipotc.clave}} {{mitipotc.descri}}
+              </option>
+            </select>
+        </div>
         <br>
         <label for="jefgpo">Jefe de Grupo
             <select name="jefgpo" id="jefgpo" value="{{nvocli.promotor}}" 

@@ -15,62 +15,70 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ConfiguracionService } from '../../services/configuracion.service';
 import { calcPossibleSecurityContexts } from '@angular/compiler/src/template_parser/binding_parser';
-import { Cliagentes } from '../../models/cliagentes';
-import { Vendedor } from '../../models/vendedor';
-
+import { Factura } from '../../models/facturas';
+import { Renfacfo } from '../../models/renfacfo';
+import { Articulo } from '../../models/articulo';
+import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 
 @Component({
-  selector: 'app-dlg-datos-vnd',
-  templateUrl: './dlg-datos-vnd.component.html',
-  styleUrls: ['./dlg-datos-vnd.component.css']
+  selector: 'app-dlgrenfac',
+  templateUrl: './dlgrenfac.component.html',
+  styleUrls: ['./dlgrenfac.component.css']
 })
-export class DlgDatosVndComponent implements OnInit {
-  vendedores : Vendedor[] = [];
-  cliagente = <Cliagentes> {};
+export class DlgrenfacComponent implements OnInit {
+
+  renfac: Renfacfo = <Renfacfo> {}
+  articulo? : Articulo;
+  esmoto = true;
+  nuevorenfac = {
+    renfac: this.renfac,
+    esmoto: this.esmoto,
+    seriemotor: "",
+    pedimento: "",
+    aduana: "",
+    marca: ""
+  }
 
   constructor(
-    public dialog: MatDialog, public dialogRef: MatDialogRef<DlgDatosVndComponent>,
+    public dialog: MatDialog, public dialogRef: MatDialogRef<DlgrenfacComponent>,
     @Inject(MAT_DIALOG_DATA) public message : string,
     private configuracion: ConfiguracionService,
     private servicioclientes: ClientesService
+
   ) { }
 
   ngOnInit(): void {
-    if (this.message == "NUEVO")  { 
-      this.inicializa_agente_cli(); 
-    } else { 
-      this.cliagente= JSON.parse(this.message)
-    }
-    this.carga_catlogos();
-
-  }
-
-  inicializa_agente_cli() {
-    this.cliagente.idvnd = -1;
-  }
-
-  carga_catlogos() {
-    let params_z = {
-      modo:"buscar_agentes"
-    }
-    this.servicioclientes.buscar_agentes(JSON.stringify(params_z)).subscribe(
-      respu => {
-        this.vendedores = respu;
-      }
-
-    );
-
   }
 
   closeyes() {
-    this.dialogRef.close(this.cliagente);
+    this.dialogRef.close(this.renfac);
   }
 
   closeno() {
     this.dialogRef.close(false);
   }
 
+  busca_articulo() {
+      var params_z = {
+        modo : "buscar_codigo_inven",
+        codigo : this.renfac.codigo
+      }
+      console.log("Debug: Estoy en busca_articulo ", this.renfac.codigo);
+      this.servicioclientes.busca_codigo_inven(JSON.stringify(params_z)).subscribe(
+        respu => {
+          if(respu) {
+            this.articulo = respu;
+            this.renfac.concepto = this.articulo.descri;
+            if(this.articulo.linea == "MOTO") {
+              this.esmoto = true;
+            } else {
+              this.esmoto = true;
+            }
+          } 
+        }
+      );
+  }
+
   formularioEnviado() {}
 
-  
 }

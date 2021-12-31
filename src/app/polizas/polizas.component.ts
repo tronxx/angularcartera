@@ -339,9 +339,9 @@ export class PolizasComponent implements OnInit {
        if(this.qom_z == "Q") this.sdoparacarta_z / 2;
        this.tasarecargo_z = 10;
        this.strfechavta = this.cliente.numcli.substr(2,6);
-       if( this.strfechavta >= "210901" && 
-           this.qom_z == "Q" && 
-           ( this.cliente.nulet == 4 || this.cliente.nulet == 10  )
+       if( this.strfechavta >= "220101" ||
+          (this.strfechavta >= "210901" && this.qom_z == "Q" && 
+           ( this.cliente.nulet == 4 || this.cliente.nulet == 10  ))
         ) {
            this.tasarecargo_z = 20;
        }

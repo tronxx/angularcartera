@@ -14,6 +14,12 @@ import { Ubivta } from '../models/ubivta';
 import { Promotor } from '../models/promotor';
 import { Nulets } from '../models/nulets';
 import { Poblacs } from '../models/poblacs';
+import { Cliagentes } from '../models/cliagentes';
+import { Vendedor } from '../models/vendedor';
+import { Tarjetatc } from '../models/tipostarjetastc';
+import { Factura } from '../models/facturas';
+import { Renfacfo } from '../models/renfacfo';
+import { Articulo } from '../models/articulo';
 
 @Injectable({
   providedIn: 'root'
@@ -389,6 +395,257 @@ export class ClientesService {
 
   busca_vencimientos (fechavta:string, qom:string, inicial:number, final:number) {
     return (this.configuracion.generavencimientos(fechavta, qom, inicial, final));
+  }
+
+  busca_cliagentes_altas( parametros: string): Observable<Cliagentes[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "buscar_cli_agentes",
+      idcli: misparams.idcli
+    }
+
+    console.log("Debug: Estoy en busca Agentes_Clientes Altas", parametros);
+  
+    return this.http.post<Cliagentes[]>(miurl, JSON.stringify(misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Cliagentes')),
+      catchError(this.handleError<Cliagentes[]>('Ocurrio un error en Post obten Cliagentes altas'))
+    );
+  }
+
+  buscar_agentes( parametros: string): Observable<Vendedor[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "buscar_agentes",
+      idcli: -1
+    }
+
+    console.log("Debug: Estoy en busca Agentes", parametros);
+  
+    return this.http.post<Vendedor[]>(miurl, JSON.stringify(misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Cliagentes')),
+      catchError(this.handleError<Vendedor[]>('Ocurrio un error en Post obten Agentes'))
+    );
+  }
+
+  agregar_cli_agente( parametros: string): Observable<Cliagentes[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "agregar_cli_agente",
+      idvndcli: -1,
+      idcli: misparams.idcli,
+      idvnd: misparams.idvnd,
+      codvnd: misparams.codvnd,
+      comis: misparams.comis
+    }
+
+    console.log("Debug: Estoy en agregar_cli_agente", parametros);
+  
+    return this.http.post<Cliagentes[]>(miurl, JSON.stringify(misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Cliagentes')),
+      catchError(this.handleError<Cliagentes[]>('Ocurrio un error en Post obten Agentes'))
+    );
+  }
+
+  modificar_cli_agente( parametros: string): Observable<Cliagentes[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "modificar_cli_agente",
+      idvndcli: misparams.idvndcli,
+      idcli: misparams.idcli,
+      idvnd: misparams.idvnd,
+      codvnd: misparams.codvnd,
+      comis: misparams.comis
+    }
+
+    console.log("Debug: Estoy en modificar_cli_agente", parametros);
+  
+    return this.http.post<Cliagentes[]>(miurl, JSON.stringify(misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Cliagentes')),
+      catchError(this.handleError<Cliagentes[]>('Ocurrio un error en Post modificar cliagentes'))
+    );
+  }
+
+  eliminar_cli_agente( parametros: string): Observable<Cliagentes[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "eliminar_cli_agente",
+      idvndcli: misparams.idvndcli,
+      idcli: misparams.idcli,
+      idvnd: misparams.idvnd,
+      codvnd: misparams.codvnd,
+      comis: misparams.comis
+    }
+
+    console.log("Debug: Estoy en eliminar_cli_agente", parametros);
+  
+    return this.http.post<Cliagentes[]>(miurl, JSON.stringify(misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Cliagentes')),
+      catchError(this.handleError<Cliagentes[]>('Ocurrio un error en Post eliminar cliagentes'))
+    );
+  }
+
+  buscar_tarjetas_tc( parametros: string): Observable<Tarjetatc[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "buscar_tarjetas_tc",
+      ticte: misparams.ticte,
+      ubiage: misparams.ubiage,
+      idcli: -1
+    }
+
+    console.log("Debug: Estoy en busca Tarjetas TC Disponibles", parametros);
+  
+    return this.http.post<Tarjetatc[]>(miurl, JSON.stringify(misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Tarjetas TC')),
+      catchError(this.handleError<Tarjetatc[]>('Ocurrio un error en Post obten Agentes'))
+    );
+  }
+
+  buscar_cli_tarjetas_tc( parametros: string): Observable<Tarjetatc> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "buscar_cli_tarjetas_tc",
+      ticte: misparams.ticte,
+      ubiage: misparams.ubiage,
+      idcli: misparams.idcli
+    }
+
+    console.log("Debug: Estoy en busca Tarjetas TC de Cliente", parametros);
+  
+    return this.http.post<Tarjetatc>(miurl, JSON.stringify(misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched tarjetas Tc cliente')),
+      catchError(this.handleError<Tarjetatc>('Ocurrio un error en Post obten Agentes'))
+    );
+  }
+
+  busca_solicitud_altas( parametros: string): Observable<Solicitud> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "buscar_solicitud_cliente",
+      idcli: misparams.idcli
+    }
+
+    console.log("Debug: Estoy en busca solicitud_altas ", parametros);
+  
+    return this.http.post<Solicitud>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Solicitud')),
+      catchError(this.handleError<Solicitud>('Ocurrio un error en Post obten busca_solicitud_altas'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  busca_factura_altas( parametros: string): Observable<Factura[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "buscar_cli_facturas",
+      idcli: misparams.idcli
+    }
+
+    console.log("Debug: Estoy en busca busca_factura_altas ", parametros);
+  
+    return this.http.post<Factura[]>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Facturas')),
+      catchError(this.handleError<Factura[]>('Ocurrio un error en Post obten busca_factura_altas'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  busca_renfac_altas( parametros: string): Observable<Renfacfo[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "buscar_renfac",
+      idfacfon: misparams.idfacfon
+    }
+
+    console.log("Debug: Estoy en busca busca_renfac_altas ", parametros);
+  
+    return this.http.post<Renfacfo[]>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Facturas')),
+      catchError(this.handleError<Renfacfo[]>('Ocurrio un error en Post obten busca_factura_altas'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  busca_codigo_inven( parametros: string): Observable<Articulo> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "buscar_codigo_inven",
+      codigo: misparams.codigo
+    }
+
+    console.log("Debug: Estoy en busca busca_articulo ", parametros);
+  
+    return this.http.post<Articulo>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Facturas')),
+      catchError(this.handleError<Articulo>('Ocurrio un error en Post obten busca_codigo_inven'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
   private handleError<T>(operation = 'operation', result?: T) {
