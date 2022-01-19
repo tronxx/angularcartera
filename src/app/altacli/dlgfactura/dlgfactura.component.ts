@@ -21,6 +21,7 @@ import { Factura } from '../../models/facturas';
 import { Renfacfo } from '../../models/renfacfo';
 import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 import { DlgrenfacComponent } from '../dlgrenfac/dlgrenfac.component';
+import { DlgdatosfacturaComponent  } from '../dlgdatosfactura/dlgdatosfactura.component';
 
 @Component({
   selector: 'app-dlgfactura',
@@ -35,9 +36,15 @@ export class DlgfacturaComponent implements OnInit {
   cargoscli_z = 0;
   servic_z = 0;
   preciolista_z =  0;
+  prodfin_z = 0;
+  fechavta = ""
+  ubiage = "";
+  tempo_z = "Tempo:";
   
   constructor(
-    public dialog: MatDialog, public dialogRef: MatDialogRef<DlgrenfacComponent>,
+    public dialog: MatDialog, 
+    public dialogRef: MatDialogRef<DlgrenfacComponent>,
+    public dialogfactura : MatDialogRef<DlgdatosfacturaComponent>,
     @Inject(MAT_DIALOG_DATA) public message : string,
     private configuracion: ConfiguracionService,
     private servicioclientes: ClientesService
@@ -46,11 +53,70 @@ export class DlgfacturaComponent implements OnInit {
 
   ngOnInit(): void {
     let params_z = JSON.parse(this.message);
-    console.log("Debug:", params_z);
+    console.log("Debug: dlgfactura params:", params_z);
     this.idcli  = params_z.idcli;
-    this.busca_factura();
+    this.cargoscli_z = params_z.cargos;
+    this.servic_z = params_z.servic;
+    this.preciolista_z = params_z.preciolista;
+    this.ubiage = params_z.ubiage,
+    this.fechavta = params_z.fechavta;
+    if(params_z.modo == "NUEVO") {
+      this.crear_factura()
+    } else {
+      this.busca_factura();
+
+    }
+    
+  }
+
+  crear_factura() {
+    let params_z = {
+      fechavta: this.fechavta,
+      factura:  <Factura> { },
+      ubiage: this.ubiage,
+      modo: "NUEVO"
+    }
+    params_z.factura.idcli = this.idcli;
+    params_z.factura.idfac = -1;
+    const dialogmov = this.dialog.open(DlgdatosfacturaComponent, {
+      width:'700px',
+      data: JSON.stringify(params_z)
+    });
+    dialogmov.afterClosed().subscribe(res => {
+      if (res) {
+        let params_z = {
+          modo:"NUEVO",
+          idcli:this.idcli,
+          factura:res
+        }
+        this.servicioclientes.crear_factura_altas(JSON.stringify(params_z)).subscribe( resalta=> {
+
+          if(resalta.status == "OK") {
+            this.busca_factura();
+          } else {
+            this.alerta("Error:" + resalta.error);
+            console.log("Debug: Error", resalta);
+            this.closeyes();
+          }
+        });
+
+      }
+    });
+  
 
   }
+
+  alerta(mensaje: string) {
+    const dialogref = this.dialog.open(DialogBodyComponent, {
+      width:'350px',
+      data: mensaje
+    });
+    dialogref.afterClosed().subscribe(res => {
+      //console.log("Debug", res);
+    });
+  
+  }
+
 
   busca_factura() {
     var params_z = {
@@ -64,14 +130,18 @@ export class DlgfacturaComponent implements OnInit {
           this.factura = respu[0];
           if(this.factura) {
             this.busca_renfacfo(this.factura.idfac);
+            this.prodfin_z = ( this.preciolista_z * ( 16 / 100 + 1 )) -  this.servic_z;
+            this.prodfin_z = this.cargoscli_z - this.prodfin_z;
+            if(this.prodfin_z < 0) this.prodfin_z = 0;
+            this.factura.prodfin = this.prodfin_z;
           }
-        }  else {
-          this.factura = <Factura> { idfac: -1, idcli: -1};
-          //this.factura.idfac = -1;
-          //this.factura.idcli = this.idcli;
         }
       }
     );
+    this.tempo_z = " prodfin:" + this.prodfin_z.toString() +
+    " cargoscli:" + this.cargoscli_z.toString() + 
+    " preciolista:" + this.preciolista_z.toString() + 
+    " Servicio:" + this.servic_z.toString();
 
   }
   
@@ -101,6 +171,26 @@ export class DlgfacturaComponent implements OnInit {
     const dialogmov = this.dialog.open(DlgrenfacComponent, {
       width:'700px',
       data: JSON.stringify(params)
+    });
+    dialogmov.afterClosed().subscribe(res => {
+      if (res) {
+        let params_z = {
+          modo:"agregar_ren_factura",
+          idcli:this.idcli,
+          renfac:res
+        }
+        this.servicioclientes.crear_factura_altas(JSON.stringify(params_z)).subscribe( resalta=> {
+
+          if(resalta.status == "OK") {
+            this.busca_factura();
+          } else {
+            this.alerta("Error:" + resalta.error);
+            console.log("Debug: Error", resalta);
+            this.closeyes();
+          }
+        });
+
+      }
     });
   
   }

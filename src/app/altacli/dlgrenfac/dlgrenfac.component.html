@@ -6,11 +6,13 @@
                 <label class="ancho80" for="articulo">Articulo</label>
                 <input type="text" size="13" name="articulo" id="articulo" 
                 [(ngModel)] = "renfac.codigo"
-                oninput="this.value = this.value.toUpperCase()" >
+                oninput="this.value = this.value.toUpperCase()" 
+                (blur)="busca_articulo()">
+
                 <button mat-raised-button  color="primary"   (click)="busca_articulo()">Aceptar Articulo</button>
                 <br>
                 <label class="ancho80" for="descri">Descripcion</label>
-                <input type="text" name="descri" id="descri" size="30"
+                <input type="text" name="descri" id="descri" size="40"
                 [(ngModel)] = "renfac.concepto"
                 oninput="this.value = this.value.toUpperCase()">
                 <br>
@@ -20,16 +22,20 @@
                 <label for="serie">Serie</label>
                 <input type="text" name="serie" id="serie" size="20"
                 [(ngModel)] = "renfac.serie"
-                oninput="this.value = this.value.toUpperCase()">
+                (blur)="valida_serie()"
+                oninput="this.value = this.value.toUpperCase()"
+                >
                 <br>
                 <label class="ancho80" for="preciou">Precio.U</label>
-                <input type="number" size="10" name="preciou" id="preciou">
+                <input type="number" size="10" name="preciou" id="preciou"
+                [(ngModel)]="renfac.preciou">
                 <br>
                 <div *ngIf="esmoto">
                     <label for="seriemotor" class="ancho80">Serie Motor</label>
                     <input type="text" name="seriemotor" id="seriemotor" size="30"
                     [(ngModel)] = "nuevorenfac.seriemotor"
                     oninput="this.value = this.value.toUpperCase()"
+                    (blur)="valida_serie_motor_moto()"
                     >
                     <label for="pedimento" class="ancho80">Pedimento</label>
                     <input type="text" name="pedimento" id="pedimento" size="30"
@@ -46,6 +52,21 @@
                     [(ngModel)] = "nuevorenfac.marca"
                     oninput="this.value = this.value.toUpperCase()"
                     >
+                    <div *ngIf="!serievalida">
+                        <br>
+                        <label id="serieinvalida" *ngIf="!serievalida">
+                            <mat-icon aria-hidden="false" aria-label="Example home icon">warning</mat-icon>
+                            La serie es Invalida
+                        </label>
+                    </div>
+                    <div *ngIf="!seriemotorvalida">
+                        <label id="seriemotorinvalida" >
+                            <mat-icon aria-hidden="false" aria-label="Example home icon">warning</mat-icon>
+                            La serie del Motor es Invalida
+                        </label>
+    
+                    </div>
+
                 </div>
             </mat-card> 
         </div> 

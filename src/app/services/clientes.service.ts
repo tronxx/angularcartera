@@ -20,6 +20,10 @@ import { Tarjetatc } from '../models/tipostarjetastc';
 import { Factura } from '../models/facturas';
 import { Renfacfo } from '../models/renfacfo';
 import { Articulo } from '../models/articulo';
+import { Serie } from '../models/serie';
+import { Seriefac } from '../models/seriesfac';
+import { Usocfdi } from '../models/usocfdi';
+import { Metodopagocfdi } from '../models/metodopagocfdi';
 
 @Injectable({
   providedIn: 'root'
@@ -634,7 +638,7 @@ export class ClientesService {
     const body=parametros;
     let misparams = JSON.parse(parametros);
     let misparamnvo = {
-      modo: "buscar_codigo_inven",
+      modo: "buscar_inven_codigo",
       codigo: misparams.codigo
     }
 
@@ -647,6 +651,132 @@ export class ClientesService {
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
+
+  busca_varios_codigos_inven( parametros: string): Observable<Articulo[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "buscar_inven_rango_codigos",
+      codigo: misparams.codigo
+    }
+
+    console.log("Debug: Estoy en busca busca_varios_codigo_inven ", parametros);
+  
+    return this.http.post<Articulo[]>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Facturas')),
+      catchError(this.handleError<Articulo[]>('Ocurrio un error en Post busca_varios_codigo_inven'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+  
+
+  busca_serie_moto( parametros: string): Observable<Serie> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "buscar_inven_serie_moto",
+      codigo: misparams.codigo,
+      serie: misparams.serie,
+      seriemotor: misparams.seriemotor
+    }
+
+    console.log("Debug: Estoy en busca busca_articulo ", parametros);
+  
+    return this.http.post<Serie>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Serie Motor')),
+      catchError(this.handleError<Serie>('Ocurrio un error en Post obten busca_codigo_inven'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  busca_serie_factura( parametros: string): Observable<Seriefac> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "buscar_facturacion_una_serie",
+      ubiage: misparams.ubiage
+    }
+
+    console.log("Debug: Estoy en busca busca_serie_factura ", parametros);
+  
+    return this.http.post<Seriefac>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Serie factura')),
+      catchError(this.handleError<Seriefac>('Ocurrio un error en Post busca_serie_factura'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  busca_cfdi_metodo_pago( ): Observable<Metodopagocfdi[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    miurl += '?modo=buscar_cat_metodo_pago'
+    const headers = { 'content-type': 'text/plain'};
+    console.log("Debug: Estoy en busca_cfdi_metodo_pago ");
+  
+    return this.http.get<Metodopagocfdi[]>(miurl,  {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Metodo de pago cfdi')),
+      catchError(this.handleError<Metodopagocfdi[]>('Ocurrio un error en Post obten busca_codigo_inven'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  busca_cat_uso_cfdi( ): Observable<Usocfdi[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    miurl += '?modo=buscar_cat_usocfdi'
+    const headers = { 'content-type': 'text/plain'};
+    console.log("Debug: Estoy en busca_cfdi_metodo_pago ");
+  
+    return this.http.get<Usocfdi[]>(miurl,  {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Metodo de pago cfdi')),
+      catchError(this.handleError<Usocfdi[]>('Ocurrio un error en Post obten busca_codigo_inven'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  crear_factura_altas( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: Estoy en crea_factura_altas parametros:", parametros);
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "crear_cli_factura",
+      factura: misparams.factura,
+      idcli: misparams.idcli
+    }
+
+    console.log("Debug: Estoy en crea_factura_altas ", misparamnvo);
+  
+    return this.http.post<any>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Facturas')),
+      catchError(this.handleError<any>('Ocurrio un error en Post obten busca_factura_altas'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

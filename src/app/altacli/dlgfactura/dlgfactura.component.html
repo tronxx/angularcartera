@@ -22,10 +22,12 @@
                                 <label for="fechafac">Fecha</label> 
                                 <input type="text" size="10" name="fechafac" id="fechafac" value ="{{factura.fecha}}"> 
                                 <br>
-                                <label class="ancho80" for="prodfin">Prod.F</label>
-                                <input type="text" size="10" name="prodfin" id="prodfin" value =" {{factura.prodfin | currency }}" >
+                                <label class="ancho80" for="prodfin">Prod.F {{factura.prodfin}} </label>
+                                <input type="text" size="10" name="prodfin" id="prodfin" 
+                                 value ="{{factura.prodfin | currency }}" >
                                 <label for="impfac"> Importe</label> 
-                                <input type="text" size="10" name="impfac" id="impfac" value ="{{factura.subtot | currency}}" >
+                                <input type="text" size="10" name="impfac" id="impfac" 
+                                value ="{{factura.subtot | currency}}" >
                                 <label for="ivafac">Iva</label>
                                 <input type="text" size="10" name="ivafac" id="ivafac" value = "{{factura.iva | currency}}" >
                                 <label for="totalfac">Total</label> 
@@ -37,12 +39,13 @@
                                 <label class="ancho80" for="metpag">Met.Pago</label> 
                                 <input type="text" size="20" name="matpag" id="metpag" value ="{{factura.metodopago}} ">
                                 <label for="usocfdi">Uso CFDI</label>
-                                <input type="text" size="20" name="usocfdi" id="usocfdi" value ="{{factura.cveusocfdi}}">
+                                <input type="text" size="20" name="usocfdi" id="usocfdi" value ="{{factura.usocfdi}}">
                                 <br>
                                 <label class="ancho80" for="rfcfac">RFC</label>
                                 <input type="text" size="15"  name="rfcfac" id="rfcfac" value ="{{factura.rfc}}">
                                 <label for="emailfac">Correo</label>
                                 <input type="text" size="50" name="emailfac" id="emailfac" value ="{{factura.email}}">
+                                <input type="text" value="{{tempo_z}} ">
                     </td>
                     </tr>
                     <tr>

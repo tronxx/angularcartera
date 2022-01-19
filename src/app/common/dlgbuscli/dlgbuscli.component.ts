@@ -16,7 +16,7 @@ export class DlgbuscliComponent implements OnInit {
   vigentes = true;
   clientes : Cliente[] = [];
   cliente?: Cliente;
-
+  numcli_z = "";
 
   constructor(
     public dialogRef: MatDialogRef<DlgbuscliComponent>,
@@ -45,7 +45,6 @@ export class DlgbuscliComponent implements OnInit {
           this.messages = "No hay clientes con ese nombre";
           console.log("Debug: No hay respuesta");
         }
-        console.log("Debug: Respu", respu);
 
       }
     )
@@ -54,6 +53,7 @@ export class DlgbuscliComponent implements OnInit {
 
   select_cliente(cliente: Cliente ) {
     this.cliente = cliente;
+    this.numcli_z = this.cliente.numcli;
   }
 
   closeyes() {

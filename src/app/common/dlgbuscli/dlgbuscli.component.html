@@ -17,7 +17,7 @@
     <div *ngIf= "cliente" >
         <label for="">Cliente Seleccionado: {{cliente.numcli}} {{cliente.nombre}} </label>
     </div>
-    <table id="tbl_clientes" class="table table-striped table-bordered table-hover" >
+    <table id="tbl_clientes" border="1" >
         <thead>
             <tr>
                 <th>Codigo</th>
@@ -29,13 +29,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let cliente of clientes" (click)="select_cliente(cliente)" >
-                <td>{{cliente.numcli}} </td>
-                <td>{{cliente.nombre}} </td>
-                <td>{{cliente.direc}} </td>
-                <td>{{cliente.qom}} </td>
-                <td align ="right">{{ cliente.cargos - cliente.abonos | currency }}</td>
-                <td>{{cliente.compra}} </td>
+            <tr 
+            [class.trselected] = "micliente.numcli == numcli_z"
+            *ngFor="let micliente of clientes" (click)="select_cliente(micliente)" >
+                <td>{{micliente.numcli}} </td>
+                <td>{{micliente.nombre}} </td>
+                <td>{{micliente.direc}} </td>
+                <td>{{micliente.qom}} </td>
+                <td align ="right">{{ micliente.cargos - micliente.abonos | currency }}</td>
+                <td>{{micliente.compra}} </td>
             </tr>
         </tbody>
                 

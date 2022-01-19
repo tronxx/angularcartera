@@ -299,6 +299,7 @@ export class AltacliComponent implements OnInit {
       this.nvocli.codpost = this.cliente.codpost;
       this.nvocli.colonia = this.cliente.colonia;
       this.nvocli.email = this.cliente.email;
+      this.nvocli.fechavta = this.cliente.fechavta;
       this.mescum = this.meses_z[this.nvocli.mescum].descri;
       this.modoqom_z = [];
       if(this.nvocli.qom == "C") this.modoqom_z .push({clave:"C", descri:"CONTADO"})
@@ -712,7 +713,7 @@ busca_factura(idcli_z : number) {
             let precon = ( this.nvocli.preciolista * ( this.nvocli.piva / 100 + 1 )) -  this.nvocli.servicio;
             precon = this.nvocli.cargos - precon 
             if(precon < 0) precon = 0;
-            this.factura.prodfin = precon ;
+            this.factura.prodfin = precon;
             this.busca_renfacfo(this.factura.idfac);
           }
         } 
@@ -741,13 +742,26 @@ busca_renfacfo(idfacfon_z : number) {
 
 factura_cli(idcli: number) {
   let idcli_z = idcli;
+  let modo_z = "";
+  let factmp =  <Factura> {};
+  if (this.factura) {
+    modo_z = "MODIFICAR";
+    factmp = this.factura;
+  } else {
+    modo_z = "NUEVO";
+    factmp.idfac = -1;
+  }
   let params = {
     idcli: idcli,
-    precon: this.nvocli.preciolista,
+    preciolista: this.nvocli.preciolista,
     servic: this.nvocli.servicio,
     cargos: this.nvocli.cargos,
-    modo: "MODIFICAR"
+    fechavta: this.nvocli.fechavta,
+    ubiage: this.nvocli.ubica,
+    factura: factmp,
+    modo: modo_z,
   }
+  console.log("Debug: crear factura params:", params);
   const dialogmov = this.dialog.open(DlgfacturaComponent, {
     width:'700px',
     data: JSON.stringify( params)
@@ -758,37 +772,9 @@ factura_cli(idcli: number) {
         idcli:idcli_z,
         iniciales:this.usrreg_z.iniciales
       }
-  
-      this.servicioclientes.modificar_movimiento(JSON.stringify(params_z)).subscribe(
-        respu => {
-          respu.iniciales = this.usrreg_z.iniciales;
-          console.log("Debug:" , respu);
-          if(respu) {
-            this.busca_movclis(idcli_z);
-          } else {
-            this.alerta("Ocurrió un error en agregar Movimientos");
-          }
-        }
-      );
     }
+    this.busca_factura(idcli);
   });
 }
-
-nueva_factura_cli(idcli: number) {
-  let idcli_z = idcli;
-  let params = {
-    idcli: idcli,
-    precon: this.nvocli.preciolista,
-    servic: this.nvocli.servicio,
-    cargos: this.nvocli.cargos,
-    modo: "NUEVO"
-  }
-  const dialogmov = this.dialog.open(DlgfacturaComponent, {
-    width:'700px',
-    data: JSON.stringify( params)
-
-  });
-}
-
 
 }

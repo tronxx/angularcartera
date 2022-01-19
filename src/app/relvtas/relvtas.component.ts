@@ -56,7 +56,7 @@ export class RelvtasComponent implements OnInit {
       let minvomes_z = Number(this.mes_z) - 1;
       let minvoanu_z = Number(this.anu_z);
       if(minvomes_z < 1) { 
-        minvomes_z = 1; minvoanu_z = minvoanu_z - 1;
+        minvomes_z = 12; minvoanu_z = minvoanu_z - 1;
       }
       let mianu_z = minvoanu_z.toString();
       let mimes_z = ((minvomes_z+100).toString()).substring(1,3);
