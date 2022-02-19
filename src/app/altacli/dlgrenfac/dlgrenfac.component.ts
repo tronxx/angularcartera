@@ -37,9 +37,12 @@ export class DlgrenfacComponent implements OnInit {
   seriemotorvalida = true;
   renfacvalido = true;
   yabusqueinven = false;
+  datoshabilitados = false;
+  
   nuevorenfac = {
     renfac: this.renfac,
     esmoto: this.esmoto,
+    piva: 16,
     linea: "",
     seriemotor: "",
     pedimento: "",
@@ -59,6 +62,7 @@ export class DlgrenfacComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.renfac.canti = 1;
   }
 
   closeyes() {
@@ -80,6 +84,7 @@ export class DlgrenfacComponent implements OnInit {
       this.editdescri = false;
       this.pedirserie = false;
       if(this.renfac.codigo == "AUXILIAR") {
+        this.datoshabilitados = true;
         this.articulo = <Articulo> {};
         this.articulo.codigo=this.renfac.codigo;
         this.articulo.tipo = "GLO";
@@ -105,8 +110,9 @@ export class DlgrenfacComponent implements OnInit {
       this.renfac.codigo = this.articulo.codigo;
       this.renfac.concepto = this.articulo.descri;
       this.renfac.preciou = this.articulo.preciou;
+      this.nuevorenfac.linea = this.articulo.linea;
+      this.datoshabilitados = true;
       if(this.articulo.linea == "MOTO") {
-        this.nuevorenfac.linea = this.articulo.linea;
         this.esmoto = true;
       } else {
         this.esmoto = false;

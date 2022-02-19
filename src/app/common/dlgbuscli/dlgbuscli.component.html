@@ -32,7 +32,12 @@
             <tr 
             [class.trselected] = "micliente.numcli == numcli_z"
             *ngFor="let micliente of clientes" (click)="select_cliente(micliente)" >
-                <td>{{micliente.numcli}} </td>
+                <td>
+                    <input type="checkbox" 
+                    [checked] = "micliente.numcli == numcli_z"
+                    >  
+                    {{micliente.numcli}} 
+                </td>
                 <td>{{micliente.nombre}} </td>
                 <td>{{micliente.direc}} </td>
                 <td>{{micliente.qom}} </td>

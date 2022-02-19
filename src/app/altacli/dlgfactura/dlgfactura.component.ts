@@ -10,15 +10,12 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { DialogBodyComponent } from '../../dialog-body/dialog-body.component';
 import { DlgbuscliComponent } from '../../common/dlgbuscli/dlgbuscli.component';
 import { MatIconModule } from '@angular/material/icon'; 
-import { Movclis } from '../../models/movclis';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ConfiguracionService } from '../../services/configuracion.service';
 import { calcPossibleSecurityContexts } from '@angular/compiler/src/template_parser/binding_parser';
-import { Cliagentes } from '../../models/cliagentes';
-import { Vendedor } from '../../models/vendedor';
-import { Factura } from '../../models/facturas';
-import { Renfacfo } from '../../models/renfacfo';
+import { Factura } from '../../models';
+import { Renfacfo } from '../../models';
 import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 import { DlgrenfacComponent } from '../dlgrenfac/dlgrenfac.component';
 import { DlgdatosfacturaComponent  } from '../dlgdatosfactura/dlgdatosfactura.component';
@@ -33,6 +30,7 @@ export class DlgfacturaComponent implements OnInit {
   factura? : Factura;
   renfacfo : Renfacfo[] = [];
   idcli = 0;
+  idfac = 0;
   cargoscli_z = 0;
   servic_z = 0;
   preciolista_z =  0;
@@ -40,6 +38,9 @@ export class DlgfacturaComponent implements OnInit {
   fechavta = ""
   ubiage = "";
   tempo_z = "Tempo:";
+  escerrada = false;
+  fechacierre_z = new Date();
+  fechaincorrecta_z = false;
   
   constructor(
     public dialog: MatDialog, 
@@ -106,6 +107,41 @@ export class DlgfacturaComponent implements OnInit {
 
   }
 
+  editar_factura() {
+    let params_z = {
+      fechavta: this.fechavta,
+      factura:  this.factura,
+      ubiage: this.ubiage,
+      modo: "MODIFICAR"
+    }
+    const dialogmov = this.dialog.open(DlgdatosfacturaComponent, {
+      width:'700px',
+      data: JSON.stringify(params_z)
+    });
+    dialogmov.afterClosed().subscribe(res => {
+      if (res) {
+        let params_z = {
+          modo:"MODIFICAR",
+          idcli:this.idcli,
+          factura:res
+        }
+        this.servicioclientes.crear_factura_altas(JSON.stringify(params_z)).subscribe( resalta=> {
+
+          if(resalta.status == "OK") {
+            this.busca_factura();
+          } else {
+            this.alerta("Error:" + resalta.error);
+            console.log("Debug: Error", resalta);
+            this.closeyes();
+          }
+        });
+
+      }
+    });
+  
+
+  }
+
   alerta(mensaje: string) {
     const dialogref = this.dialog.open(DialogBodyComponent, {
       width:'350px',
@@ -129,11 +165,15 @@ export class DlgfacturaComponent implements OnInit {
         if(respu) {
           this.factura = respu[0];
           if(this.factura) {
+            this.idfac = this.factura.idfac;
             this.busca_renfacfo(this.factura.idfac);
             this.prodfin_z = ( this.preciolista_z * ( 16 / 100 + 1 )) -  this.servic_z;
             this.prodfin_z = this.cargoscli_z - this.prodfin_z;
             if(this.prodfin_z < 0) this.prodfin_z = 0;
             this.factura.prodfin = this.prodfin_z;
+            this.escerrada = ( this.factura.status == "C");
+            //this.fechacierre_z = new Date(this.factura.fecha.replace(/-/g, '\/'));
+            this.fechaincorrecta_z = this.valida_fecha();
           }
         }
       }
@@ -161,6 +201,37 @@ export class DlgfacturaComponent implements OnInit {
   }
 
   eliminar_renfac(mirenfac: Renfacfo) {
+    let idcli_z = this.factura?.idcli;
+    let idfac_z = this.factura?.idfac;
+    const dialogref = this.dialog.open(DialogBodyComponent, {
+      width:'350px',
+      data: 'Seguro de Eliminar Renglon: ' + mirenfac.codigo + 
+      " " + mirenfac.concepto
+    });
+    dialogref.afterClosed().subscribe(res => {
+      if(res) {
+        let params_z = {
+          modo: "eliminar_renfac",
+          idcli: idcli_z,
+          idfac: idfac_z,
+          idrenfac:mirenfac.idrenfacfo,
+          renfac: mirenfac
+        }
+        this.servicioclientes.agregar_renfac_altas(JSON.stringify(params_z)).subscribe( resalta=> 
+          {
+            if(resalta.status == "OK") {
+              this.busca_factura();
+            } else {
+              this.alerta("Error:" + resalta.error);
+              console.log("Debug: Error", resalta);
+              this.closeyes();
+            }
+  
+          });
+
+      }
+    });
+
   } 
 
   agregar_renfac() {
@@ -174,12 +245,14 @@ export class DlgfacturaComponent implements OnInit {
     });
     dialogmov.afterClosed().subscribe(res => {
       if (res) {
+        console.log("Debug: regreso de dlgrenfaccomponent:", res);
         let params_z = {
           modo:"agregar_ren_factura",
           idcli:this.idcli,
+          idfac: this.idfac,
           renfac:res
         }
-        this.servicioclientes.crear_factura_altas(JSON.stringify(params_z)).subscribe( resalta=> {
+        this.servicioclientes.agregar_renfac_altas(JSON.stringify(params_z)).subscribe( resalta=> {
 
           if(resalta.status == "OK") {
             this.busca_factura();
@@ -205,11 +278,106 @@ export class DlgfacturaComponent implements OnInit {
 
   formularioEnviado() {}
 
+  valida_fecha() {
+    let fechaprop_z = ";"
+    let msg1_z = "";
+    let undia_z = 24 * 60 * 60 * 1000;
+    let escorrecto_z = true;
+    let fechahoy_z = new Date;
+    let dias_z = (fechahoy_z.getTime() / (undia_z)) -  (this.fechacierre_z.getTime() / (undia_z));
+    let fechamin_z = new Date(fechahoy_z.getTime() - undia_z * 3);
+    fechaprop_z = this.configuracion.fecha_a_str(fechamin_z, "dd-mm-YYYY");
+    if(dias_z < 0) {
+      msg1_z = "No puede facturar con fecha Posterior";
+      escorrecto_z = false;
+    }
+    if(dias_z > 3) {
+      msg1_z = "No puede facturar con más de 3 días de diferencia";
+      escorrecto_z = false;
+    }
+    return escorrecto_z;
+  }
+
+  validar_fecha_cierre() {
+    let resultado_z = {
+      escorrecto_z : true,
+      msg1_z : ""
+    } 
+    let fechaprop_z = ";"
+    let msg1_z = "";
+    let undia_z = 24 * 60 * 60 * 1000;
+    let fechahoy_z = new Date;
+    let dias_z = (fechahoy_z.getTime() / (undia_z)) -  (this.fechacierre_z.getTime() / (undia_z));
+    let fechamin_z = new Date(fechahoy_z.getTime() - undia_z * 3);
+    fechaprop_z = this.configuracion.fecha_a_str(fechamin_z, "dd-mm-YYYY");
+    if(dias_z < 0) {
+      resultado_z.msg1_z = "No puede facturar con fecha Posterior";
+      resultado_z.escorrecto_z = false;
+    }
+    if(dias_z > 3) {
+      resultado_z.msg1_z = "No puede facturar con más de 3 días de diferencia";
+      resultado_z.escorrecto_z = false;
+    }
+    return resultado_z;
+  }
+
   cerrar_factura() {
+    let validar_z = this.validar_fecha_cierre();
+    if(!validar_z.escorrecto_z) {
+      this.alerta(validar_z.msg1_z);
+      return;
+    }
+   
+    const dialogref = this.dialog.open(DialogBodyComponent, {
+      width:'350px',
+      data: 'Seguro de Cerrar esta Factura'
+    });
+    dialogref.afterClosed().subscribe(res => {
+      if (res) {
+        let params_z = {
+          idcli: this.idcli,
+          idfac: this.idfac,
+          fechacierre: this.fechacierre_z
+        }
+        this.servicioclientes.cerrar_factura_altas(JSON.stringify(params_z)).subscribe( resalta=> {
+
+          if(resalta.status == "OK") {
+            this.descarga_pdf_fac(resalta.uuid);
+            this.busca_factura();
+          } else {
+            this.alerta("Error:" + resalta.error);
+            console.log("Debug: Error", resalta);
+            this.closeyes();
+          }
+        });
+      }
+    });
 
   }
 
   imprimir_factura() {
+    if(this.factura) {
+      let uuid_z = this.factura.uuid;
+      const dialogref = this.dialog.open(DialogBodyComponent, {
+        width:'350px',
+        data: 'Seguro de Imprimir esta Factura ?'
+      });
+      dialogref.afterClosed().subscribe(res => {
+        if (res) {
+          this.descarga_pdf_fac(uuid_z);
+        }
+      });
+
+    }
+
+  }
+
+  descarga_pdf_fac(uuid: string) {
+    let params_z = {
+      uuid: uuid,
+      rotar: "NO",
+    }
+    this.servicioclientes.obten_pdf_cfdi_factura(JSON.stringify(params_z));
 
   }
 

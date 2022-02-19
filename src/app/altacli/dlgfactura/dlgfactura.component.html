@@ -6,11 +6,18 @@
                 <table *ngIf="factura">
                     <tr>
                         <td>
-                            <button mat-raised-button color="primary" (click)="cerrar_factura()" >
+                            <button mat-raised-button color="primary" 
+                                [disabled]="escerrada" (click)="editar_factura()" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
+                                 Modificar Factura
+                            </button>
+                            <button mat-raised-button color="primary" 
+                            [disabled]="escerrada" (click)="cerrar_factura()" >
                                 <mat-icon aria-hidden="false" aria-label="Example new icon">lock</mat-icon>
                                 Cerrar Factura
                             </button>
-                            <button mat-raised-button color="primary" (click)="imprimir_factura()" >
+                            <button mat-raised-button color="primary" 
+                                [disabled]="!escerrada" (click)="imprimir_factura()" >
                                 <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
                                 Imprimir Factura
                             </button>
@@ -21,8 +28,12 @@
                                 <input type="text" size="8" name="numfac" id="numfac" value = "{{factura.numero}}" > 
                                 <label for="fechafac">Fecha</label> 
                                 <input type="text" size="10" name="fechafac" id="fechafac" value ="{{factura.fecha}}"> 
+                                <div *ngIf="!fechaincorrecta_z">
+                                    <label for="">Fecha Cierre</label>
+                                    <input type="date" size="10" ([ngModel])="fechacierre_z">
+                                </div>
                                 <br>
-                                <label class="ancho80" for="prodfin">Prod.F {{factura.prodfin}} </label>
+                                <label class="ancho80" for="prodfin">Prod.F</label>
                                 <input type="text" size="10" name="prodfin" id="prodfin" 
                                  value ="{{factura.prodfin | currency }}" >
                                 <label for="impfac"> Importe</label> 
@@ -45,7 +56,6 @@
                                 <input type="text" size="15"  name="rfcfac" id="rfcfac" value ="{{factura.rfc}}">
                                 <label for="emailfac">Correo</label>
                                 <input type="text" size="50" name="emailfac" id="emailfac" value ="{{factura.email}}">
-                                <input type="text" value="{{tempo_z}} ">
                     </td>
                     </tr>
                     <tr>
@@ -76,7 +86,7 @@
                                         <td>{{mirenfac.concepto}} </td>
                                         <td> {{mirenfac.canti}} </td>
                                         <td>{{mirenfac.preciou | currency}} </td>
-                                        <td> {{mirenfac.importe | currency}} </td>
+                                        <td> {{mirenfac.importe + mirenfac.iva | currency}} </td>
                                         <td> {{mirenfac.folio}} </td>
                                         <td> {{mirenfac.serie}} </td>
                                         <button mat-raised-button color="warn" (click)="eliminar_renfac(mirenfac)" >

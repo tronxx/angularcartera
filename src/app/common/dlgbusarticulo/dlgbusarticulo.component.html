@@ -29,7 +29,9 @@
             <tr 
             [class.trselected] = "miarticulo.codigo == codigo_z"
             *ngFor="let miarticulo of articulos" (click)="select_articulo(miarticulo)" >
-                <td> {{miarticulo.codigo}} </td>
+                <td>
+                    <input type="checkbox" [checked] = "miarticulo.codigo == codigo_z"> 
+                    {{miarticulo.codigo}} </td>
                 <td>{{miarticulo.descri}} </td>
                 <td>{{miarticulo.linea}} </td>
                 <td>{{ miarticulo.preciou | currency }} </td>

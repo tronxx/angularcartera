@@ -7,27 +7,31 @@
                 <input type="text" size="13" name="articulo" id="articulo" 
                 [(ngModel)] = "renfac.codigo"
                 oninput="this.value = this.value.toUpperCase()" 
-                (blur)="busca_articulo()">
-
-                <button mat-raised-button  color="primary"   (click)="busca_articulo()">Aceptar Articulo</button>
+                >
+                <button mat-raised-button 
+                color="primary"   (click)="busca_articulo()">Aceptar Articulo</button>
                 <br>
                 <label class="ancho80" for="descri">Descripcion</label>
                 <input type="text" name="descri" id="descri" size="40"
+                [disabled]="!datoshabilitados"
                 [(ngModel)] = "renfac.concepto"
                 oninput="this.value = this.value.toUpperCase()">
                 <br>
                 <label class="ancho80" for="folio">Folio</label>
                 <input type="number" size="5" name="folio" id="folio"
+                [disabled]="!datoshabilitados"
                 [(ngModel)] = "renfac.folio">
                 <label for="serie">Serie</label>
                 <input type="text" name="serie" id="serie" size="20"
                 [(ngModel)] = "renfac.serie"
+                [disabled]="!datoshabilitados"
                 (blur)="valida_serie()"
                 oninput="this.value = this.value.toUpperCase()"
                 >
                 <br>
                 <label class="ancho80" for="preciou">Precio.U</label>
                 <input type="number" size="10" name="preciou" id="preciou"
+                [disabled]="!datoshabilitados"
                 [(ngModel)]="renfac.preciou">
                 <br>
                 <div *ngIf="esmoto">
@@ -74,7 +78,9 @@
 </div>
 <div mat-dialog-actions>
     <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>
-    <button mat-raised-button  color="primary"   (click)="closeyes()">Aceptar</button>
+    <button mat-raised-button 
+    [disabled]="!datoshabilitados"
+    color="primary"   (click)="closeyes()">Aceptar</button>
 </div>
 
        
