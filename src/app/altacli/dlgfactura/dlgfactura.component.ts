@@ -10,12 +10,13 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { DialogBodyComponent } from '../../dialog-body/dialog-body.component';
 import { DlgbuscliComponent } from '../../common/dlgbuscli/dlgbuscli.component';
 import { MatIconModule } from '@angular/material/icon'; 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ConfiguracionService } from '../../services/configuracion.service';
 import { calcPossibleSecurityContexts } from '@angular/compiler/src/template_parser/binding_parser';
 import { Factura } from '../../models';
 import { Renfacfo } from '../../models';
+import { Cliente } from '../../models/clientes';
 import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 import { DlgrenfacComponent } from '../dlgrenfac/dlgrenfac.component';
 import { DlgdatosfacturaComponent  } from '../dlgdatosfactura/dlgdatosfactura.component';
@@ -28,7 +29,9 @@ import { DlgdatosfacturaComponent  } from '../dlgdatosfactura/dlgdatosfactura.co
 export class DlgfacturaComponent implements OnInit {
 
   factura? : Factura;
+  cliente? : Cliente;
   renfacfo : Renfacfo[] = [];
+  codcli_z = "";
   idcli = 0;
   idfac = 0;
   cargoscli_z = 0;
@@ -40,28 +43,33 @@ export class DlgfacturaComponent implements OnInit {
   tempo_z = "Tempo:";
   escerrada = false;
   fechacierre_z = new Date();
-  fechaincorrecta_z = false;
+  fechacorrecta_z = false;
+  strfeccierre_z = "";
   
   constructor(
     public dialog: MatDialog, 
     public dialogRef: MatDialogRef<DlgrenfacComponent>,
     public dialogfactura : MatDialogRef<DlgdatosfacturaComponent>,
-    @Inject(MAT_DIALOG_DATA) public message : string,
     private configuracion: ConfiguracionService,
-    private servicioclientes: ClientesService
+    private servicioclientes: ClientesService,
+    private route : ActivatedRoute
 
   ) { }
 
   ngOnInit(): void {
-    let params_z = JSON.parse(this.message);
-    console.log("Debug: dlgfactura params:", params_z);
-    this.idcli  = params_z.idcli;
-    this.cargoscli_z = params_z.cargos;
-    this.servic_z = params_z.servic;
-    this.preciolista_z = params_z.preciolista;
-    this.ubiage = params_z.ubiage,
-    this.fechavta = params_z.fechavta;
-    if(params_z.modo == "NUEVO") {
+    this.codcli_z = String(this.route.snapshot.paramMap.get('numcli'));
+    this.idfac = Number(this.route.snapshot.paramMap.get('idfac'));
+    this.buscar_cliente(this.codcli_z);
+    if(this.cliente) {
+      this.idcli  = this.cliente.idcli;
+      this.cargoscli_z = this.cliente.cargos;
+      this.servic_z = this.cliente.servicio;
+      this.preciolista_z = this.cliente.preciolista;
+      this.ubiage = this.cliente.ubica;
+      this.fechavta = this.cliente.fechavta;
+  
+    }
+    if(this.idfac == -1) {
       this.crear_factura()
     } else {
       this.busca_factura();
@@ -103,7 +111,16 @@ export class DlgfacturaComponent implements OnInit {
 
       }
     });
-  
+  }
+
+  buscar_cliente(codcli: string) {
+    this.servicioclientes.buscaclientealta(codcli).subscribe(res => {
+      if(res) {
+        this.cliente=res;
+      } else {
+        this.alerta("Cliente Inexistente");
+      }
+    });
 
   }
 
@@ -172,8 +189,8 @@ export class DlgfacturaComponent implements OnInit {
             if(this.prodfin_z < 0) this.prodfin_z = 0;
             this.factura.prodfin = this.prodfin_z;
             this.escerrada = ( this.factura.status == "C");
-            //this.fechacierre_z = new Date(this.factura.fecha.replace(/-/g, '\/'));
-            this.fechaincorrecta_z = this.valida_fecha();
+            this.strfeccierre_z = this.factura.fecha;
+            this.validar_fecha_cierre();
           }
         }
       }
@@ -278,26 +295,6 @@ export class DlgfacturaComponent implements OnInit {
 
   formularioEnviado() {}
 
-  valida_fecha() {
-    let fechaprop_z = ";"
-    let msg1_z = "";
-    let undia_z = 24 * 60 * 60 * 1000;
-    let escorrecto_z = true;
-    let fechahoy_z = new Date;
-    let dias_z = (fechahoy_z.getTime() / (undia_z)) -  (this.fechacierre_z.getTime() / (undia_z));
-    let fechamin_z = new Date(fechahoy_z.getTime() - undia_z * 3);
-    fechaprop_z = this.configuracion.fecha_a_str(fechamin_z, "dd-mm-YYYY");
-    if(dias_z < 0) {
-      msg1_z = "No puede facturar con fecha Posterior";
-      escorrecto_z = false;
-    }
-    if(dias_z > 3) {
-      msg1_z = "No puede facturar con más de 3 días de diferencia";
-      escorrecto_z = false;
-    }
-    return escorrecto_z;
-  }
-
   validar_fecha_cierre() {
     let resultado_z = {
       escorrecto_z : true,
@@ -306,9 +303,10 @@ export class DlgfacturaComponent implements OnInit {
     let fechaprop_z = ";"
     let msg1_z = "";
     let undia_z = 24 * 60 * 60 * 1000;
-    let fechahoy_z = new Date;
-    let dias_z = (fechahoy_z.getTime() / (undia_z)) -  (this.fechacierre_z.getTime() / (undia_z));
-    let fechamin_z = new Date(fechahoy_z.getTime() - undia_z * 3);
+    let fechahoy_z = new Date();
+    this.fechacierre_z = new Date(this.strfeccierre_z);
+    let dias_z = Math.floor(fechahoy_z.getTime() / (undia_z)) -  Math.floor(this.fechacierre_z.getTime() / (undia_z));
+    let fechamin_z = new Date(Math.floor(fechahoy_z.getTime()/undia_z) - undia_z * 3);
     fechaprop_z = this.configuracion.fecha_a_str(fechamin_z, "dd-mm-YYYY");
     if(dias_z < 0) {
       resultado_z.msg1_z = "No puede facturar con fecha Posterior";
@@ -318,6 +316,7 @@ export class DlgfacturaComponent implements OnInit {
       resultado_z.msg1_z = "No puede facturar con más de 3 días de diferencia";
       resultado_z.escorrecto_z = false;
     }
+    this.fechacorrecta_z = resultado_z.escorrecto_z;
     return resultado_z;
   }
 

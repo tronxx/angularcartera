@@ -73,31 +73,31 @@
             <input type="text" name="emailcli" id="emailcli" size="30" [(ngModel)]="nvocli.email" >
         </mat-card>
         <br>
-        <mat-card *ngIf="conaval && aval" >
+        <mat-card *ngIf="conaval" >
             <mat-card-title>Datos del Aval</mat-card-title>
             <label class="ancho80" for="appataval" size="10">Apellido Paterno</label>
-            <input type="text" name="appataval" id="appataval" size="30" [(ngModel)]="aval.appat" 
+            <input type="text" name="appataval" id="appataval" size="30" [(ngModel)]="nvoaval.appat" 
                 oninput="this.value = this.value.toUpperCase()">
 
             <br>
             <label class="ancho80" for="apmataval" size="10" >Apellido Materno</label>
-            <input type="text" name="apmataval" id="apmataval" size="30" [(ngModel)]="aval.apmat" 
+            <input type="text" name="apmataval" id="apmataval" size="30" [(ngModel)]="nvoaval.apmat" 
                 oninput="this.value = this.value.toUpperCase()">
             <br> 
             <label class="ancho80" for="nombre1aval" size="10">Nombre1</label>
-            <input type="text" name="nombre1aval" id="nombre1aval" size="30" [(ngModel)]="aval.nompil1"
+            <input type="text" name="nombre1aval" id="nombre1aval" size="30" [(ngModel)]="nvoaval.nompil1"
                 oninput="this.value = this.value.toUpperCase()" >
             <br>
             <label class="ancho80" for="nombre2aval"  size="10">Nombre2</label>
-            <input type="text" name="nombre2aval" id="nombre2aval" size="30" [(ngModel)]="aval.nompil2"
+            <input type="text" name="nombre2aval" id="nombre2aval" size="30" [(ngModel)]="nvoaval.nompil2"
                 oninput="this.value = this.value.toUpperCase()" >
             <br>
             <label class="ancho80" for="dir1aval"  size="10">Direccion</label>
-            <input type="text" name="dir1aval" id="dir1aval" size="30" [(ngModel)]="aval.dirav1"
+            <input type="text" name="dir1aval" id="dir1aval" size="30" [(ngModel)]="nvoaval.dirav1"
                     oninput="this.value = this.value.toUpperCase()" >
             <br>
             <label class="ancho80" for="dir2aval"  size="10">Direccion 2</label>
-            <input type="text" name="dir2aval" id="dir2aval" size="30" [(ngModel)]="aval.dirav2"
+            <input type="text" name="dir2aval" id="dir2aval" size="30" [(ngModel)]="nvoaval.dirav2"
                             oninput="this.value = this.value.toUpperCase()" >
         </mat-card>
 

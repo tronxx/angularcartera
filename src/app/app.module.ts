@@ -43,6 +43,7 @@ import { DlgfacturaComponent } from './altacli/dlgfactura/dlgfactura.component';
 import { DlgrenfacComponent } from './altacli/dlgrenfac/dlgrenfac.component';
 import { DlgdatosfacturaComponent } from './altacli/dlgdatosfactura/dlgdatosfactura.component';
 import { DlgbusarticuloComponent } from './common/dlgbusarticulo/dlgbusarticulo.component';
+import { FacturacliComponent } from './altacli/facturacli/facturacli.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { DlgbusarticuloComponent } from './common/dlgbusarticulo/dlgbusarticulo.
     DlgfacturaComponent,
     DlgrenfacComponent,
     DlgdatosfacturaComponent,
-    DlgbusarticuloComponent
+    DlgbusarticuloComponent,
+    FacturacliComponent
   ],
   imports: [
     BrowserModule,

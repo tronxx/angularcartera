@@ -47,6 +47,8 @@ export class DlgdatoscliComponent implements OnInit {
   nulets : Nulets[] = [];
   poblaciones : Poblacs[] = [];
   tarjetastc : Tarjetatc[] = [];
+  aval? : Aval;
+
   conaval = false;
   contarjetatc = false;
 
@@ -139,7 +141,20 @@ export class DlgdatoscliComponent implements OnInit {
     tarjetatc:""
   }
 
-  aval? : Aval;
+  nvoaval = {
+    idcli : -1,
+    direc2: "",
+    nomav: "",
+    dirav1: "",
+    dirav2: "",
+    compra: "",
+    linea: "",
+    appat: "",
+    apmat: "",
+    nompil1: "",
+    nompil2: ""
+  }
+
 
 
   constructor(public dialog: MatDialog, 
@@ -222,6 +237,7 @@ export class DlgdatoscliComponent implements OnInit {
           this.promotor = respu;
         }
       );
+     
       let parampoblac_z = {
         modo :"buscar_poblacs",
         codprom : "-1"
@@ -290,8 +306,8 @@ export class DlgdatoscliComponent implements OnInit {
         } else {
           this.contarjetatc = false;
         }
-        this.selecciona_letras_cliente()
         this.busca_aval(this.nvocli.idcli);
+        this.selecciona_letras_cliente()
       }
   
     }
@@ -307,6 +323,7 @@ export class DlgdatoscliComponent implements OnInit {
         respu => {
           if(respu) {
             this.aval = respu;
+            this.nvoaval = this.aval;
           } else {
             this.aval = <Aval> {}
             this.aval.idcli = -1;
@@ -411,7 +428,7 @@ export class DlgdatoscliComponent implements OnInit {
       let respuesta = {
         modo:"",
         clienterespu: this.nvocli,
-        avalrespu: this.aval
+        avalrespu: this.nvoaval
       }
       this.dialogRef.close(respuesta);
     }

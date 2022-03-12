@@ -1,5 +1,5 @@
 <div>
-    <form #formularioCliente="ngForm" (ngSubmit)="formularioEnviado()" *ngIf= "factura">
+    <form #formularioCliente="ngForm" *ngIf= "factura">
         <div name="factura">
             <mat-card>
                 <mat-card-title>Datos de Factura</mat-card-title>
@@ -22,14 +22,21 @@
                                 Imprimir Factura
                             </button>
                             <br>
+                                <div *ngIf="cliente">
+                                    <label class="ancho80" for=""> Codigo</label>
+                                    <input disabled type="text" size="10" name="" id="" value=" {{cliente.numcli}} ">
+                                    <label for=""> Nombre</label>
+                                     <input disabled type="text" size="30" name="" id="" value=" {{cliente.nombre}} ">
+                                </div>
                                 <label class="ancho80" for="seriefac">Serie</label> 
                                 <input type="text" size="5"  name="serifac" id="seriefac" value=" {{factura.serie}}"> 
                                 <label for="numfac">Numero</label> 
                                 <input type="text" size="8" name="numfac" id="numfac" value = "{{factura.numero}}" > 
                                 <label for="fechafac">Fecha</label> 
+                                <input type="text" size="10" name="fechafac" id="fechafac" value ="{{factura.fecha}}"> 
                                 <div *ngIf="!escerrada" >
-                                    <input type="text" size="10" name="fechafac" id="fechafac" value ="{{factura.fecha}}"> 
-                                    <label color="warn" for="fecha">Fecha de cierre </label>
+                                    <mat-icon>warning</mat-icon>
+                                    <label color="warn" for="fecha">Fecha de cierre                                         </label>
                                     <input type="date" name="fecha" id="fecha" (change)="validar_fecha_cierre()" [(ngModel)]="strfeccierre_z" >
                                     <div *ngIf="!fechacorrecta_z">
                                         <p>Para poder cerrar la Factura debe Proporcionar una Fecha Válida</p>
@@ -64,7 +71,7 @@
                     <tr>
                         <td>
 
-                            <button mat-raised-button color="primary" (click)="agregar_renfac()" >
+                            <button [disabled]="escerrada" mat-raised-button color="primary" (click)="agregar_renfac()" >
                                 <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
                                 Agregar Renglon
                             </button>
@@ -92,7 +99,7 @@
                                         <td> {{mirenfac.importe + mirenfac.iva | currency}} </td>
                                         <td> {{mirenfac.folio}} </td>
                                         <td> {{mirenfac.serie}} </td>
-                                        <button mat-raised-button color="warn" (click)="eliminar_renfac(mirenfac)" >
+                                        <button [disabled]="escerrada" mat-raised-button color="warn" (click)="eliminar_renfac(mirenfac)" >
                                             <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
                                             Eliminar
                                         </button>

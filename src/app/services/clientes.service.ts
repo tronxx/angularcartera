@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { catchError, map, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -84,6 +85,24 @@ export class ClientesService {
       catchError(this.handleError<Cliente>('Ocurrio un error en Post busca cliente'))
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  imprimir_tarjeta_altas(params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Debug: Estoy en Imprimir tarjeta altas ", params);
+    var miurl = this.url + "altas/serviciosaltas.php?modo=imprimir_tarjeta" + 
+      "&numcli="+misparams.numcli;
+      console.log("Debug url: ", miurl);
+      window.open(miurl, "_blank");
+  }
+
+  imprimir_edocta_altas(params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Debug: Estoy en Imprimir Estado de Cuenta altas ", params);
+    var miurl = this.url + "altas/serviciosaltas.php?modo=imprimir_edocta_altas" + 
+      "&numcli="+misparams.numcli;
+      console.log("Debug url: ", miurl);
+      window.open(miurl, "_blank");
   }
 
   obtencartaprom ( parametros: string): Observable<Cartapro[]> {
@@ -226,7 +245,7 @@ export class ClientesService {
     
     return this.http.post<Nulets[]>(miurl, parametros, {'headers':headers}).
     pipe(
-      tap(_ => this.log('fetched CartasProm')),
+      tap(_ => this.log('fetched Nulets')),
       catchError(this.handleError<Nulets[]>('Ocurrio un error en Post obten Ubivta'))
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
@@ -826,10 +845,72 @@ export class ClientesService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  cerrar_cliente_altas( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: Estoy en cerrar_cliente_altas parametros:", parametros);
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "cerrar_cliente_altas",
+      idcli: misparams.idcli,
+      numcli: misparams.numcli
+    }
+
+    return this.http.post<any>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched cerrar_cliente_altas')),
+      catchError(this.handleError<any>('Ocurrio un error en Post obten agregar_renfac_altas '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  buscar_status_cliente_cerrado( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: Estoy en cerrar_cliente_altas parametros:", parametros);
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "obtener_status_cierre_cliente_altas",
+      numcli: misparams.numcli
+    }
+
+    return this.http.post<any>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched cerrar_cliente_altas')),
+      catchError(this.handleError<any>('Ocurrio un error en Post obten agregar_renfac_altas '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  grabar_solicitud_altas( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: Estoy en grabar_solicitud_altas parametros:", parametros);
+    let misparams = JSON.parse(parametros);
+
+    return this.http.post<any>(miurl, JSON.stringify( misparams), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched grabar_solicitud_altas')),
+      catchError(this.handleError<any>('Ocurrio un error en Post obten agregar_renfac_altas '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+
+
   obten_pdf_cfdi_factura(params:string) {
     let misparams = JSON.parse(params);
     console.log("Debug: Estoy en obtenpdfcfdi ", params);
-    var miurl = this.url + "altas/servicios.php?modo=descarga_pdf_cfdi_factura&uuid="+misparams.uuid + "&rotarfac="+misparams.rotar;
+    var miurl = this.url + "altas/serviciosaltas.php?modo=descarga_pdf_cfdi_factura&uuid="+misparams.uuid + "&rotarfac="+misparams.rotar;
     window.open(miurl, "_blank");
   }
 

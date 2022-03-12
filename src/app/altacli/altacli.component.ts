@@ -22,12 +22,13 @@ import { Factura } from '../models/facturas';
 import { Renfacfo } from '../models/renfacfo';
 import { Tarjetatc } from '../models/tipostarjetastc';
 import { DlgedoctaComponent  } from '../common/dlgedocta/dlgedocta.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { DlgdatoscliComponent } from './dlgdatoscli/dlgdatoscli.component';
 import { DlgdatosmovcliComponent } from './dlgdatosmovcli/dlgdatosmovcli.component';
 import { DlgDatosVndComponent } from './dlg-datos-vnd/dlg-datos-vnd.component';
 import { DlgfacturaComponent } from './dlgfactura/dlgfactura.component';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-altacli',
@@ -55,6 +56,8 @@ export class AltacliComponent implements OnInit {
   contarjetatc = false;
   yaagentes_z = false;
   modoqom_z = [ { clave:"C", descri:"CONTADO"}];
+  linkfactura = "";
+  linksolicitud = "";
 
   tictes_z = [
     { clave:"PC", descri:"PRIMER CREDITO"},
@@ -151,11 +154,15 @@ export class AltacliComponent implements OnInit {
     "nivel":""
   }
 
+  clienteabierto = false;
+  letraspend = false;
+  clientecred = false;
 
   constructor(public dialog: MatDialog, 
     private route: ActivatedRoute,
     private location: Location,
-    private servicioclientes: ClientesService
+    private servicioclientes: ClientesService,
+    private router: Router
     ) { }
 
   ngOnInit(): void {
@@ -216,6 +223,22 @@ export class AltacliComponent implements OnInit {
           });
      
         }
+      }
+    );
+
+  }
+
+  buscastatuscerrado() {
+    var params_z = {
+      modo : "obtener_status_cierre_cliente_altas",
+      numcli: this.numcli_z
+    }
+    this.clienteabierto = false;
+    this.servicioclientes.buscar_status_cliente_cerrado(JSON.stringify(params_z)).subscribe(
+      respu => {
+        if(respu) {
+          this.clienteabierto = (respu.status == "VENTA_ABIERTA");
+         }
       }
     );
 
@@ -306,12 +329,20 @@ export class AltacliComponent implements OnInit {
       if(this.nvocli.qom == "Q") this.modoqom_z .push({clave:"Q", descri:"QUINCENAL"})
       if(this.nvocli.qom == "M") this.modoqom_z .push({clave:"M", descri:"MENSUAL"})
       this.busca_movclis(this.nvocli.idcli);
+      this.buscastatuscerrado();
+      if(this.nvocli.qom != "C") {
+        this.busca_letras_pendientes();
+      } else {
+        this.letraspend = false;
+      }
       //this.busca_cliagentes(this.nvocli.idcli);
       if(this.nvocli.qom != "C") {
         this.conaval = true;
+        this.clientecred = true;
         this.busca_aval(this.nvocli.idcli);
       } else {
         this.conaval = false;
+        this.clientecred = true;
         this.aval = <Aval> {};
         if(this.nvocli.ticte == "TC") {
           this.busca_mi_tc(this.nvocli.idcli);
@@ -322,6 +353,22 @@ export class AltacliComponent implements OnInit {
         console.log("Debug: contarjetatc:", this.contarjetatc);
       }
     }
+
+  }
+
+  busca_letras_pendientes() {
+    var params_z = {
+      modo : "obtener_status_letras_impresas",
+      numcli: this.numcli_z
+    }
+    this.letraspend = true;
+    this.servicioclientes.buscar_status_cliente_cerrado(JSON.stringify(params_z)).subscribe(
+      respu => {
+        if(respu) {
+          this.letraspend = (respu.seimprimierontodaslasletras == "false");
+         }
+      }
+    );
 
   }
 
@@ -678,6 +725,7 @@ eliminar_agente(miagente: Cliagentes) {
 }
 
 busca_solicitud(idcli_z : number) {
+  this.linksolicitud = "/solicitud/" +  this.numcli_z;
   if(!this.solicitudcli_z) {
     var params_z = {
       modo : "buscar_solicitud",
@@ -698,13 +746,14 @@ busca_solicitud(idcli_z : number) {
 }
 
 busca_factura(idcli_z : number) {
+  let idfac_z = -1;
   if(!this.facturacli_z) {
     var params_z = {
       modo : "buscar_cli_facturas",
       codigo: this.numcli_z,
       idcli : idcli_z
     }
-    console.log("Debug: Estoy en busca_factura ", idcli_z);
+    this.linkfactura = "/facturacli/" + idfac_z.toString() + "/" + this.numcli_z;
     this.servicioclientes.busca_factura_altas(JSON.stringify(params_z)).subscribe(
       respu => {
         if(respu) {
@@ -714,8 +763,11 @@ busca_factura(idcli_z : number) {
             precon = this.nvocli.cargos - precon 
             if(precon < 0) precon = 0;
             this.factura.prodfin = precon;
+            idfac_z = this.factura.idfac;
             this.busca_renfacfo(this.factura.idfac);
+            this.linkfactura = "/facturacli/" + idfac_z.toString() + "/" + this.numcli_z;
           }
+
         } 
       }
     );
@@ -741,40 +793,57 @@ busca_renfacfo(idfacfon_z : number) {
 }
 
 factura_cli(idcli: number) {
-  let idcli_z = idcli;
+
+  let numcli_z = this.numcli_z
   let modo_z = "";
-  let factmp =  <Factura> {};
+  let idfac_z = -1;
   if (this.factura) {
-    modo_z = "MODIFICAR";
-    factmp = this.factura;
-  } else {
-    modo_z = "NUEVO";
-    factmp.idfac = -1;
-  }
-  let params = {
-    idcli: idcli,
-    preciolista: this.nvocli.preciolista,
-    servic: this.nvocli.servicio,
-    cargos: this.nvocli.cargos,
-    fechavta: this.nvocli.fechavta,
-    ubiage: this.nvocli.ubica,
-    factura: factmp,
-    modo: modo_z,
-  }
-  console.log("Debug: crear factura params:", params);
-  const dialogmov = this.dialog.open(DlgfacturaComponent, {
-    width:'700px',
-    data: JSON.stringify( params)
-  });
-  dialogmov.afterClosed().subscribe(res => {
-    if (res) {
-      let params_z = {
-        idcli:idcli_z,
-        iniciales:this.usrreg_z.iniciales
-      }
+    idfac_z = this.factura.idfac;
+  } 
+  let url_z = "/facturacli/`${idfac}/${numcli_z}`";
+  this.router.navigateByUrl(url_z).then( (e) => {
+    if (e) {
+      console.log("Navigation is successful!");
+    } else {
+      console.log("Navigation has failed!");
     }
-    this.busca_factura(idcli);
   });
 }
+
+imprimir_tarjeta() {
+  var params_z = {
+    modo : "imprimir_tarjeta",
+    numcli: this.numcli_z
+  }
+  console.log("Debug: Estoy en imprmir_tarjeta ", this.numcli_z);
+  this.servicioclientes.imprimir_tarjeta_altas(JSON.stringify(params_z));
+}
+
+imprimir_edocta() {
+  var params_z = {
+    modo : "imprimir_edocta_altas",
+    numcli: this.numcli_z
+  }
+  console.log("Debug: Estoy en imprmir_tarjeta ", this.numcli_z);
+  this.servicioclientes.imprimir_edocta_altas(JSON.stringify(params_z));
+}
+
+cerrarcliente() {
+  var params_z = {
+    modo : "cerrar_cliente_altas",
+    numcli: this.numcli_z
+  }
+  console.log("Debug: Estoy en Cerrar Cliente");
+  this.servicioclientes.cerrar_cliente_altas(JSON.stringify(params_z)).subscribe(
+    respu => {
+      if(respu) {
+        this.alerta("Cliente Cerrado");
+        this.clienteabierto = false;
+  
+      } 
+    }
+  );
+}
+
 
 }

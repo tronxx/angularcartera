@@ -35,6 +35,7 @@ export interface Solicitud {
     conocido: string,
     direccionconocido: string,
     referencia1: string,
+    referencia1a: string,
     referencia2: string,
     observaciones: string
 }

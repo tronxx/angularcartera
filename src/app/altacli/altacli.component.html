@@ -2,18 +2,35 @@
     <input type="text" name="codigo" id="codigo" size="12" [(ngModel)]="numcli_z">
     <button mat-raised-button color="primary" (click)="buscarcliente()" >Aceptar</button>
     <div *ngIf="cliente" >
-        <button mat-raised-button color="primary" (click)="modificarcliente()" >
-            <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
-            Modificar
+        <div *ngIf="clienteabierto" >
+            <button mat-raised-button color="primary" (click)="modificarcliente()" >
+                <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
+                Modificar
+            </button>
+            <button mat-raised-button color="primary" (click)="buscarcliente()" >
+                <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
+                Eliminar
+            </button>
+            <button mat-raised-button color="primary" (click)="cerrarcliente()" >
+                <mat-icon aria-hidden="false" aria-label="Example new icon">lock</mat-icon>
+                Cerrar
+            </button>
+        </div>
+        <button mat-raised-button color="primary" (click)="imprimir_tarjeta()" >
+            <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+            Tarjeta
         </button>
-        <button mat-raised-button color="primary" (click)="buscarcliente()" >
-            <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
-            Eliminar
+        <button mat-raised-button color="primary" (click)="imprimir_edocta()" >
+            <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+            Edo.Cta
         </button>
-        <button mat-raised-button color="primary" (click)="buscarcliente()" >
-            <mat-icon aria-hidden="false" aria-label="Example new icon">lock</mat-icon>
-            Cerrar
-        </button>
+        <div *ngIf="clientecred && letraspend">
+            <button mat-raised-button color="primary" (click)="imprimir_edocta()" >
+                <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+                Letras
+            </button>
+    
+        </div>
 
     </div>
     
@@ -136,7 +153,7 @@
                 <br>
 
 
-                <table border="1">
+                <table border="1" >
                     <tr>
                         <th>Fecha</th>
                         <th>Concepto</th>
@@ -222,19 +239,20 @@
                 <ng-template mat-tab-label>
                     <span (click)="busca_factura(nvocli.idcli)">Factura</span>
                 </ng-template>
-
-                <button *ngIf="factura" mat-raised-button color="primary" (click)="factura_cli(nvocli.idcli)" >
-                    <mat-icon aria-hidden="false" aria-label="Example new icon">receipt</mat-icon>
-                    Detalles Factura
-                </button>
-                <button *ngIf="!factura" mat-raised-button color="primary" (click)="factura_cli(nvocli.idcli)" >
-                    <mat-icon  aria-hidden="false" aria-label="Example new icon">add</mat-icon>
-                    Agregar Factura
-                </button>
-                <br>
-
-
-                <table *ngIf="factura">
+                <div>
+                    <a routerLink="{{linkfactura}}"> 
+                        <button *ngIf="factura" mat-raised-button color="primary" >
+                            <mat-icon aria-hidden="false" aria-label="Example new icon">receipt</mat-icon>
+                            Detalles Factura
+                        </button>
+                        <button *ngIf="!factura" mat-raised-button color="primary">
+                            <mat-icon  aria-hidden="false" aria-label="Example new icon">add</mat-icon>
+                            Agregar Factura
+                        </button>
+                    </a> 
+    
+                </div>
+                <table *ngIf="factura" >
                     <tr>
                         <td>
                                 <label class="ancho80" for="seriefac">Serie</label> 
@@ -269,7 +287,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <table border="1">
+                            <table border="1" class="hover">
                                 <thead>
                                     <tr>
                                         <th>Codigo</th>
@@ -300,10 +318,17 @@
                 </table>
 
             </mat-tab>
-            <mat-tab label="Datos Solicitud">
+            <mat-tab *ngIf="clientecred" label="Datos Solicitud">
                 <ng-template mat-tab-label>
                     <span (click)="busca_solicitud(cliente.idcli)">Datos Solicitud</span>
                 </ng-template>
+                <a routerLink="{{linksolicitud}}"> 
+                    <button mat-raised-button color="primary" >
+                        <mat-icon aria-hidden="false" aria-label="Example new icon">assignment</mat-icon>
+                        Modificar
+                    </button>
+                </a> 
+
                 <div *ngIf="solicitud" >
 
                     <table border="1">
@@ -403,7 +428,7 @@
                                 <br>
                                 <label for="conyugval">Nombre</label>
                                 <input size="30" type="text" name="conyugaval" id="conyugaval"
-                                [(ngModel)]="solicitud.antiguedadaval">
+                                [(ngModel)]="solicitud.conyugeaval">
                                 <label for="ocupaconyugval">Ocupacion</label>
                                 <input size="30" type="text" name="ocupaconyugaval" id="ocupconyugaval"
                                 [(ngModel)]="solicitud.ocupacionconyugeaval">
@@ -442,6 +467,10 @@
                                 <label for="referencia1">Referencia</label>
                                 <input size="70" type="text" name="referencia1" id="referencia1"
                                 [(ngModel)]="solicitud.referencia1">
+                                <br>
+                                <label for="referencia1a">Referencia 1A</label>
+                                <input size="70" type="text" name="referencia1a" id="referencia1"
+                                [(ngModel)]="solicitud.referencia1a">
                                 <br>
                                 <label for="referencia2">Referencia 2</label>
                                 <input size="70" type="text" name="referencia2" id="referencia2"
