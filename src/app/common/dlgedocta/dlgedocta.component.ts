@@ -16,6 +16,7 @@ export class DlgedoctaComponent implements OnInit {
   observaciones = false;
   tipoimpresion = "pdf";
   numobs = 0;
+  edoctaespecial = false;
   constructor(
     public dialogRef: MatDialogRef<DlgedoctaComponent>,
     @Inject(MAT_DIALOG_DATA) public message : string,
@@ -31,7 +32,8 @@ export class DlgedoctaComponent implements OnInit {
       'tipoimpresion': this.tipoimpresion,
       'observaciones': this.observaciones,
       'numobs': this.numobs,
-      'datosol': this.datossol
+      'datosol': this.datossol,
+      "edoctaespecial": this.edoctaespecial
     }
     this.dialogRef.close(resultado);
 

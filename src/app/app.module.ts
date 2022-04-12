@@ -20,13 +20,32 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { DialogBodyComponent } from './dialog-body/dialog-body.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card'; 
 import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSelectModule  } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatProgressBarModule } from '@angular/material/progress-bar'
+
+import { DlgedoctaComponent } from './common/dlgedocta/dlgedocta.component';
 import { DlgbuscliComponent } from './common/dlgbuscli/dlgbuscli.component';
 import { DetallescliComponent } from './detallescli/detallescli.component';
-import { MatTabsModule } from '@angular/material/tabs';
-import { DlgedoctaComponent } from './common/dlgedocta/dlgedocta.component';
-import {MatRadioModule} from '@angular/material/radio';
 import { ConsupolComponent } from './consupol/consupol.component';
+import { AltacliComponent } from './altacli/altacli.component';
+import { RelvtasComponent } from './relvtas/relvtas.component';
+import { DlgdatoscliComponent } from './altacli/dlgdatoscli/dlgdatoscli.component';
+import { DlgdatosmovcliComponent } from './altacli/dlgdatosmovcli/dlgdatosmovcli.component';
+import { DatossolicitComponent } from './altacli/datossolicit/datossolicit.component';
+import { DlgdatosavalComponent } from './altacli/dlgdatosaval/dlgdatosaval.component';
+import { DlgdatosvendedorComponent } from './altacli/dlgdatosvendedor/dlgdatosvendedor.component';
+import { DlgDatosSolicComponent } from './altacli/dlg-datos-solic/dlg-datos-solic.component';
+import { DlgDatosVndComponent } from './altacli/dlg-datos-vnd/dlg-datos-vnd.component';
+import { DlgfacturaComponent } from './altacli/dlgfactura/dlgfactura.component';
+import { DlgrenfacComponent } from './altacli/dlgrenfac/dlgrenfac.component';
+import { DlgdatosfacturaComponent } from './altacli/dlgdatosfactura/dlgdatosfactura.component';
+import { DlgbusarticuloComponent } from './common/dlgbusarticulo/dlgbusarticulo.component';
+import { FacturacliComponent } from './altacli/facturacli/facturacli.component';
+import { DlgbuscaseriesComponent } from './common/dlgbuscaseries/dlgbuscaseries.component';
 
 @NgModule({
   declarations: [
@@ -39,8 +58,24 @@ import { ConsupolComponent } from './consupol/consupol.component';
     DialogBodyComponent,
     DlgbuscliComponent,
     DetallescliComponent,
+    DlgdatoscliComponent,
     DlgedoctaComponent,
-    ConsupolComponent
+    ConsupolComponent,
+    AltacliComponent,
+    RelvtasComponent,
+    DlgdatoscliComponent,
+    DlgdatosmovcliComponent,
+    DatossolicitComponent,
+    DlgdatosavalComponent,
+    DlgdatosvendedorComponent,
+    DlgDatosSolicComponent,
+    DlgDatosVndComponent,
+    DlgfacturaComponent,
+    DlgrenfacComponent,
+    DlgdatosfacturaComponent,
+    DlgbusarticuloComponent,
+    FacturacliComponent,
+    DlgbuscaseriesComponent
   ],
   imports: [
     BrowserModule,
@@ -53,6 +88,9 @@ import { ConsupolComponent } from './consupol/consupol.component';
     MatTabsModule,
     MatIconModule,
     MatRadioModule,
+    MatCardModule,
+    MatSelectModule,
+    MatProgressBarModule,
     BrowserAnimationsModule
   ],
   providers: [ UsuariosService, 

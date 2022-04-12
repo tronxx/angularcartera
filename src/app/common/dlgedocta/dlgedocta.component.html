@@ -13,6 +13,10 @@
             </label>
         </div>
     </label><br>
+    <label for="chk_edoctaespecial">
+        <input type="checkbox" name="chk_edoctaespecial" id="chk_edoctaespecial" [(ngModel)]="edoctaespecial">
+        Estado de Cuenta Especial
+    </label><br>
     <mat-radio-group aria-label="Seleccione el Tipo de Impresion" [(ngModel)]="tipoimpresion">
         <mat-radio-button value="pdf">Modo pdf</mat-radio-button>
         <mat-radio-button value="txt">Modo Matriz Puntos</mat-radio-button>

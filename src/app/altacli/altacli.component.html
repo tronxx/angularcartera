@@ -1,0 +1,487 @@
+    <label class="ancho80" for="codigo">Codigo</label>
+    <input type="text" name="codigo" id="codigo" size="12" [(ngModel)]="numcli_z">
+    <button mat-raised-button color="primary" (click)="buscarcliente()" >Aceptar</button>
+    <div *ngIf="cliente" >
+        <button [disabled]="!clienteabierto" mat-raised-button color="primary" (click)="modificarcliente()" >
+            <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
+            Modificar
+        </button>
+        <button [disabled]="!clienteabierto" mat-raised-button color="primary" (click)="buscarcliente()" >
+            <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
+            Eliminar
+        </button>
+        <button [disabled]="!clienteabierto" mat-raised-button color="primary" (click)="cerrarcliente()" >
+            <mat-icon aria-hidden="false" aria-label="Example new icon">lock</mat-icon>
+            Cerrar
+        </button>
+        <button mat-raised-button color="primary" (click)="imprimir_tarjeta()" >
+            <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+            Tarjeta
+        </button>
+        <button mat-raised-button color="primary" (click)="imprimir_edocta()" >
+            <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+            Edo.Cta
+        </button>
+        <button [disabled]="!(clientecred && letraspend)" mat-raised-button color="primary" (click)="imprimir_edocta()" >
+                <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+                Letras
+        </button>
+
+    </div>
+    
+    <div name="datoscliente">
+            <label class="ancho80"  for="nomcli" size="10">Nombre</label>
+            <input readonly type="text" name="nombre" id="nombre" size="40" [(ngModel)]="nvocli.nombre" >
+            <label for="emailcli">Email Cliente</label>
+            <input readonly type="text" name="emailcli" id="emailcli" size="30" [(ngModel)]="nvocli.email" >
+            <br>
+            <label class="ancho80" for="direc">Direccion</label>
+            <input readonly type="text" name="direc" id="direc" size="50" [(ngModel)]="nvocli.direc" >
+            <label for="pordesc">% Descto
+            <input readonly type="number" name="pordesc" id="pordesc" size="10" [(ngModel)]="nvocli.pdsc" >
+            </label>
+            <label for="ubicacion">Ubicacion 
+                <input readonly type="text" id="ubicacion" name="ubicacion" size="5" [(ngModel)]="nvocli.ubica" >
+            </label>
+            <br>
+            <label class="ancho80" for="poblacion">Poblacion</label>
+            <input readonly type="text" name="poblacion" id="poblacion" size="30" [(ngModel)]="nvocli.poblac" >
+            <label class="ancho80" for="opcion">Opcion</label>
+            <select name="opcion" id="opcion" value="{{nvocli.opcion}}" 
+             [(ngModel)]= "nvocli.opcion" >
+                <option *ngFor="let miopcion of cartaspro" value="{{miopcion.clave}}"
+                [selected]="nvocli.opcion == miopcion.clave">
+                {{miopcion.descri}}
+                </option>
+            </select>
+        <br>
+        <div *ngIf="conaval && aval">
+            <label class="ancho80"  for="nomaval" size="10">Aval</label>
+            <input readonly type="text" name="nomaval" id="nomaval" size="40" [(ngModel)]="aval.nomav" >
+            <label class="ancho80" for="diraval">Direccion</label>
+            <input readonly type="text" name="diraval" id="diraval" size="50" value="{{aval.dirav1 + aval.dirav2}}" >
+            <br>
+        </div>
+
+        <label class="ancho80" for="ticte">Tipo Cte</label>
+            <select name="ticte" id="ticte" value="{{nvocli.ticte}}" 
+             [(ngModel)]= "nvocli.ticte" >
+            <option *ngFor="let miticte of tictes_z" value="{{miticte.clave}}"
+              [selected]="nvocli.ticte == miticte.clave">
+              {{miticte.descri}}
+              </option>
+        </select>
+        <label for="tipotarjetatc" *ngIf="contarjetatc">Tarjeta TC
+            <input type="text" readonly name="tipotarjetatc" value="{{nvocli.tarjetatc}}">
+        </label>
+        <label for="mescum">Cumpleaños
+            <input readonly type="text" size="10" name="mescum" id="mescum" [(ngModel)]= "mescum" > /
+            <input readonly type="text" size="5" name="diacum" id="diacum" [(ngModel)]= "nvocli.diacum" >
+        </label>
+        <br>
+        <label class="ancho80" for="jefgpo">Jefe Grupo</label>
+        <input readonly type="text" name="jefgpo" id="jefgpo" size="4" [(ngModel)]="nvocli.promotor">
+        <label for="comjef">Comision Jefe Grupo
+            <input readonly type="text" name="comjef" id="comjef" size="10" value="{{nvocli.comisionprom | currency}}">
+        </label>
+        <label for="fpagcom">Fecha Pago Comision
+            <input readonly type="text" name="fpagcom" id="fpagcom" size="10" [(ngModel)]="nvocli.pgocom" >
+        </label>
+
+        <label for="tasaiva">Tasa Iva
+            <input readonly type="number" name="tasaiva" id="tasaiva" size="4" [(ngModel)]="nvocli.piva" >
+        </label>
+
+        <br>
+        <label class="ancho80" for="servicio">Servicio</label>
+        <input readonly type="text" name="servicio" id="servicio" size="10" value="{{nvocli.servicio| currency}}">
+        <label for="enganche">Enganche
+            <input readonly type="text" name="enganche" id="enganche" size="10" value="{{nvocli.enganche | currency}}">
+        </label>
+        <label for="precon">Precio.Lista
+            <input readonly type="text" name="precon" id="precon" size="10" value="{{nvocli.preciolista | currency}}">
+        </label>
+        <label for="letra1">Letra 1/1
+            <input readonly type="number" name="letra1" id="letra1" value="{{nvocli.letra1 | currency}}" size="10" [(ngModel)]="nvocli.letra1">
+        </label>
+        <br>
+        <label class="ancho80" for="qom">Q/C</label>
+        <select name="qom" id="qom" >
+       <option *ngFor="let mimodo of modoqom_z" value="{{mimodo.clave}}"
+         [selected]="nvocli.qom == mimodo.clave">
+         {{mimodo.descri}}
+         </option>
+       </select>
+        <label for="nulet">Numero Letras
+            <input readonly type="number" name="nulet" id="nulet" size="5" [(ngModel)]="nvocli.nulet">
+        </label>
+        <label for="canle">Precio x Letra
+            <input readonly type="text" name="canle" id="canle" size="10" value ="{{nvocli.canle | currency}}">
+        </label>
+        <label for="bonif">Bonificacion
+            <input readonly type="text" name="bonif" id="bonif" size="10" value="{{nvocli.bonificacion | currency}}">
+        </label>
+        <br>
+        <label class="ancho80" for="cargos">Cargos</label>
+            <input readonly type="text" name="cargos" id="cargos" value =" {{nvocli.cargos | currency}}">
+        <label for="cargos">Abonos
+            <input readonly type="text" name="abonos" id="abonos" value =" {{nvocli.cargos | currency}}">
+        </label>
+        <label for="cargos">Saldo
+            <input readonly type="text" name="saldo" id="saldo" value = "{{nvocli.cargos - nvocli.abonos |currency}}" >
+        </label>
+        <br>
+        <label class="ancho80" for="compra">Compra</label>
+        <input readonly type="text" name="compra" id="compra" size="70" [(ngModel)]="nvocli.compra">
+        <label for="idcli">Idcli
+            <input readonly type="text" name="idcli" id="idcli" size="10" [(ngModel)]="nvocli.idcli" >
+        </label>
+
+    </div>    
+    <div id="movimientos" *ngIf="cliente">
+        <mat-tab-group>
+            <mat-tab label="Movimientos">
+                <button mat-raised-button color="primary" (click)="agregar_movto()" >
+                    <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
+                    Agregar Movimiento
+                </button>
+                <br>
+
+
+                <table border="1" >
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Concepto</th>
+                        <th>Usr</th>
+                        <th>Poliza</th>
+                        <th>Prm</th>
+                        <th>Tipo</th>
+                        <th align="right">Recargos</th>
+                        <th align="right">Bonificacion</th>
+                        <th align="right">Importe</th>
+                        <th align="right">Saldo</th>
+                        <th> Acciones </th>
+                    </tr>
+                    <tr *ngFor="let mimov of mismovclis" >
+                        <td> {{mimov.fechamov}} </td>
+                        <td> {{mimov.concep}} </td>
+                        <td> {{mimov.usuario}} </td>
+                        <td> {{mimov.poliza}} </td>
+                        <td> {{mimov.oper}} </td>
+                        <td> {{mimov.tipag}} </td>
+                        <td  align="right"> 
+                            <label for="" *ngIf="mimov.recargo > 0">{{mimov.recargo | currency}}</label> 
+                        </td>
+                        <td  align="right"> 
+                            <label for="" *ngIf="mimov.bonificacion> 0">{{mimov.bonificacion | currency}}</label> 
+                        </td>
+                        <td  align="right"> {{mimov.importe | currency}} </td>
+                        <td  align="right"> {{mimov.saldo | currency}} </td>
+                        <td>
+                            <button mat-raised-button color="primary" (click)="modificar_movto(mimov)" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
+                                Modificar
+                            </button>
+                            <button mat-raised-button color="warn" (click)="eliminar_movto(mimov)" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
+                                Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                </table>   
+        
+            </mat-tab>
+            <mat-tab label="Agentes" >
+                <ng-template mat-tab-label>
+                    <span (click)="busca_cliagentes(nvocli.idcli)">Agentes</span>
+                </ng-template>
+
+                <button mat-raised-button color="primary" (click)="agregar_agente()" >
+                    <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
+                    Agregar Agente
+                </button>
+                <br>
+
+
+                <table border="1">
+                    <tr>
+                        <th>Codigo</th>
+                        <th>Nombre</th>
+                        <th align="right">Comision</th>
+                        <th> Acciones </th>
+                    </tr>
+                    <tr *ngFor="let miagente of cliagentes" >
+                        <td> {{miagente.codvnd}} </td>
+                        <td> {{miagente.nombre}} </td>
+                        <td  align="right"> 
+                            {{miagente.comis | currency}}
+                        </td>
+                        <td>
+                            <button mat-raised-button color="primary" (click)="modificar_agente(miagente)" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
+                                Modificar
+                            </button>
+                            <button mat-raised-button color="warn" (click)="eliminar_agente(miagente)" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
+                                Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                </table>   
+        
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <span (click)="busca_factura(nvocli.idcli)">Factura</span>
+                </ng-template>
+                <div>
+                    <a routerLink="{{linkfactura}}"> 
+                        <button *ngIf="factura" mat-raised-button color="primary" >
+                            <mat-icon aria-hidden="false" aria-label="Example new icon">receipt</mat-icon>
+                            Detalles Factura
+                        </button>
+                        <button *ngIf="!factura" mat-raised-button color="primary">
+                            <mat-icon  aria-hidden="false" aria-label="Example new icon">add</mat-icon>
+                            Agregar Factura
+                        </button>
+                    </a> 
+    
+                </div>
+                <table *ngIf="factura" >
+                    <tr>
+                        <td>
+                                <label class="ancho80" for="seriefac">Serie</label> 
+                                <input type="text" size="5" readonly name="serifac" id="seriefac" value=" {{factura.serie}}"> 
+                                <label for="numfac">Numero</label> 
+                                <input type="text" size="8" name="numfac" id="numfac" value = "{{factura.numero}}" > 
+                                <label for="fechafac">Fecha</label> 
+                                <input type="text" size="10" name="fechafac" id="fechafac" value ="{{factura.fecha}}"> 
+                                <br>
+                                <label class="ancho80" for="prodfin">Prod.F</label>
+                                <input type="text" size="10" name="prodfin" id="prodfin" value =" {{factura.prodfin | currency }}" >
+                                <label for="impfac"> Importe</label> 
+                                <input type="text" size="10" name="impfac" id="impfac" value ="{{factura.subtot | currency}}" >
+                                <label for="ivafac">Iva</label>
+                                <input type="text" size="10" name="ivafac" id="ivafac" value = "{{factura.iva | currency}}" >
+                                <label for="totalfac">Total</label> 
+                                <input type="text" size="10" name="totalfac" id="totalfac" value ="{{factura.total | currency}}">
+                                 <br>
+                                <label class="ancho80" for="uuidfac">UUID</label> 
+                                <input type="text" size="40" name="uuidfac" id="uuidfac" value ="{{factura.uuid}}">
+                                <br>
+                                <label class="ancho80" for="metpag">Met.Pago</label> 
+                                <input type="text" size="20" name="matpag" id="metpag" value ="{{factura.metodopago}} ">
+                                <label for="usocfdi">Uso CFDI</label>
+                                <input type="text" size="20" name="usocfdi" id="usocfdi" value ="{{factura.cveusocfdi}}">
+                                <br>
+                                <label class="ancho80" for="rfcfac">RFC</label>
+                                <input type="text" size="15"  name="rfcfac" id="rfcfac" value ="{{factura.rfc}}">
+                                <label for="emailfac">Correo</label>
+                                <input type="text" size="50" name="emailfac" id="emailfac" value ="{{factura.email}}">
+                    </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table border="1" class="hover">
+                                <thead>
+                                    <tr>
+                                        <th>Codigo</th>
+                                        <th>Descripcion</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio.U</th>
+                                        <th>Importe</th>
+                                        <th>Folio</th>
+                                        <th>Serie</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let mirenfac of renfacfo">
+                                        <td>{{mirenfac.codigo}}</td>
+                                        <td>{{mirenfac.concepto}} </td>
+                                        <td> {{mirenfac.canti}} </td>
+                                        <td>{{mirenfac.preciou | currency}} </td>
+                                        <td> {{mirenfac.importe + mirenfac.iva | currency}} </td>
+                                        <td> {{mirenfac.folio}} </td>
+                                        <td> {{mirenfac.serie}} </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </mat-tab>
+            <mat-tab *ngIf="clientecred" label="Datos Solicitud">
+                <ng-template mat-tab-label>
+                    <span (click)="busca_solicitud(cliente.idcli)">Datos Solicitud</span>
+                </ng-template>
+                <a routerLink="{{linksolicitud}}"> 
+                    <button mat-raised-button color="primary" >
+                        <mat-icon aria-hidden="false" aria-label="Example new icon">assignment</mat-icon>
+                        Modificar
+                    </button>
+                </a> 
+
+                <div *ngIf="solicitud" >
+                    <table border="1">
+                        <tr>
+                            <td>
+                                <label for=""> <b> Cliente</b> </label> <br>
+                                <label for="ocupacion">Ocupacion </label> 
+                                <input readonly size="30" type="text" name="ocupacion" 
+                                id="ocupacion" value = "{{solicitud.ocupacion}}"
+                                >
+                                <label for="ingresos">Ingresos</label>
+                                <input readonly size="12" type="text" name="ingresos" id="ingresos"
+                                value = "{{solicitud.ingresos | currency}}">
+                                <br>
+                                <label for="sexo">Sexo</label>
+                                <select name="sexo" id="sexo" [(ngModel)]="solicitud.sexo" >
+                                    <option *ngFor="let misexo of sexos"
+                                     value="{{misexo.clave}}" 
+                                     [selected]="misexo.clave == solicitud.sexo">
+                                        {{misexo.descri}}
+                                    </option>
+                                </select>
+                                <label for="edad">Edad</label>
+                                <input size="5" type="text" readonly name="edad" id="edad" 
+                                value="{{solicitud.edad}}" >
+                                <label for="edocivil">Estado Civil </label>
+                                <select name="edocivil" id="edocivil" [(ngModel)]="solicitud.estadocivil" >
+                                    <option *ngFor="let miedocivil of edoscivil" 
+                                    value="{{miedocivil.clave}}"
+                                    [selected]="solicitud.estadocivil == miedocivil.clave"
+                                    > {{miedocivil.descri}} </option>
+                                </select>
+                                <br>
+                                <label for=""> <b>Datos del Trabajo del Cliente</b> </label><br>
+                                <label size="30" for="trabajo">Lugar</label>
+                                <input type="text" readonly name="trabajo" id="trabajo"
+                                 value="{{solicitud.trabajo}}" >
+                                <label for="telefono">Telefono</label>
+                                <input size="30" readonly type="text" name="telefono" id="telefono"
+                                 value = "{{solicitud.telefono}} ">
+                                <br>
+                                <label for="dirtra">Direccion</label>
+                                <input size="30" readonly type="text" name="dirtra" id="dirtra"
+                                value = "{{solicitud.direcciontrabajo}}">
+                                <label for="antigtra">Antigüead</label>
+                                <input size="5" readonly type="text" name="antigtra" id="antigtra"
+                                value = "{{solicitud.antiguedad}}">
+                                <hr>
+                                <label for=""><b>Datos del Conyuge del Cliente</b></label>
+                                <br>
+                                <label for="conyuge">Nombre</label>
+                                <input size="30" readonly type="text" name="conyuge" id="conyuge"
+                                value = "{{solicitud.conyuge}}">
+                                <label for="ocupacony">Ocupacion</label>
+                                <input size="30" readonly type="text" name="ocupacony" id="ocupacony"
+                                value = "{{solicitud.ocupacionconyuge}}">
+                                <label for="ingcony">Ingresos</label>
+                                <input size="12" type="text" readonly name="ingcony" id="ingcony"
+                                value =  "{{solicitud.ingresosconyuge | currency}}">
+                                <br>
+                                <label for="trabcony">Trabajo</label>
+                                <input size="30" type="text" readonly name="trabcony" id="trabcony"
+                                value = "{{solicitud.trabajoconyuge}}">
+                                <label for="trabcony">Direccion Trabajo</label>
+                                <input size="30" readonly type="text" name="trabcony" id="trabcony"
+                                value="{{solicitud.direcciontrabconyuge}}">
+                                <label for="antigcony">Antigüedad</label>
+                                <input size="5" type="text" readonly name="antigcony" id="antigcony"
+                                value="{{solicitud.antiguedadconyuge}}">
+                                <label for="telefonocony">Telefono</label>
+                                <input size="30" type="text" readonly name="telefonocony" id="telefonocony"
+                                value="{{solicitud.telefonoconyuge}}">
+                            </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for=""> <b>Datos del Aval</b> </label>
+                                    <br>
+                                <label for="aval">Generales</label>
+                                <input size="30" readonly type="text" name="aval" id="aval"
+                                value="{{solicitud.aval}}">
+                                <label for="ocupaaval">Ocupacion</label>
+                                <input size="30" readonly type="text" name="ocupaaval" id="ocupaaval"
+                                value="{{solicitud.ocupacionaval}}">
+                                <label for="ingaval">Ingresos</label>
+                                <input size="12" type="text" readonly name="ingaval" id="ingaval"
+                                value="{{solicitud.ingresosaval | currency}}">
+                                <br>
+                                <label for="trabaval">Trabajo</label>
+                                <input size="30" type="text" readonly name="trabaval" id="trabaval"
+                                value="{{solicitud.trabajoaval}}">
+                                <label for="antingaval">Anitgüedad</label>
+                                <input size="5" type="text" readonly name="antingaval" id="antingaval"
+                                value="{{solicitud.antiguedadaval | currency}}">
+                                <br>
+                                <label for="telaval">Telefono</label>
+                                <input size="30" type="text" readonly name="telaval" id="telaval"
+                                value="{{solicitud.telefonoaval}}">
+                                <hr>
+                                <label for=""><b>Datos del Conyuge del Aval </b></label>
+                                <br>
+                                <label for="conyugval">Nombre</label>
+                                <input size="30" type="text" readonly name="conyugaval" id="conyugaval"
+                                value="{{solicitud.conyugeaval}}">
+                                <label for="ocupaconyugval">Ocupacion</label>
+                                <input size="30" type="text" readonly name="ocupaconyugaval" id="ocupconyugaval"
+                                value="{{solicitud.ocupacionconyugeaval}}">
+                                <br>
+                                <label for="ingconyugval">Ingresos</label>
+                                <input size="12" type="text" readonly name="ingconyugaval" id="ingconyugaval"
+                                value="{{solicitud.ingresosconyugeaval | currency}}">
+                                <label for="trabconyugval">Trabajo</label>
+                                <input size="30" type="text" readonly name="trabconyugaval" id="trabconyugaval"
+                                value="{{solicitud.trabajoconyugeaval}}">
+                                <label for="antigconyugval">Antiguedad</label>
+                                <input size="5" type="text" readonly name="antigconyugaval" id="antigconyugaval"
+                                value="{{solicitud.antiguedadconyugeaval}}">
+                                <label for="telconyugval">Telefono</label>
+                                <input size="30" type="text" readonly name="telconyugaval" id="telconyugaval"
+                                value="{{solicitud.telconyugeaval}}">
+                                <br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                <label for="familiar">Familiar</label>
+                                <input size="30" type="text" readonly name="familiar" id="familiar"
+                                value="{{solicitud.familiar}}">
+                                <label for="dirfamiliar">Direccion del Familiar</label>
+                                <input size="30" type="text" readonly name="dirfamiliar" id="dirfamiliar"
+                                value="{{solicitud.direccionfamiliar}}">
+                                <br>
+                                <label for="conocido">Conocido</label>
+                                <input size="30" type="text" readonly name="conocido" id="conocido"
+                                value="{{solicitud.conocido}}">
+                                <label for="dirconocido">Direccion del Conocido</label>
+                                <input type="text" readonly name="dirconocido" id="dirconocido"
+                                value="{{solicitud.direccionconocido}}">
+                                <br>
+                                <label for="referencia1">Referencia</label>
+                                <input size="70" type="text" readonly name="referencia1" id="referencia1"
+                                value="{{solicitud.referencia1}}">
+                                <br>
+                                <label for="referencia1a">Referencia 1A</label>
+                                <input size="70" type="text" readonly name="referencia1a" id="referencia1"
+                                value="{{solicitud.referencia1a}}">
+                                <br>
+                                <label for="referencia2">Referencia 2</label>
+                                <input size="70" type="text" readonly name="referencia2" id="referencia2"
+                                value="{{solicitud.referencia2}}">
+                                <br>
+                                <label for="observaciones">Observaciones</label>
+                                <input size="70" type="text" readonly name="observaciones" id="observaciones"
+                                value="{{solicitud.observaciones}}">
+                            </td>
+                        </tr>
+                      </table>
+                </div>
+            </mat-tab>
+
+        </mat-tab-group>
+    </div>

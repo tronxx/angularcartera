@@ -23,4 +23,23 @@ export interface Cliente {
     preciolista: number;
     compra: string;
     piva: number;
+    factura: number;
+    comisagente: number;
+    pgocom: string;
+    pdsc: number;
+    fechalta: string;
+    ultmod: string;
+    fecsal: string;
+    diacum: number;
+    mescum: number;
+    nompil1: string;
+    nompil2: string;
+    appat: string;
+    apmat: string;
+    calle: string;
+    numpred: string;
+    codpost: string;
+    colonia: string;
+    email: string;
+
 }

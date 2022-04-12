@@ -2,6 +2,7 @@ import { getAttrsForDirectiveMatching } from '@angular/compiler/src/render3/view
 import { Component, OnInit } from '@angular/core';
 import { ClientesService } from '../services/clientes.service';
 import { PolizasService } from '../services/polizas.service';
+import { ConfiguracionService } from '../services/configuracion.service';
 import { Cliente } from '../models/clientes';
 import { Aval } from '../models/aval'
 import { Poliza } from '../models/polizas';
@@ -14,7 +15,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import { DialogBodyComponent } from '../dialog-body/dialog-body.component';
 import { DlgbuscliComponent } from '../common/dlgbuscli/dlgbuscli.component';
 import { MatIconModule } from '@angular/material/icon'; 
-import { stringify } from '@angular/compiler/src/util';
+import { newArray, stringify } from '@angular/compiler/src/util';
 import { Compania } from '../models/config';
 
 @Component({
@@ -45,6 +46,7 @@ export class PolizasComponent implements OnInit {
   errorespoliza = [""]
   listaletras = [""];
   enespera = false;
+  ultimo_z = "";
   
   cobratario = {
     "idpromot": 0,
@@ -55,6 +57,7 @@ export class PolizasComponent implements OnInit {
   tda_z = "";
   tdaspol_z? = {};
   fechapol_z = "";
+  fechasrv_z = "";
   nomtda_z = "";
   datospolenabled_z = false;
   cobratarioactivo_z = false;
@@ -115,6 +118,11 @@ export class PolizasComponent implements OnInit {
   totalimports_z=0;
 
   msg_z ="";
+  listavencimientos_z = [ {
+        "letra" : "",
+        "vence" : ""
+      }
+  ]
 
 
   datospago = {
@@ -153,18 +161,24 @@ export class PolizasComponent implements OnInit {
   dia_z = ((this.fechahoy_z.getDate()+100).toString()).substring(1,3);
   strfecha_z = this.anu_z + "-" + this.mes_z + "-" + this.dia_z;
   vence_z  = new Date();
+  fechaactual_z = new Date();
   strfechavta = "";
 
   constructor(private servicioclientes: ClientesService,
     public dialog: MatDialog, 
     public datepipe: DatePipe,
-     private serviciopolizas: PolizasService
+     private serviciopolizas: PolizasService,
+     private configuracion : ConfiguracionService
     ) { }
 
   ngOnInit(): void {
     var mistorage_z  = localStorage.getItem('token') || "{}";
     this.usrreg_z =  JSON.parse(mistorage_z);
+    this.fechapol_z = this.strfecha_z;
     //console.log("Usuario:" + mistorage_z);
+    this.fechaactual_z = new Date();
+    this.datospolenabled_z = (this.usrreg_z.nivel == "S");
+    
     this.errorespoliza=[];
     this.buscar_codigos_poliza();
     this.cia_z =  this.serviciopolizas.obtendatoscia();
@@ -179,6 +193,17 @@ export class PolizasComponent implements OnInit {
       this.PrecioListaMinimoCarta = Number (this.cia_z.PrecioListaMinimoCarta);
     
     }
+    this.serviciopolizas.obten_fecha_servidor ().subscribe(
+      respu => {
+        let misdatos = respu;
+        this.fechasrv_z = misdatos.fechayhora.substring(0,10);
+        if (this.fechasrv_z != this.strfecha_z) {
+          this.alerta("La fecha actual no coincide con la fecha del Servidor");          
+          this.strfecha_z = this.fechasrv_z;
+          this.fechahoy_z =  new Date(this.strfecha_z.replace(/-/g, '\/'));
+        }
+      }
+    );
   }
 
   hayerrorpoliza () {
@@ -188,15 +213,19 @@ export class PolizasComponent implements OnInit {
   buscar_poliza() {
 
     this.enespera = true;
-    if(this.usrreg_z.nivel =="N") {
       //this.buscar_codigos_poliza();
       var params = {
         "modo":"acceder_poliza",
-        "fecha":this.fechahoy_z,
+        "fecha":this.fechapol_z,
         "crearpoliza":"S",
         "tda":this.tda_z
       }
-      this.datospolenabled_z = false;
+      if(this.tda_z == "") {
+        this.alerta("El Codigo de la Poliza no puede estar vacio");
+        this.enespera = false;
+        return;
+
+      }
       this.serviciopolizas.buscapoliza(JSON.stringify(params)).subscribe(
         respu => {
           this.errorespoliza=[];
@@ -214,9 +243,7 @@ export class PolizasComponent implements OnInit {
           }
           this.enespera = false;
         }
-      )
-    }
-
+      );
   }
 
   buscar_codigos_poliza() {
@@ -268,7 +295,8 @@ export class PolizasComponent implements OnInit {
       codigo: this.codcli_z,
       idcli : -1
     }
-  
+    this.fechaactual_z = new Date();
+
     this.servicioclientes.buscacliente(JSON.stringify(params_z)).subscribe(
       respu => {
         if(respu) {
@@ -317,14 +345,18 @@ export class PolizasComponent implements OnInit {
        if(this.qom_z == "Q") this.sdoparacarta_z / 2;
        this.tasarecargo_z = 10;
        this.strfechavta = this.cliente.numcli.substr(2,6);
-       if( this.strfechavta >= "210901" && 
-           this.qom_z == "Q" && 
-           ( this.cliente.nulet == 4 || this.cliente.nulet == 10  )
+       if( this.strfechavta >= "220101" ||
+          (this.strfechavta >= "210901" && this.qom_z == "Q" && 
+           ( this.cliente.nulet == 4 || this.cliente.nulet == 10  ))
         ) {
            this.tasarecargo_z = 20;
        }
 
        this.busca_aval(this.cliente.idcli);
+       this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.qom_z, 1, this.nulets_z));
+       //console.log('FechaStr:', this.strfechavta, 'Vencimientos:', this.listavencimientos_z);
+       
+
 
        if(this.abonos_z >= (this.engan_z + this.serv_z) ) {
           this.ltpag_z = Math.floor ((this.abonos_z - this.engan_z - this.serv_z  ) / this.prlet_z);
@@ -382,8 +414,8 @@ export class PolizasComponent implements OnInit {
 
 
         }
-        this.vence_z = this.calcula_venc(this.cliente.fechavta, this.cliente.qom, this.sigletra_z);
-        this.msg_z += " Vence:" + this.fecha_a_str(this.vence_z, "dd-mmm-YYYY");
+        this.vence_z = this.configuracion.calcula_venc(this.cliente.fechavta, this.cliente.qom, this.sigletra_z);
+        this.msg_z += " Vence:" + this.configuracion.fecha_a_str(this.vence_z, "dd-mmm-YYYY");
         this.datospago.dias = Math.floor( ( this.fechahoy_z.getTime() - this.vence_z.getTime()  ) / (86400000));
         //console.log("Debug: dias", this.datospago.dias, " Hoy:", this.fechahoy_z.getTime(), " Vence:", this.vence_z.getTime() );
         if(this.datospago.dias > this.diasbon ) {
@@ -445,7 +477,7 @@ export class PolizasComponent implements OnInit {
     }
 
   }
-
+  
   activar_tipopago(tipospagodisp:string[]) {
     this.tipospagos = [];
     tipospagodisp.forEach(tipo => {
@@ -593,6 +625,9 @@ export class PolizasComponent implements OnInit {
     }
     this.aceptarpago = !this.errorespago();
     return(!this.errorespago());
+    if(this.tda_z == "") {
+      this.errores_z.push("El Codigo de la Poliza no puede estar vacío");
+    }
   }
 
   errorespago () {
@@ -613,7 +648,7 @@ export class PolizasComponent implements OnInit {
   calcula_venc <Date> (fechavta:string, qom_z:string, letra:number) {
 
     let vencimiento_z = new Date(fechavta.replace(/-/g, '\/'));
-    let strfecvta =  this.fecha_a_str  (vencimiento_z, "YYYYmmdd");
+    let strfecvta =  this.configuracion.fecha_a_str  (vencimiento_z, "YYYYmmdd");
     let dias_z = 15;
     let nvafecha_z = 0;
     let meses_z = 0;
@@ -649,40 +684,17 @@ export class PolizasComponent implements OnInit {
 
   }
 
-  fecha_a_str  (fecha : Date, formato:string)  {
-    let strfecha_z = "";
-    let anu_z = "";
-    let mes_z = "";
-    let dia_z = "";
-    let meses_z = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-    anu_z = fecha.getFullYear().toString();
-    mes_z = ((fecha.getMonth()+101).toString()).substring(1,3);
-    dia_z = ((fecha.getDate()+100).toString()).substring(1,3);
-    if(formato == "YYYY-mm-dd") {
-      strfecha_z = anu_z + "-" + mes_z + "-" + dia_z;
-    }
-    if(formato == "YYYYmmdd") {
-      strfecha_z = anu_z + mes_z +  dia_z;
-    }
-
-    if(formato == "dd-mm-YYYY") {
-      strfecha_z = dia_z +  "-" + mes_z + "-" + anu_z ;
-    }
-    if(formato == "dd-mmm-YYYY") {
-      strfecha_z = dia_z +  "-" + meses_z[fecha.getMonth()] + "-" + anu_z ;
-    }
-    return (strfecha_z);
-  }
-
   clickaceptarpago() {
+    let estemov_z = this.codcli_z + ":" + this.datospago.concepto + " " + this.datospago.conceptocompl +  ":" + this.datospago.importe.toString;
     if(this.validarpago()) {
-      this.confirma_aceptar_pago();
+        this.confirma_aceptar_pago();
     } else {
       this.alerta("Hay Errores en el pago");
     }
   }
 
   confirma_aceptar_pago() {
+    let estemov_z = this.codcli_z + ":" + this.datospago.concepto + " " + this.datospago.conceptocompl +  ":" + this.datospago.importe.toString();
     const dialogref = this.dialog.open(DialogBodyComponent, {
       width:'350px',
       data: 'Seguro de aceptar este Pago?'
@@ -690,14 +702,18 @@ export class PolizasComponent implements OnInit {
     dialogref.afterClosed().subscribe(res => {
       //console.log("Debug", res);
       if(res) {
-        this.si_aceptarpago();
+        if (this.ultimo_z == estemov_z) {
+          this.alerta("Está seguro de cobrar el mismo movimiento dos veces ?");
+        } else {
+          this.si_aceptarpago();
+          this.ultimo_z = estemov_z;
+        }
       }
     });
   
   }
 
   si_aceptarpago() {
-
     this.enespera = true;
     this.datospago.idpoliza = this.idpoliza;
     this.datospago.idusuario = this.usrreg_z.idusuario;
@@ -705,7 +721,7 @@ export class PolizasComponent implements OnInit {
     this.datospago.tipopago = this.tipopagosel_z;
     this.datospago.tipomov = this.tipomovsel_z;
     this.datospago.claveempresa = this.claveempresa;
-    this.datospago.vence = this.fecha_a_str(this.vence_z, "YYYY-mm-dd");
+    this.datospago.vence = this.configuracion.fecha_a_str(this.vence_z, "YYYY-mm-dd");
     // console.log("Debug DatosPago: ", this.datospago);
     this.serviciopolizas.agregar_pago(JSON.stringify(this.datospago )).subscribe(
       respu => {

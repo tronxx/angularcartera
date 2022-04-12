@@ -1,0 +1,45 @@
+<div mat-dialog-content>
+    <form #formularioCliente="ngForm" (ngSubmit)="formularioEnviado()" *ngIf= "factura">
+        <div name="factura">
+            <mat-card>
+                <mat-card-title>Datos de Factura</mat-card-title>
+                <label class="ancho80" for="seriefac">Serie</label> 
+                <input type="text" size="5"  name="serifac" id="seriefac" [(ngModel)]="factura.serie"> 
+                <label for="numfac">Numero</label> 
+                <input type="text" size="8" name="numfac" id="numfac" [(ngModel)] = "factura.numero" > 
+                <label for="fechafac">Fecha</label> 
+                <input type="date" size="10" name="fechafac" id="fechafac" [(ngModel)] ="factura.fecha"> 
+                <br>
+                <label class="ancho80" for="metpag">Met.Pago {{factura.cvemetodopago }} </label> 
+                <select name="metpag" id="metpag" value="{{factura.cvemetodopago}}" 
+                [(ngModel)]= "factura.metodopago" >
+                   <option *ngFor="let mimetodopago of metodospago" value="{{mimetodopago.clave}}"
+                   [selected]="factura.cvemetodopago == mimetodopago.clave">
+                   {{mimetodopago.clave}} {{mimetodopago.descri}}
+                   </option>
+               </select>
+               <br>
+               <label class="ancho80" for="usocfdi">Uso CFDI</label>
+               <select name="usocfdi" id="usocfdi" value="{{factura.cveusocfdi}}" 
+               [(ngModel)]= "factura.cveusocfdi" >
+                  <option *ngFor="let miusocfdi of usoscfdi" value="{{miusocfdi.clave}}"
+                  [selected]="factura.cveusocfdi == miusocfdi.clave">
+                  {{miusocfdi.clave}} {{miusocfdi.descri}}
+                  </option>
+              </select>
+              <br>
+              <label class="ancho80" for="rfcfac">RFC.Cliente</label> 
+              <input type="text" size="15"  name="rfcfac" id="rfcfac" [(ngModel)] ="factura.rfc">
+              <label class="ancho80" for="emailfac">Email</label> 
+              <input type="text" size="50" name="emailfac" id="emailfac" [(ngModel)] ="factura.email">
+
+            </mat-card>
+        </div>
+
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>
+    <button mat-raised-button  color="primary"   (click)="closeyes()">Aceptar</button>
+</div>
+

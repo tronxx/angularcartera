@@ -16,53 +16,88 @@
 <table border="1">
     <tr>
         <td>
-            Codigo: <b>{{cliente.numcli}}</b> 
+            <label class="ancho80" for="codigo">Coódigo</label>
+            <input readonly  name="codigo" size="12" type="text" value=" {{cliente.numcli}}"> <br>
             <button mat-raised-button color="primary" (click)="impresion_edocta()">
                 <mat-icon aria-hidden="false" aria-label="Example home icon">print</mat-icon>
                 Estado Cuenta
             </button>
                     
             <br>
-            Nombre: <b>{{cliente.nombre}}</b> <br>
-            Direccion: <b>{{cliente.direc}}</b> <br>
-            Poblacion: <b>{{cliente.poblac}}</b> <br>
-            Promotor: <b> {{cliente.promotor}} </b>
+            <label class="ancho80" for="nombre">Nombre</label>
+            <input readonly  name="nombre" size="40" type="text" value=" {{cliente.nombre}}"> <br>
+            <label class="ancho80" for="direccion">Direccion</label>
+            <input readonly name="direccion" type="text" size="40" value= "{{cliente.direc}}"><br>
+            <label class="ancho80" for="poblacion">Poblacion</label>
+            <input readonly name="poblacion" type="text" size="40" value= "{{cliente.poblac}}"> <br>
+            <div id="aval" *ngIf="cliente.qom != tipocontado_z ">
+                <label class="ancho80"  for="aval">Aval </label>
+                <input readonly name="aval" type="text" size="40" value= "{{nomaval}}"> <br>
+                 <label class="ancho80" for="diraval">Direccion</label>
+                 <input readonly name="diraval" type="text" size="40" value= "{{diraval}}"> 
+            </div>
         </td>
         <td>
-            Ubicacion: <b> {{cliente.ubica}} </b>
-            Carta: <b> {{cliente.opcion}} </b>
-            Precio Lista: <b> {{ cliente.preciolista | currency }} </b><br>
-            Servicio: <b> {{ cliente.servicio | currency }} </b>
-            Enganche: <b> {{ cliente.enganche | currency }} </b><br>
-            Letras: <b> {{cliente.nulet}} </b> Q/M/C:  <b> {{cliente.qom}} </b><br>
-            Precio x Letra: <b> {{cliente.canle | currency}} </b> <br>
-            Bonificacion: <b> {{cliente.bonificacion | currency}} </b><br>
+            <label for="promotor" class="ancho80" >Promotor</label>
+            <input readonly name="pomotor" type="text" size="4" value= "{{cliente.promotor}}" >
+            <label for="ubicacion"> Ubicacion </label>
+            <input readonly name="ubicacion" type="text" size="4" value= "{{cliente.ubica}}">
+            <label for="opcion">Carta </label>
+            <input readonly name="opcion" type="text" size="4" value= " {{cliente.opcion}} "><br>
+            <label for="nfac">N.Factura </label>
+            <input readonly name="nfac" type="text" size="4" value= " {{cliente.factura}} "><br>
+            <label for="preciocon" class="ancho80" >Precio Lista</label>
+            <input readonly name="preciocon" type="text" size="10" value= "{{ cliente.preciolista | currency }}">
+            <label for="servicio">Servicio</label>
+            <input readonly name="servicio" type="text" size="10" value= "{{ cliente.servicio | currency }}">
+            <label for="enganche">Enganche</label>
+            <input readonly name="enganche" type="text" size="10" value= "{{ cliente.enganche | currency }}"> <br>
+            <label for="letras" class="ancho80" >Letras</label>
+            <input readonly name="leras" type="text" size="3" value= "{{ cliente.nulet  }}">
+            <label for="qom">Q/M/C</label>
+            <input readonly name="qom" type="text" size="3" value= "{{ cliente.qom }}">
+            <label for="canle">Precio x Letra</label>
+            <input readonly name="canle" type="text" size="10" value= "{{ cliente.canle | currency }}"> 
+            <label for="bonif">Bonificacion</label>
+            <input readonly name="bonif" type="text" size="10" value= "{{ cliente.bonificacion | currency }}"><br>
+        </td>
+        <td>
+            Vencimientos:<br>
+            <div class="boxscroll">
+
+                <ul>
+                    <li for="" *ngFor="let mivencimiento of listavencimientos_z" >
+                        Letra: {{mivencimiento.letra}}/{{cliente.nulet}}
+                        Vence: {{mivencimiento.vence}}
+                    </li>
+
+                </ul>
+
+            </div>
+
         </td>
     </tr>
     <tr>
-        <td colspan="2">
-            Cargos: <b> {{cliente.cargos | currency}} </b>
-            Abonos: <b> {{cliente.abonos | currency}} </b>
-            Saldo: <b> {{cliente.cargos - cliente.abonos | currency}} </b>
-        </td>
-    </tr>
-    <tr *ngIf="cliente.qom != tipocontado_z ">
-        <td colspan="2">
-                Aval: <b> {{nomaval}} </b><br>
-                Direccion Aval: <b> {{diraval}} </b>
-            
+        <td colspan="3">
+            <label for="cargos">Cargos</label>
+            <input readonly name="cargos" type="text" size="10" value= "{{ cliente.cargos | currency }}">
+            <label for="abonos">Abonos</label>
+            <input readonly name="abonos" type="text" size="10" value= "{{ cliente.abonos | currency }}"> 
+            <label for="saldo"> Saldo</label>
+            <input readonly name="saldo" type="text" size="10" value= "{{ cliente.cargos - cliente.abonos | currency }}"> 
         </td>
     </tr>
     <tr>
-        <td colspan="2">
-                Compra: <b> {{compracli_z}} </b>
+        <td colspan="3">
+            <label for="compra">Compra</label>
+            <input readonly name="compra" type="text" size="80" value= "{{compracli_z}}"> 
         </td>
     </tr>
 </table>
     <div id="movimientos">
         <mat-tab-group>
             <mat-tab label="Movimientos">
-                <table class="table table-striped table-bordered table-hover">
+                <table border="1">
                     <tr>
                         <th>Fecha</th>
                         <th>Concepto</th>
@@ -132,7 +167,150 @@
                 <p>Estos son los reportes de Servicio</p>
             </mat-tab>
             <mat-tab label="Datos Solicitud">
-                <p>Estos son los reportes de Servicio</p>
+                <ng-template mat-tab-label>
+                    <span (click)="busca_solicitud(cliente.idcli)">Datos Solicitud</span>
+                </ng-template>
+                <div *ngIf="solicitud" >
+                    <table border="1">
+                        <tr>
+                            <td>
+                                <label for=""> <b> Cliente</b> </label> <br>
+                                <label for="ocupacion">Ocupacion </label> 
+                                <input size="30" type="text" name="ocupacion" id="ocupacion" 
+                                [(ngModel)]="solicitud.ocupacion" >
+                                <label for="ingresos">Ingresos</label>
+                                <input size="12" type="number" name="ingresos" id="ingresos"
+                                [(ngModel)]="solicitud.ingresos">
+                                <br>
+                                <label for="sexo">Sexo</label>
+                                <input size="3" type="text" name="sexo" id="sexo"
+                                [(ngModel)]="solicitud.sexo">
+                                <label for="edad">Edad</label>
+                                <input size="5" type="number" name="edad" id="edad" 
+                                [(ngModel)]="solicitud.edad">
+                                <label for="edocivil">Estado Civil </label>
+                                <input size="3" type="text" name="edocivil" id="edocivil"
+                                [(ngModel)]="solicitud.estadocivil">
+                                <br>
+                                <label for=""> <b>Datos del Trabajo del Cliente</b> </label><br>
+                                <label size="30" for="trabajo">Lugar</label>
+                                <input type="text" name="trabajo" id="trabajo"
+                                [(ngModel)]="solicitud.trabajo">
+                                <label for="telefono">Telefono</label>
+                                <input size="30" type="text" name="telefono" id="telefono"
+                                [(ngModel)]="solicitud.telefono">
+                                <br>
+                                <label for="dirtra">Direccion</label>
+                                <input size="30" type="text" name="dirtra" id="dirtra"
+                                [(ngModel)]="solicitud.direcciontrabajo">
+                                <label for="antigtra">Antigüead</label>
+                                <input size="5" type="text" name="antigtra" id="antigtra"
+                                [(ngModel)]="solicitud.antiguedad">
+                                <hr>
+                                <label for=""><b>Datos del Conyuge del Cliente</b></label>
+                                <br>
+                                <label for="conyuge">Nombre</label>
+                                <input size="30" type="text" name="conyuge" id="conyuge"
+                                [(ngModel)]="solicitud.conyuge">
+                                <label for="ocupacony">Ocupacion</label>
+                                <input size="30" type="text" name="ocupacony" id="ocupacony"
+                                [(ngModel)]="solicitud.ocupacionconyuge">
+                                <label for="ingcony">Ingresos</label>
+                                <input size="12" type="number" name="ingcony" id="ingcony"
+                                [(ngModel)]="solicitud.ingresosconyuge">
+                                <br>
+                                <label for="trabcony">Trabajo</label>
+                                <input size="30" type="text" name="trabcony" id="trabcony"
+                                [(ngModel)]="solicitud.trabajoconyuge">
+                                <label for="antigcony">Antigüedad</label>
+                                <input size="5" type="text" name="antigcony" id="antigcony"
+                                [(ngModel)]="solicitud.antiguedadconyuge">
+                                <label for="telefonocony">Telefono</label>
+                                <input size="30" type="text" name="telefonocony" id="telefonocony"
+                                [(ngModel)]="solicitud.telefonoconyuge">
+                            </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for=""> <b>Datos del Aval</b> </label>
+                                    <br>
+                                <label for="aval">Generales</label>
+                                <input size="30" type="text" name="aval" id="aval"
+                                [(ngModel)]="solicitud.aval">
+                                <label for="ocupaaval">Ocupacion</label>
+                                <input size="30" type="text" name="ocupaaval" id="ocupaaval"
+                                [(ngModel)]="solicitud.ocupacionaval">
+                                <label for="ingaval">Ingresos</label>
+                                <input size="12" type="number" name="ingaval" id="ingaval"
+                                [(ngModel)]="solicitud.ingresosaval">
+                                <br>
+                                <label for="trabaval">Trabajo</label>
+                                <input size="30" type="text" name="trabaval" id="trabaval"
+                                [(ngModel)]="solicitud.trabajoaval">
+                                <label for="antingaval">Anitgüedad</label>
+                                <input size="5" type="text" name="antingaval" id="antingaval"
+                                [(ngModel)]="solicitud.antiguedadaval">
+                                <br>
+                                <label for="telaval">Telefono</label>
+                                <input size="30" type="text" name="telaval" id="telaval"
+                                [(ngModel)]="solicitud.telefonoaval">
+                                <hr>
+                                <label for=""><b>Datos del Conyuge del Aval </b></label>
+                                <br>
+                                <label for="conyugval">Nombre</label>
+                                <input size="30" type="text" name="conyugaval" id="conyugaval"
+                                [(ngModel)]="solicitud.antiguedadaval">
+                                <label for="ocupaconyugval">Ocupacion</label>
+                                <input size="30" type="text" name="ocupaconyugaval" id="ocupconyugaval"
+                                [(ngModel)]="solicitud.ocupacionconyugeaval">
+                                <br>
+                                <label for="ingconyugval">Ingresos</label>
+                                <input size="12" type="number" name="ingconyugaval" id="ingconyugaval"
+                                [(ngModel)]="solicitud.ingresosconyugeaval">
+                                <label for="trabconyugval">Trabajo</label>
+                                <input size="30" type="text" name="trabconyugaval" id="trabconyugaval"
+                                [(ngModel)]="solicitud.trabajoconyugeaval">
+                                <label for="antigconyugval">Antiguedad</label>
+                                <input size="5" type="number" name="antigconyugaval" id="antigconyugaval"
+                                [(ngModel)]="solicitud.antiguedadconyugeaval">
+                                <label for="telconyugval">Telefono</label>
+                                <input size="30" type="text" name="telconyugaval" id="telconyugaval"
+                                [(ngModel)]="solicitud.telconyugeaval">
+                                <br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                <label for="familiar">Familiar</label>
+                                <input size="30" type="text" name="familiar" id="familiar"
+                                [(ngModel)]="solicitud.familiar">
+                                <label for="dirfamiliar">Direccion del Familiar</label>
+                                <input size="30" type="text" name="dirfamiliar" id="dirfamiliar"
+                                [(ngModel)]="solicitud.direccionfamiliar">
+                                <br>
+                                <label for="conocido">Conocido</label>
+                                <input size="30" type="text" name="conocido" id="conocido"
+                                [(ngModel)]="solicitud.conocido">
+                                <label for="dirconocido">Direccion del Conocido</label>
+                                <input type="text" name="dirconocido" id="dirconocido"
+                                [(ngModel)]="solicitud.direccionconocido">
+                                <br>
+                                <label for="referencia1">Referencia</label>
+                                <input size="70" type="text" name="referencia1" id="referencia1"
+                                [(ngModel)]="solicitud.referencia1">
+                                <br>
+                                <label for="referencia2">Referencia 2</label>
+                                <input size="70" type="text" name="referencia2" id="referencia2"
+                                [(ngModel)]="solicitud.referencia2">
+                                <br>
+                                <label for="observaciones">Observaciones</label>
+                                <input size="70" type="text" name="observaciones" id="observaciones"
+                                [(ngModel)]="solicitud.observaciones">
+                            </td>
+                        </tr>
+                      </table>
+                    
+                </div>
             </mat-tab>
             <mat-tab label="Comisiones Vendedores">
                 <p>Estos son los reportes de Servicio</p>
