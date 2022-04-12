@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, Input } from '@angular/core';
 import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 import { ClientesService } from '../../services/clientes.service'
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormControl } from '@angular/forms';
 import { formatNumber,  CommonModule,  CurrencyPipe, formatCurrency, formatDate, DatePipe } from '@angular/common';
 import { isEmpty } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button'; 
@@ -21,6 +21,7 @@ import { Renfacfo } from '../../models';
 import { Articulo } from '../../models';
 import { Serie } from '../../models';
 import { DlgbusarticuloComponent } from '../../common/dlgbusarticulo/dlgbusarticulo.component';
+import {map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-dlgrenfac',
@@ -29,9 +30,11 @@ import { DlgbusarticuloComponent } from '../../common/dlgbusarticulo/dlgbusartic
 })
 export class DlgrenfacComponent implements OnInit {
 
+  myControl = new FormControl();
   renfac: Renfacfo = <Renfacfo> {}
   articulo? : Articulo;
   serie?: Serie;
+  series : Serie[] = [];
   esmoto = false;
   serievalida = true;
   seriemotorvalida = true;
@@ -52,6 +55,8 @@ export class DlgrenfacComponent implements OnInit {
 
   pedirserie = false;
   editdescri = false;
+  seriemanual = false;
+  almacen = "";
 
   constructor(
     public dialog: MatDialog, public dialogRef: MatDialogRef<DlgrenfacComponent>,
@@ -63,6 +68,7 @@ export class DlgrenfacComponent implements OnInit {
 
   ngOnInit(): void {
     this.renfac.canti = 1;
+    let datosparam = JSON.parse(this.message);
   }
 
   closeyes() {
@@ -114,18 +120,29 @@ export class DlgrenfacComponent implements OnInit {
       this.datoshabilitados = true;
       if(this.articulo.linea == "MOTO") {
         this.esmoto = true;
+        this.seriemanual = true;
+        this.pedirserie = true;
+        this.series = [];
       } else {
         this.esmoto = false;
+        this.pedirserie = false;
         if(this.articulo.tipo == "ALF") {
-          this.pedirserie = false;
+          this.pedirserie = true;
           this.selecciona_serie();
           this.seriemotorvalida = true;
           this.serievalida = true;
-        }
+          this.seriemanual = false;
+        } 
       }
   
     }
 
+  }
+
+  verstatus() {
+    this.seriemanual = !this.seriemanual;
+    console.log("Estatus seriemanual:", this.seriemanual);
+    
   }
 
   selecciona_codigo_inven() {
@@ -143,6 +160,18 @@ export class DlgrenfacComponent implements OnInit {
   }
 
   selecciona_serie() {
+    let params_z = {
+      modo : "buscar_inven_todas_series",
+      codigo : this.renfac.codigo,
+      almacen: '%'
+    }
+  this.servicioclientes.busca_series_disponibles(JSON.stringify(params_z)).subscribe(
+      respu => {
+        if(respu) {
+          this.series = respu;
+        }
+      }
+    );
 
   }
 

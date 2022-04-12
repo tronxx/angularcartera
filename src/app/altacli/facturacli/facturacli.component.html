@@ -1,8 +1,14 @@
 <div>
+    <h2>Datos de Factura</h2>
+    <a routerLink="{{linkcliente}}"> 
+        <button mat-raised-button color="primary"  >
+            <mat-icon aria-hidden="false" aria-label="Example new icon">keyboard_arrow_left</mat-icon>
+             Regresar
+            </button>
+    </a>
+
     <form #formularioCliente="ngForm" *ngIf= "factura">
         <div name="factura">
-            <mat-card>
-                <mat-card-title>Datos de Factura</mat-card-title>
                 <table *ngIf="factura">
                     <tr>
                         <td>
@@ -35,11 +41,13 @@
                                 <label for="fechafac">Fecha</label> 
                                 <input type="text" size="10" name="fechafac" id="fechafac" value ="{{factura.fecha}}"> 
                                 <div *ngIf="!escerrada" >
-                                    <mat-icon>warning</mat-icon>
-                                    <label color="warn" for="fecha">Fecha de cierre                                         </label>
+                                    <label color="warn" for="fecha">Fecha de cierre</label>
                                     <input type="date" name="fecha" id="fecha" (change)="validar_fecha_cierre()" [(ngModel)]="strfeccierre_z" >
                                     <div *ngIf="!fechacorrecta_z">
-                                        <p>Para poder cerrar la Factura debe Proporcionar una Fecha Válida</p>
+                                        <p>
+                                        <mat-icon class="red-icon">warning</mat-icon>
+                                        {{msgerror_z}} 
+                                        </p>
                                     </div>
                                 </div>
                                 <br>
@@ -77,7 +85,7 @@
                             </button>
                             <br>
             
-                            <table border="1">
+                            <table border="1" class="hover">
                                 <thead>
                                     <tr>
                                         <th>Codigo</th>
@@ -91,7 +99,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let mirenfac of renfacfo">
+                                    <tr *ngFor="let mirenfac of renfacfo; first as isFirst">
                                         <td>{{mirenfac.codigo}}</td>
                                         <td>{{mirenfac.concepto}} </td>
                                         <td> {{mirenfac.canti}} </td>
@@ -103,6 +111,11 @@
                                             <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
                                             Eliminar
                                         </button>
+                                        <button  *ngIf="!isFirst" [disabled]="escerrada" mat-raised-button color="primary" (click)="subir_renfac(mirenfac)" >
+                                            <mat-icon aria-hidden="false" aria-label="Example new icon">keyboard_arrow_up</mat-icon>
+                                            Subir
+                                        </button>
+
             
                                     </tr>
                                 </tbody>
@@ -111,9 +124,6 @@
                     </tr>
 
                 </table>
-
-
-            </mat-card>
         </div>
 
     </form>

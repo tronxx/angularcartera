@@ -26,6 +26,7 @@ export class DatossolicitComponent implements OnInit {
 
   solicitud : Solicitud = <Solicitud> {};  
   cliente?: Cliente;
+  linkcliente = "";
   idcli_z = 0;
   numcli_z= "";
   edoscivil = [
@@ -52,6 +53,7 @@ export class DatossolicitComponent implements OnInit {
     this.solicitud.estadocivil = "S";
     this.solicitud.sexo = "M";
     this.busca_cliente(this.numcli_z);
+    this.linkcliente = "/altacli/" + this.numcli_z;
   }
 
   busca_cliente(numcli_z: string) {

@@ -106,7 +106,7 @@
              [(ngModel)]= "nvocli.opcion" >
              <option *ngFor="let miopcion of cartaspro" value="{{miopcion.clave}}"
               [selected]="nvocli.opcion == miopcion.clave">
-              {{miopcion.descri}}
+              {{miopcion.clave}} {{miopcion.descri}}
              </option>
             </select>
         </label>
@@ -124,7 +124,7 @@
             </select>
         </label>
         <br>
-        <label for="ticte">Tipo Cte {{nvocli.ticte}}
+        <label for="ticte">Tipo Cte
             <select name="ticte" id="ticte" value="{{nvocli.ticte}}" 
              [(ngModel)]= "nvocli.ticte" (blur)="selecciona_tarjetas_tc()" >
             <option *ngFor="let miticte of tictes_z" value="{{miticte.clave}}"

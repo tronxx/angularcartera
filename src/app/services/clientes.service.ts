@@ -719,6 +719,30 @@ export class ClientesService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  busca_series_disponibles( parametros: string): Observable<Serie[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "buscar_inven_todas_series",
+      codigo: misparams.codigo,
+      almacen: misparams.almacen
+    }
+
+    console.log("Debug: Estoy en busca busca_articulo ", parametros);
+  
+    return this.http.post<Serie[]>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Serie Motor')),
+      catchError(this.handleError<Serie[]>('Ocurrio un error en Post obten busca_codigo_inven'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+
   busca_serie_factura( parametros: string): Observable<Seriefac> {
     
     let respu_z = "";
@@ -820,6 +844,25 @@ export class ClientesService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  subir_renfac_altas( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: Estoy en subir_renfac_altas parametros:", parametros);
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = misparams;
+    console.log("Debug: Estoy en subir_renfac_altas  ", misparamnvo);
+  
+    return this.http.post<any>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched subir_renfac_altas ')),
+      catchError(this.handleError<any>('Ocurrio un error en Post obten subir_renfac_altas '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
   cerrar_factura_altas( parametros: string): Observable<any> {
     
     let respu_z = "";
@@ -912,6 +955,21 @@ export class ClientesService {
     console.log("Debug: Estoy en obtenpdfcfdi ", params);
     var miurl = this.url + "altas/serviciosaltas.php?modo=descarga_pdf_cfdi_factura&uuid="+misparams.uuid + "&rotarfac="+misparams.rotar;
     window.open(miurl, "_blank");
+  }
+
+  imprime_relvtas(params:string) {
+    let misparams = JSON.parse(params);
+    let miurl = this.url + "altas/serviciosaltas.php?" +
+    'modo=relacion_ventas' + 
+    '&fechainicial=' + misparams.fechainicial +
+    '&fechafinal=' + misparams.fechafinal +
+    '&codigoinicial='+misparams.codigoinicial +
+    '&codigofinal='+misparams.codigofinal +
+    '&ubicacioninicial=' + '.' +
+    '&ubicacionfinal='+'zz';
+    console.log("Debug: imprime_relvtas", miurl);
+    window.open(miurl, "_blank");
+
   }
 
 

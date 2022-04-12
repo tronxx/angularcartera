@@ -2,6 +2,7 @@ import { getAttrsForDirectiveMatching } from '@angular/compiler/src/render3/view
 import { Component, OnInit } from '@angular/core';
 import { ClientesService } from '../services/clientes.service';
 import { PolizasService } from '../services/polizas.service';
+import { ConfiguracionService } from '../services/configuracion.service';
 import { Cliente } from '../models/clientes';
 import { Aval } from '../models/aval'
 import { Poliza } from '../models/polizas';
@@ -166,7 +167,8 @@ export class PolizasComponent implements OnInit {
   constructor(private servicioclientes: ClientesService,
     public dialog: MatDialog, 
     public datepipe: DatePipe,
-     private serviciopolizas: PolizasService
+     private serviciopolizas: PolizasService,
+     private configuracion : ConfiguracionService
     ) { }
 
   ngOnInit(): void {
@@ -218,6 +220,12 @@ export class PolizasComponent implements OnInit {
         "crearpoliza":"S",
         "tda":this.tda_z
       }
+      if(this.tda_z == "") {
+        this.alerta("El Codigo de la Poliza no puede estar vacio");
+        this.enespera = false;
+        return;
+
+      }
       this.serviciopolizas.buscapoliza(JSON.stringify(params)).subscribe(
         respu => {
           this.errorespoliza=[];
@@ -236,8 +244,6 @@ export class PolizasComponent implements OnInit {
           this.enespera = false;
         }
       );
-
-
   }
 
   buscar_codigos_poliza() {
@@ -347,7 +353,9 @@ export class PolizasComponent implements OnInit {
        }
 
        this.busca_aval(this.cliente.idcli);
-       this.generavencimientos(1, this.nulets_z);
+       this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.qom_z, 1, this.nulets_z));
+       //console.log('FechaStr:', this.strfechavta, 'Vencimientos:', this.listavencimientos_z);
+       
 
 
        if(this.abonos_z >= (this.engan_z + this.serv_z) ) {
@@ -406,8 +414,8 @@ export class PolizasComponent implements OnInit {
 
 
         }
-        this.vence_z = this.calcula_venc(this.cliente.fechavta, this.cliente.qom, this.sigletra_z);
-        this.msg_z += " Vence:" + this.fecha_a_str(this.vence_z, "dd-mmm-YYYY");
+        this.vence_z = this.configuracion.calcula_venc(this.cliente.fechavta, this.cliente.qom, this.sigletra_z);
+        this.msg_z += " Vence:" + this.configuracion.fecha_a_str(this.vence_z, "dd-mmm-YYYY");
         this.datospago.dias = Math.floor( ( this.fechahoy_z.getTime() - this.vence_z.getTime()  ) / (86400000));
         //console.log("Debug: dias", this.datospago.dias, " Hoy:", this.fechahoy_z.getTime(), " Vence:", this.vence_z.getTime() );
         if(this.datospago.dias > this.diasbon ) {
@@ -469,31 +477,7 @@ export class PolizasComponent implements OnInit {
     }
 
   }
-
-  generavencimientos(inicio:number, final:number) {
-    let ii_z = 0;
-    let letra = "";
-    let vence = "";
-    let fecven = new Date();
-
-    this.listavencimientos_z= [];
-    for (ii_z = inicio; ii_z <= final; ii_z++) {
-      if(ii_z) {
-        letra = ii_z.toString().padStart(2, " ");
-      } else {
-        letra = "SE";
-      }
-      if (this.cliente) {
-         fecven = this.calcula_venc(this.cliente.fechavta, this.cliente.qom, ii_z);
-      }
-      vence = this.fecha_a_str(fecven, "dd-mmm-YYYY");
-      this.listavencimientos_z.push({letra, vence});
-
-    }
-
-  }
-
-
+  
   activar_tipopago(tipospagodisp:string[]) {
     this.tipospagos = [];
     tipospagodisp.forEach(tipo => {
@@ -641,6 +625,9 @@ export class PolizasComponent implements OnInit {
     }
     this.aceptarpago = !this.errorespago();
     return(!this.errorespago());
+    if(this.tda_z == "") {
+      this.errores_z.push("El Codigo de la Poliza no puede estar vacío");
+    }
   }
 
   errorespago () {
@@ -661,7 +648,7 @@ export class PolizasComponent implements OnInit {
   calcula_venc <Date> (fechavta:string, qom_z:string, letra:number) {
 
     let vencimiento_z = new Date(fechavta.replace(/-/g, '\/'));
-    let strfecvta =  this.fecha_a_str  (vencimiento_z, "YYYYmmdd");
+    let strfecvta =  this.configuracion.fecha_a_str  (vencimiento_z, "YYYYmmdd");
     let dias_z = 15;
     let nvafecha_z = 0;
     let meses_z = 0;
@@ -697,31 +684,6 @@ export class PolizasComponent implements OnInit {
 
   }
 
-  fecha_a_str  (fecha : Date, formato:string)  {
-    let strfecha_z = "";
-    let anu_z = "";
-    let mes_z = "";
-    let dia_z = "";
-    let meses_z = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-    anu_z = fecha.getFullYear().toString();
-    mes_z = ((fecha.getMonth()+101).toString()).substring(1,3);
-    dia_z = ((fecha.getDate()+100).toString()).substring(1,3);
-    if(formato == "YYYY-mm-dd") {
-      strfecha_z = anu_z + "-" + mes_z + "-" + dia_z;
-    }
-    if(formato == "YYYYmmdd") {
-      strfecha_z = anu_z + mes_z +  dia_z;
-    }
-
-    if(formato == "dd-mm-YYYY") {
-      strfecha_z = dia_z +  "-" + mes_z + "-" + anu_z ;
-    }
-    if(formato == "dd-mmm-YYYY") {
-      strfecha_z = dia_z +  "-" + meses_z[fecha.getMonth()] + "-" + anu_z ;
-    }
-    return (strfecha_z);
-  }
-
   clickaceptarpago() {
     let estemov_z = this.codcli_z + ":" + this.datospago.concepto + " " + this.datospago.conceptocompl +  ":" + this.datospago.importe.toString;
     if(this.validarpago()) {
@@ -752,7 +714,6 @@ export class PolizasComponent implements OnInit {
   }
 
   si_aceptarpago() {
-
     this.enespera = true;
     this.datospago.idpoliza = this.idpoliza;
     this.datospago.idusuario = this.usrreg_z.idusuario;
@@ -760,7 +721,7 @@ export class PolizasComponent implements OnInit {
     this.datospago.tipopago = this.tipopagosel_z;
     this.datospago.tipomov = this.tipomovsel_z;
     this.datospago.claveempresa = this.claveempresa;
-    this.datospago.vence = this.fecha_a_str(this.vence_z, "YYYY-mm-dd");
+    this.datospago.vence = this.configuracion.fecha_a_str(this.vence_z, "YYYY-mm-dd");
     // console.log("Debug DatosPago: ", this.datospago);
     this.serviciopolizas.agregar_pago(JSON.stringify(this.datospago )).subscribe(
       respu => {

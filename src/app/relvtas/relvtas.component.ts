@@ -77,6 +77,18 @@ export class RelvtasComponent implements OnInit {
     )
   }
 
+  relvtas() {
+    let params_z = {
+      fechainicial : this.mimodelo.fechaini,
+      fechafinal : this.mimodelo.fechafin,
+      codigoinicial: this.mimodelo.codigoini,
+      codigofinal : this.mimodelo.codigofin,
+      ubicacioninicial : '',
+      ubicaconfinal: 'zz'
+    }
+    this.servicioclientes.imprime_relvtas(JSON.stringify(params_z));
+  }
+
   onNoClick() {
 
   }

@@ -8,7 +8,7 @@
                       [(ngModel)]= "cliagente.codvnd" >
                      <option *ngFor="let mivendedor of vendedores" value="{{mivendedor.codvnd}}"
                        [selected]="mivendedor.codvnd == cliagente.codvnd">
-                       {{mivendedor.nombre}}
+                       {{mivendedor.codvnd}} {{mivendedor.nombre}}
                        </option>
                 </select>
                 <br>

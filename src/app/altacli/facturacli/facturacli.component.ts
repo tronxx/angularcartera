@@ -37,6 +37,8 @@ export class FacturacliComponent implements OnInit {
   fechacierre_z = new Date();
   fechacorrecta_z = false;
   strfeccierre_z = "";
+  linkcliente = "";
+  msgerror_z = "";
   
 
 
@@ -51,20 +53,9 @@ export class FacturacliComponent implements OnInit {
   ngOnInit(): void {
     this.codcli_z = String(this.route.snapshot.paramMap.get('numcli'));
     this.idfac = Number(this.route.snapshot.paramMap.get('idfac'));
-    this.buscar_cliente(this.codcli_z);
-    if(this.cliente) {
-      this.idcli  = this.cliente.idcli;
-      this.cargoscli_z = this.cliente.cargos;
-      this.servic_z = this.cliente.servicio;
-      this.preciolista_z = this.cliente.preciolista;
-      this.ubiage = this.cliente.ubica;
-      this.fechavta = this.cliente.fechavta;
+    const micli = this.buscar_cliente(this.codcli_z);
+    this.linkcliente = "/altacli/" + this.codcli_z;
     
-    }
-    if(this.idfac == -1) {
-      this.crear_factura()
-    }
-
   }
 
   crear_factura() {
@@ -101,7 +92,7 @@ export class FacturacliComponent implements OnInit {
     });
   }
 
-  buscar_cliente(codcli: string) {
+  buscar_cliente (codcli: string) {
     var params_z = {
       modo : "buscar_un_cliente",
       codigo: codcli,
@@ -118,6 +109,9 @@ export class FacturacliComponent implements OnInit {
         this.ubiage = this.cliente.ubica;
         this.fechavta = this.cliente.fechavta;
         this.busca_factura();
+        if(this.idfac == -1 ) {
+          this.crear_factura();
+        }
       } else {
         this.alerta("Cliente Inexistente:" + this.codcli_z + " Codcli:" + codcli);
       }
@@ -160,11 +154,6 @@ export class FacturacliComponent implements OnInit {
         }
       }
     );
-    this.tempo_z = " prodfin:" + this.prodfin_z.toString() +
-    " cargoscli:" + this.cargoscli_z.toString() + 
-    " preciolista:" + this.preciolista_z.toString() + 
-    " Servicio:" + this.servic_z.toString();
-
   }
 
   editar_factura() {
@@ -201,8 +190,6 @@ export class FacturacliComponent implements OnInit {
 
   }
 
-  
-
   busca_renfacfo(idfacfon_z : number) {
     var params_z = {
       modo : "buscar_renfac",
@@ -216,6 +203,33 @@ export class FacturacliComponent implements OnInit {
         } 
       }
     );
+}
+
+subir_renfac(mirenfac: Renfacfo) {
+  console.log("Voy a subir de orden el renglon");
+  let idfac_z = -1;
+  if(this.factura) {
+    idfac_z = this.factura.idfac;
+  }
+  let params_z = {
+    modo: "subir_renfac",
+    idcli: this.factura?.idcli,
+    idfac: idfac_z,
+    idrenfac:mirenfac.idrenfacfo,
+    renfac: mirenfac
+  }
+  this.servicioclientes.subir_renfac_altas(JSON.stringify(params_z)).subscribe( resalta=> 
+    {
+      if(resalta.status == "OK") {
+        this.busca_renfacfo(idfac_z);
+      } else {
+        this.alerta("Error:" + resalta.error);
+        console.log("Debug: Error", resalta);
+      }
+
+    }
+  );
+
 }
 
 eliminar_renfac(mirenfac: Renfacfo) {
@@ -300,14 +314,28 @@ validar_fecha_cierre() {
   let fechamin_z = new Date(Math.floor(fechahoy_z.getTime()/undia_z) - undia_z * 3);
   fechaprop_z = this.configuracion.fecha_a_str(fechamin_z, "dd-mm-YYYY");
   if(dias_z < 0) {
-    resultado_z.msg1_z = "No puede facturar con fecha Posterior";
+    resultado_z.msg1_z += " No puede facturar con fecha Posterior";
     resultado_z.escorrecto_z = false;
   }
   if(dias_z > 3) {
-    resultado_z.msg1_z = "No puede facturar con más de 3 días de diferencia";
+    resultado_z.msg1_z += " No puede facturar con más de 3 días de diferencia";
     resultado_z.escorrecto_z = false;
   }
+  let totfac = 0;
+  if(this.factura) {
+    totfac = Math.round (this.factura.total );
+  }
+  let cargos = -1;
+  if(this.cliente) {
+    cargos = Math.round (this.cliente.preciolista * (this.cliente.piva /100 + 1));
+  }
+  if (totfac != cargos) {
+    resultado_z.msg1_z += " El Valor de las Mercancias de la Factura no coincide con el de la venta";
+    resultado_z.escorrecto_z = false;
+
+  }
   this.fechacorrecta_z = resultado_z.escorrecto_z;
+  this.msgerror_z = resultado_z.msg1_z;
   return resultado_z;
 }
 

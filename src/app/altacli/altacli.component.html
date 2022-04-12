@@ -2,20 +2,18 @@
     <input type="text" name="codigo" id="codigo" size="12" [(ngModel)]="numcli_z">
     <button mat-raised-button color="primary" (click)="buscarcliente()" >Aceptar</button>
     <div *ngIf="cliente" >
-        <div *ngIf="clienteabierto" >
-            <button mat-raised-button color="primary" (click)="modificarcliente()" >
-                <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
-                Modificar
-            </button>
-            <button mat-raised-button color="primary" (click)="buscarcliente()" >
-                <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
-                Eliminar
-            </button>
-            <button mat-raised-button color="primary" (click)="cerrarcliente()" >
-                <mat-icon aria-hidden="false" aria-label="Example new icon">lock</mat-icon>
-                Cerrar
-            </button>
-        </div>
+        <button [disabled]="!clienteabierto" mat-raised-button color="primary" (click)="modificarcliente()" >
+            <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
+            Modificar
+        </button>
+        <button [disabled]="!clienteabierto" mat-raised-button color="primary" (click)="buscarcliente()" >
+            <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
+            Eliminar
+        </button>
+        <button [disabled]="!clienteabierto" mat-raised-button color="primary" (click)="cerrarcliente()" >
+            <mat-icon aria-hidden="false" aria-label="Example new icon">lock</mat-icon>
+            Cerrar
+        </button>
         <button mat-raised-button color="primary" (click)="imprimir_tarjeta()" >
             <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
             Tarjeta
@@ -24,13 +22,10 @@
             <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
             Edo.Cta
         </button>
-        <div *ngIf="clientecred && letraspend">
-            <button mat-raised-button color="primary" (click)="imprimir_edocta()" >
+        <button [disabled]="!(clientecred && letraspend)" mat-raised-button color="primary" (click)="imprimir_edocta()" >
                 <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
                 Letras
-            </button>
-    
-        </div>
+        </button>
 
     </div>
     
@@ -330,17 +325,17 @@
                 </a> 
 
                 <div *ngIf="solicitud" >
-
                     <table border="1">
                         <tr>
                             <td>
                                 <label for=""> <b> Cliente</b> </label> <br>
                                 <label for="ocupacion">Ocupacion </label> 
-                                <input size="30" type="text" name="ocupacion" id="ocupacion" 
-                                [(ngModel)]="solicitud.ocupacion" >
+                                <input readonly size="30" type="text" name="ocupacion" 
+                                id="ocupacion" value = "{{solicitud.ocupacion}}"
+                                >
                                 <label for="ingresos">Ingresos</label>
-                                <input size="12" type="number" name="ingresos" id="ingresos"
-                                [(ngModel)]="solicitud.ingresos">
+                                <input readonly size="12" type="text" name="ingresos" id="ingresos"
+                                value = "{{solicitud.ingresos | currency}}">
                                 <br>
                                 <label for="sexo">Sexo</label>
                                 <select name="sexo" id="sexo" [(ngModel)]="solicitud.sexo" >
@@ -351,8 +346,8 @@
                                     </option>
                                 </select>
                                 <label for="edad">Edad</label>
-                                <input size="5" type="number" name="edad" id="edad" 
-                                [(ngModel)]="solicitud.edad">
+                                <input size="5" type="text" readonly name="edad" id="edad" 
+                                value="{{solicitud.edad}}" >
                                 <label for="edocivil">Estado Civil </label>
                                 <select name="edocivil" id="edocivil" [(ngModel)]="solicitud.estadocivil" >
                                     <option *ngFor="let miedocivil of edoscivil" 
@@ -363,40 +358,43 @@
                                 <br>
                                 <label for=""> <b>Datos del Trabajo del Cliente</b> </label><br>
                                 <label size="30" for="trabajo">Lugar</label>
-                                <input type="text" name="trabajo" id="trabajo"
-                                [(ngModel)]="solicitud.trabajo">
+                                <input type="text" readonly name="trabajo" id="trabajo"
+                                 value="{{solicitud.trabajo}}" >
                                 <label for="telefono">Telefono</label>
-                                <input size="30" type="text" name="telefono" id="telefono"
-                                [(ngModel)]="solicitud.telefono">
+                                <input size="30" readonly type="text" name="telefono" id="telefono"
+                                 value = "{{solicitud.telefono}} ">
                                 <br>
                                 <label for="dirtra">Direccion</label>
-                                <input size="30" type="text" name="dirtra" id="dirtra"
-                                [(ngModel)]="solicitud.direcciontrabajo">
+                                <input size="30" readonly type="text" name="dirtra" id="dirtra"
+                                value = "{{solicitud.direcciontrabajo}}">
                                 <label for="antigtra">Antigüead</label>
-                                <input size="5" type="number" name="antigtra" id="antigtra"
-                                [(ngModel)]="solicitud.antiguedad">
+                                <input size="5" readonly type="text" name="antigtra" id="antigtra"
+                                value = "{{solicitud.antiguedad}}">
                                 <hr>
                                 <label for=""><b>Datos del Conyuge del Cliente</b></label>
                                 <br>
                                 <label for="conyuge">Nombre</label>
-                                <input size="30" type="text" name="conyuge" id="conyuge"
-                                [(ngModel)]="solicitud.conyuge">
+                                <input size="30" readonly type="text" name="conyuge" id="conyuge"
+                                value = "{{solicitud.conyuge}}">
                                 <label for="ocupacony">Ocupacion</label>
-                                <input size="30" type="text" name="ocupacony" id="ocupacony"
-                                [(ngModel)]="solicitud.ocupacionconyuge">
+                                <input size="30" readonly type="text" name="ocupacony" id="ocupacony"
+                                value = "{{solicitud.ocupacionconyuge}}">
                                 <label for="ingcony">Ingresos</label>
-                                <input size="12" type="number" name="ingcony" id="ingcony"
-                                [(ngModel)]="solicitud.ingresosconyuge">
+                                <input size="12" type="text" readonly name="ingcony" id="ingcony"
+                                value =  "{{solicitud.ingresosconyuge | currency}}">
                                 <br>
                                 <label for="trabcony">Trabajo</label>
-                                <input size="30" type="text" name="trabcony" id="trabcony"
-                                [(ngModel)]="solicitud.trabajoconyuge">
+                                <input size="30" type="text" readonly name="trabcony" id="trabcony"
+                                value = "{{solicitud.trabajoconyuge}}">
+                                <label for="trabcony">Direccion Trabajo</label>
+                                <input size="30" readonly type="text" name="trabcony" id="trabcony"
+                                value="{{solicitud.direcciontrabconyuge}}">
                                 <label for="antigcony">Antigüedad</label>
-                                <input size="5" type="number" name="antigcony" id="antigcony"
-                                [(ngModel)]="solicitud.antiguedadconyuge">
+                                <input size="5" type="text" readonly name="antigcony" id="antigcony"
+                                value="{{solicitud.antiguedadconyuge}}">
                                 <label for="telefonocony">Telefono</label>
-                                <input size="30" type="text" name="telefonocony" id="telefonocony"
-                                [(ngModel)]="solicitud.telefonoconyuge">
+                                <input size="30" type="text" readonly name="telefonocony" id="telefonocony"
+                                value="{{solicitud.telefonoconyuge}}">
                             </td>
                             </tr>
                             <tr>
@@ -404,85 +402,84 @@
                                     <label for=""> <b>Datos del Aval</b> </label>
                                     <br>
                                 <label for="aval">Generales</label>
-                                <input size="30" type="text" name="aval" id="aval"
-                                [(ngModel)]="solicitud.aval">
+                                <input size="30" readonly type="text" name="aval" id="aval"
+                                value="{{solicitud.aval}}">
                                 <label for="ocupaaval">Ocupacion</label>
-                                <input size="30" type="text" name="ocupaaval" id="ocupaaval"
-                                [(ngModel)]="solicitud.ocupacionaval">
+                                <input size="30" readonly type="text" name="ocupaaval" id="ocupaaval"
+                                value="{{solicitud.ocupacionaval}}">
                                 <label for="ingaval">Ingresos</label>
-                                <input size="12" type="number" name="ingaval" id="ingaval"
-                                [(ngModel)]="solicitud.ingresosaval">
+                                <input size="12" type="text" readonly name="ingaval" id="ingaval"
+                                value="{{solicitud.ingresosaval | currency}}">
                                 <br>
                                 <label for="trabaval">Trabajo</label>
-                                <input size="30" type="text" name="trabaval" id="trabaval"
-                                [(ngModel)]="solicitud.trabajoaval">
+                                <input size="30" type="text" readonly name="trabaval" id="trabaval"
+                                value="{{solicitud.trabajoaval}}">
                                 <label for="antingaval">Anitgüedad</label>
-                                <input size="5" type="number" name="antingaval" id="antingaval"
-                                [(ngModel)]="solicitud.antiguedadaval">
+                                <input size="5" type="text" readonly name="antingaval" id="antingaval"
+                                value="{{solicitud.antiguedadaval | currency}}">
                                 <br>
                                 <label for="telaval">Telefono</label>
-                                <input size="30" type="text" name="telaval" id="telaval"
-                                [(ngModel)]="solicitud.telefonoaval">
+                                <input size="30" type="text" readonly name="telaval" id="telaval"
+                                value="{{solicitud.telefonoaval}}">
                                 <hr>
                                 <label for=""><b>Datos del Conyuge del Aval </b></label>
                                 <br>
                                 <label for="conyugval">Nombre</label>
-                                <input size="30" type="text" name="conyugaval" id="conyugaval"
-                                [(ngModel)]="solicitud.conyugeaval">
+                                <input size="30" type="text" readonly name="conyugaval" id="conyugaval"
+                                value="{{solicitud.conyugeaval}}">
                                 <label for="ocupaconyugval">Ocupacion</label>
-                                <input size="30" type="text" name="ocupaconyugaval" id="ocupconyugaval"
-                                [(ngModel)]="solicitud.ocupacionconyugeaval">
+                                <input size="30" type="text" readonly name="ocupaconyugaval" id="ocupconyugaval"
+                                value="{{solicitud.ocupacionconyugeaval}}">
                                 <br>
                                 <label for="ingconyugval">Ingresos</label>
-                                <input size="12" type="number" name="ingconyugaval" id="ingconyugaval"
-                                [(ngModel)]="solicitud.ingresosconyugeaval">
+                                <input size="12" type="text" readonly name="ingconyugaval" id="ingconyugaval"
+                                value="{{solicitud.ingresosconyugeaval | currency}}">
                                 <label for="trabconyugval">Trabajo</label>
-                                <input size="30" type="text" name="trabconyugaval" id="trabconyugaval"
-                                [(ngModel)]="solicitud.trabajoconyugeaval">
+                                <input size="30" type="text" readonly name="trabconyugaval" id="trabconyugaval"
+                                value="{{solicitud.trabajoconyugeaval}}">
                                 <label for="antigconyugval">Antiguedad</label>
-                                <input size="5" type="number" name="antigconyugaval" id="antigconyugaval"
-                                [(ngModel)]="solicitud.antiguedadconyugeaval">
+                                <input size="5" type="text" readonly name="antigconyugaval" id="antigconyugaval"
+                                value="{{solicitud.antiguedadconyugeaval}}">
                                 <label for="telconyugval">Telefono</label>
-                                <input size="30" type="text" name="telconyugaval" id="telconyugaval"
-                                [(ngModel)]="solicitud.telconyugeaval">
+                                <input size="30" type="text" readonly name="telconyugaval" id="telconyugaval"
+                                value="{{solicitud.telconyugeaval}}">
                                 <br>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                 <label for="familiar">Familiar</label>
-                                <input size="30" type="text" name="familiar" id="familiar"
-                                [(ngModel)]="solicitud.familiar">
+                                <input size="30" type="text" readonly name="familiar" id="familiar"
+                                value="{{solicitud.familiar}}">
                                 <label for="dirfamiliar">Direccion del Familiar</label>
-                                <input size="30" type="text" name="dirfamiliar" id="dirfamiliar"
-                                [(ngModel)]="solicitud.direccionfamiliar">
+                                <input size="30" type="text" readonly name="dirfamiliar" id="dirfamiliar"
+                                value="{{solicitud.direccionfamiliar}}">
                                 <br>
                                 <label for="conocido">Conocido</label>
-                                <input size="30" type="text" name="conocido" id="conocido"
-                                [(ngModel)]="solicitud.conocido">
+                                <input size="30" type="text" readonly name="conocido" id="conocido"
+                                value="{{solicitud.conocido}}">
                                 <label for="dirconocido">Direccion del Conocido</label>
-                                <input type="text" name="dirconocido" id="dirconocido"
-                                [(ngModel)]="solicitud.direccionconocido">
+                                <input type="text" readonly name="dirconocido" id="dirconocido"
+                                value="{{solicitud.direccionconocido}}">
                                 <br>
                                 <label for="referencia1">Referencia</label>
-                                <input size="70" type="text" name="referencia1" id="referencia1"
-                                [(ngModel)]="solicitud.referencia1">
+                                <input size="70" type="text" readonly name="referencia1" id="referencia1"
+                                value="{{solicitud.referencia1}}">
                                 <br>
                                 <label for="referencia1a">Referencia 1A</label>
-                                <input size="70" type="text" name="referencia1a" id="referencia1"
-                                [(ngModel)]="solicitud.referencia1a">
+                                <input size="70" type="text" readonly name="referencia1a" id="referencia1"
+                                value="{{solicitud.referencia1a}}">
                                 <br>
                                 <label for="referencia2">Referencia 2</label>
-                                <input size="70" type="text" name="referencia2" id="referencia2"
-                                [(ngModel)]="solicitud.referencia2">
+                                <input size="70" type="text" readonly name="referencia2" id="referencia2"
+                                value="{{solicitud.referencia2}}">
                                 <br>
                                 <label for="observaciones">Observaciones</label>
-                                <input size="70" type="text" name="observaciones" id="observaciones"
-                                [(ngModel)]="solicitud.observaciones">
+                                <input size="70" type="text" readonly name="observaciones" id="observaciones"
+                                value="{{solicitud.observaciones}}">
                             </td>
                         </tr>
                       </table>
-                   
                 </div>
             </mat-tab>
 

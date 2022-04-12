@@ -62,8 +62,8 @@ export class DlgdatoscliComponent implements OnInit {
   ]
 
   tipoqom = [
-    { clave:"Q", descri:"Quincenal"},
-    { clave:"C", descri:"Contado"}
+    { clave:"C", descri:"Contado"},
+    { clave:"Q", descri:"Quincenal"}
   ]
 
   statuscli = [
@@ -184,6 +184,7 @@ export class DlgdatoscliComponent implements OnInit {
       } else {
         this.nvocli.modo = "modificar_cliente";
       }
+      this.selecciona_letras_cliente();
     }
   
     buscarcliente() {

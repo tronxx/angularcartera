@@ -3,6 +3,7 @@ import { catchError, map, mapTo, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Compania } from '../models/config'
+import { DateAdapter } from '@angular/material/core';
 
 
 @Injectable({
@@ -102,10 +103,14 @@ export class ConfiguracionService {
   calcula_venc <Date> (fechavta:string, qom_z:string, letra:number) {
 
     let vencimiento_z = new Date(fechavta.replace(/-/g, '\/'));
+    let esfindemes = this.esfindemes(vencimiento_z);
     let strfecvta =  this.fecha_a_str  (vencimiento_z, "YYYYmmdd");
     let dias_z = 15;
+    let esimpar_z = 0;
     let nvafecha_z = 0;
     let meses_z = 0;
+    let mimes_z = 0;
+    let midia_z = 0;
     if (this.cia) {
       if( this.cia.AplicarContingencia  && strfecvta < this.cia.FechaContingencia) {
         meses_z = Math.floor(this.cia.DiasContingencia / 30);
@@ -117,29 +122,103 @@ export class ConfiguracionService {
   
     }
 
+    let anu = vencimiento_z.getFullYear();
+    let mes = vencimiento_z.getMonth() + 1;
+    let dia = vencimiento_z.getDate();
+    let diaoriginal = dia;
+    
     if(qom_z == "Q") {
       meses_z = Math.floor(letra / 2);
-      dias_z = (letra % 2) * 15;
+      esimpar_z = (letra % 2);
+      if(esimpar_z) {
+        meses_z += Math.floor((dia + 15) / 30)
+        dia = ( (dia  + 15) % 30);
+      }
     } else {
-      dias_z = 0;
       meses_z = letra;
     }
-    // console.log("Debug Meses:", meses_z, " Dias:", dias_z);
-    if(letra == 0) {
-      nvafecha_z = vencimiento_z.getTime() + (7 * 24 * 60 * 60 *  1000);
-    } else {
-      // console.log("Debug 1:" + fechavta, vencimiento_z);
-      //vencimiento_z.setMonth(10);
-      vencimiento_z.setMonth(vencimiento_z.getMonth() + meses_z);
-      // console.log("Debug 2:",vencimiento_z);
-      //vencimiento_z = vencimiento_z.setMonth(vencimiento_z.getMonth() + meses_z);
-      nvafecha_z =  vencimiento_z.getTime() + (dias_z * 24 * 60 * 60 * 1000);
+    if(mes + meses_z > 12 ) {
+      anu += ( Math.floor( (mes + meses_z) /12 ));
     }
-    vencimiento_z = new Date(nvafecha_z);
-    // console.log("Debug 3:",vencimiento_z);
+    mes = mes + meses_z; 
+    if(mes > 12) { mes = mes % 12; }
+    let strfec = anu.toString() + "/" + mes.toString() + '/' + dia.toString();
+    //console.log("letra:", letra, "strfec:", strfec);
+    
+    if(qom_z == "Q" && esimpar_z ) {
+        if(mes == 2 && dia > 28 ) {
+            vencimiento_z = this.corrige_fecha_fin_de_mes(strfec);
+        } else if ((mes == 4 || mes == 6 || mes == 9 || mes == 11 )&& dia > 30 ) {
+          vencimiento_z = this.damefindemes(new Date(anu.toString() + "/" + mes.toString() + "/01"));  
+        } else {
+          vencimiento_z = new Date(strfec);
+        }
+    } else {
+      if(esfindemes) {
+        vencimiento_z = this.damefindemes(new Date(anu.toString() + "/" + mes.toString() + "/01"));
+      } else {
+        vencimiento_z = this.corrige_fecha_fin_de_mes(strfec);
+      }
+    }
     return (vencimiento_z);
   }
 
+  corrige_fecha_fin_de_mes(strfec: string) {
+    let anu = 0;
+    let mes = 0;
+    let dia = 0;
+    let fechaxpartes = strfec.split("/")
+    let stranu = fechaxpartes[0]
+    let strmes = fechaxpartes[1]
+    let strdia = fechaxpartes[2]
+    anu = Number(stranu);
+    mes = Number(strmes);
+    dia = Number(strdia);
+    //console.log('stranu:', stranu, strmes, strdia);
+    
+    let vencimiento_z = new Date();
+    if(mes == 2 && dia > 28 ) {
+      vencimiento_z = this.damefindemes(new Date(anu.toString() + "/" + mes.toString() + "/01"));  
+    } else if ((mes == 4 || mes == 6 || mes == 9 || mes == 11 )&& dia > 30 ) {
+      vencimiento_z = this.damefindemes(new Date(anu.toString() + "/" + mes.toString() + "/01"));  
+    } else {
+      vencimiento_z = new Date(anu.toString() + "/" + mes.toString() + "/" + dia.toString());  
+    }
+    return (vencimiento_z);
+
+  }
+
+  esfindemes <bool> (fecha: Date)  {
+    let nvafecha = new Date (fecha.getTime() + (1 * 24 * 60 * 60 *  1000));
+    let dia = 0;
+    dia = nvafecha.getDate();
+    if(dia == 1) {
+      return (true);
+    } else {
+      return (false);
+    }
+
+  }
+
+  damefindemes  (mifecha : Date) {
+    let anu = 0;
+    let mes=0;
+    anu = mifecha.getFullYear();
+    mes = mifecha.getMonth()+1;
+
+    if(mes == 12) {
+      anu =anu+1; mes=1;
+    } else {
+      mes = mes + 1;
+    }
+    let strfec = anu.toString() + "/" + mes.toString() + '/' + "01";
+    let findemes = new Date( strfec);
+    findemes = new Date ( findemes.getTime() + (-1 * 24 * 60 * 60 *  1000));
+    //console.log('mes:', mes, 'mifecha:', mifecha.toDateString(), 'strfec:', strfec, 'Fin de Mes:', findemes.toDateString());
+    return (new Date(findemes));
+    
+  }
+  
   generavencimientos (fechavta:string, qom:string, inicio:number, final:number) {
     let ii_z = 0;
     let letra = "";

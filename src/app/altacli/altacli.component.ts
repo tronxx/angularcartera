@@ -28,7 +28,6 @@ import { DlgdatoscliComponent } from './dlgdatoscli/dlgdatoscli.component';
 import { DlgdatosmovcliComponent } from './dlgdatosmovcli/dlgdatosmovcli.component';
 import { DlgDatosVndComponent } from './dlg-datos-vnd/dlg-datos-vnd.component';
 import { DlgfacturaComponent } from './dlgfactura/dlgfactura.component';
-import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-altacli',
@@ -204,6 +203,7 @@ export class AltacliComponent implements OnInit {
           this.yaagentes_z = false;
           this.solicitudcli_z = false;
           this.facturacli_z = false;
+          this.buscastatuscerrado();
 
           //this.busca_aval(this.cliente.idcli);
           //this.busca_movclis(this.cliente.idcli);
@@ -323,7 +323,7 @@ export class AltacliComponent implements OnInit {
       this.nvocli.colonia = this.cliente.colonia;
       this.nvocli.email = this.cliente.email;
       this.nvocli.fechavta = this.cliente.fechavta;
-      this.mescum = this.meses_z[this.nvocli.mescum].descri;
+      this.mescum = this.meses_z[this.nvocli.mescum -1 ].descri;
       this.modoqom_z = [];
       if(this.nvocli.qom == "C") this.modoqom_z .push({clave:"C", descri:"CONTADO"})
       if(this.nvocli.qom == "Q") this.modoqom_z .push({clave:"Q", descri:"QUINCENAL"})
@@ -417,8 +417,11 @@ export class AltacliComponent implements OnInit {
         this.servicioclientes.agrega_nuevo_cliente(JSON.stringify(res)).subscribe(
           respu => {
             if(respu) {
-              this.buscarcliente();
-    
+              if(respu.status == "Error") {
+                this.alerta(respu.error);
+              } else {
+                this.buscarcliente();
+              }
             } else {
               this.alerta("Ocurrió un error en alta");
             }

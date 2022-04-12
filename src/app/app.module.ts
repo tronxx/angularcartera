@@ -25,6 +25,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule  } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatProgressBarModule } from '@angular/material/progress-bar'
 
 import { DlgedoctaComponent } from './common/dlgedocta/dlgedocta.component';
 import { DlgbuscliComponent } from './common/dlgbuscli/dlgbuscli.component';
@@ -44,6 +45,7 @@ import { DlgrenfacComponent } from './altacli/dlgrenfac/dlgrenfac.component';
 import { DlgdatosfacturaComponent } from './altacli/dlgdatosfactura/dlgdatosfactura.component';
 import { DlgbusarticuloComponent } from './common/dlgbusarticulo/dlgbusarticulo.component';
 import { FacturacliComponent } from './altacli/facturacli/facturacli.component';
+import { DlgbuscaseriesComponent } from './common/dlgbuscaseries/dlgbuscaseries.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +74,8 @@ import { FacturacliComponent } from './altacli/facturacli/facturacli.component';
     DlgrenfacComponent,
     DlgdatosfacturaComponent,
     DlgbusarticuloComponent,
-    FacturacliComponent
+    FacturacliComponent,
+    DlgbuscaseriesComponent
   ],
   imports: [
     BrowserModule,
@@ -87,6 +90,7 @@ import { FacturacliComponent } from './altacli/facturacli/facturacli.component';
     MatRadioModule,
     MatCardModule,
     MatSelectModule,
+    MatProgressBarModule,
     BrowserAnimationsModule
   ],
   providers: [ UsuariosService, 

@@ -69,7 +69,7 @@ export class DlgdatosfacturaComponent implements OnInit {
         this.seriefac = respu;
         if(this.factura) {
           this.factura.serie = this.seriefac.seriefac;
-          this.factura.numero = this.seriefac.ultimofolio + 1;
+          this.factura.numero = this.seriefac.ultimofolio;
           this.factura.fecha =  this.fechavta;
           this.factura.rfc = 'XAXX010101000';
           this.factura.email = this.seriefac.emailctegeneral;
