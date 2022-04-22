@@ -16,7 +16,7 @@ export class MainComponent implements OnInit {
     { link: "/conscli", titulo: "Clientes", active:"active" },
     { link: "/login", titulo: "Acceso", active:""  },
     { link: "/polizas", titulo: "Poliza de Cobranza", active:"active"  },
-    { link: "/consupol", titulo: "Consulta de Polizas", active:"active"  },
+    { link: "/acumpol", titulo: "Consulta de Polizas", active:"active"  },
     { link: "/detallescli", titulo: "Detalles Cliente", active:"active"  }
   ];
 

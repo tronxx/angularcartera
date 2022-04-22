@@ -5,5 +5,7 @@ export interface Poliza {
     bonif: number,
     recar:number,
     impor: number,
-    idpoliza: number
+    idpoliza: number,
+    valormercancia: number,
+    financiamiento: number
 }

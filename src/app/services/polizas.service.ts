@@ -94,6 +94,23 @@ export class PolizasService {
 
   }
 
+  busca_acumulado_polizas ( params: string): Observable<Poliza[]> {
+    let miurl = this.url + "polizas/servicios.php"
+    const headers = { 'content-type': 'text/plain'};
+    //const body=JSON.stringify(misparams);
+    console.log("Debug: busca_acumulado_polizas params:", params);
+    
+    return this.http.post<Poliza[]>(miurl, params, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched poliza')),
+      catchError(this.handleError<Poliza[]>('Ocurrio un error en Post obtenusuario'))
+
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+
+  }
+
+
   agregar_pago ( params: string): Observable<any> {
     let misparamold_z = { 
       "idcli":0,

@@ -6,6 +6,7 @@ import { ClientesService } from '../services/clientes.service'
 import { ConfiguracionService } from '../services/configuracion.service';
 import { Cliente } from '../models/clientes';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { ReportecomisComponent } from '../reportecomis/reportecomis.component';
 
 @Component({
   selector: 'app-relvtas',
@@ -87,6 +88,30 @@ export class RelvtasComponent implements OnInit {
       ubicaconfinal: 'zz'
     }
     this.servicioclientes.imprime_relvtas(JSON.stringify(params_z));
+  }
+
+  repcomis() {
+    let params_z = {
+      fechainicial : this.mimodelo.fechaini,
+      fechafinal : this.mimodelo.fechafin,
+      codigoinicial: this.mimodelo.codigoini,
+      codigofinal : this.mimodelo.codigofin,
+      ubicacioninicial : "",
+      ubicacionfinal: 'zz',
+      title: "Datos Reporte Comisiones"
+    }
+    const dialogref = this.dialog.open(ReportecomisComponent, {
+      width:'350px',
+      data: JSON.stringify( params_z)
+    });
+    dialogref.afterClosed().subscribe(res => {
+      if(res) {
+        console.log("Voy a mandar a servicios", res);
+        this.servicioclientes.imprime_repcomis(JSON.stringify(res));
+      }
+    });
+  
+  
   }
 
   onNoClick() {

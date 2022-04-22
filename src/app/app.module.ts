@@ -46,6 +46,9 @@ import { DlgdatosfacturaComponent } from './altacli/dlgdatosfactura/dlgdatosfact
 import { DlgbusarticuloComponent } from './common/dlgbusarticulo/dlgbusarticulo.component';
 import { FacturacliComponent } from './altacli/facturacli/facturacli.component';
 import { DlgbuscaseriesComponent } from './common/dlgbuscaseries/dlgbuscaseries.component';
+import { DlgimpriletrasComponent } from './common/dlgimpriletras/dlgimpriletras.component';
+import { ReportecomisComponent } from './reportecomis/reportecomis.component';
+import { AcumpolComponent } from './acumpol/acumpol.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +78,10 @@ import { DlgbuscaseriesComponent } from './common/dlgbuscaseries/dlgbuscaseries.
     DlgdatosfacturaComponent,
     DlgbusarticuloComponent,
     FacturacliComponent,
-    DlgbuscaseriesComponent
+    DlgbuscaseriesComponent,
+    DlgimpriletrasComponent,
+    ReportecomisComponent,
+    AcumpolComponent
   ],
   imports: [
     BrowserModule,

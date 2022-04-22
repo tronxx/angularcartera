@@ -1,0 +1,12 @@
+<div mat-dialog-content>{{title}} <br>
+    <label for="ltaini" >Letra Inicial</label>
+    <input type="number" size="5" [(ngModel)]="ltaini">
+    <label for="">Letra 0 es Saldo de Enganche</label>
+    <br>
+    <label for="ltafin">Letra Final</label>
+    <input type="number" size="5" [(ngModel)]="ltafin">
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>
+    <button mat-raised-button  color="primary"   (click)="closeyes()">Aceptar</button>
+</div>

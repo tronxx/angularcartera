@@ -12,6 +12,7 @@ import { DlgdatosfacturaComponent } from './altacli/dlgdatosfactura/dlgdatosfact
 import { FacturacliComponent } from './altacli/facturacli/facturacli.component';
 import { RelvtasComponent  } from './relvtas/relvtas.component';
 import { DatossolicitComponent } from './altacli/datossolicit/datossolicit.component';
+import { AcumpolComponent } from './acumpol/acumpol.component';
 
 const routes: Routes = [
   { path: 'conscli', component: ConscliComponent, canActivate : [AuthGuard]  },
@@ -20,6 +21,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'polizas', component: PolizasComponent, canActivate : [AuthGuard] },
   { path: 'consupol', component: ConsupolComponent, canActivate : [AuthGuard] },
+  { path: 'consupol/:tda/:fecha', component: ConsupolComponent, canActivate : [AuthGuard] },
+  { path: 'acumpol', component: AcumpolComponent, canActivate : [AuthGuard] },
   { path: 'altacli/:numcli', component: AltacliComponent, canActivate : [AuthGuard] },
   { path: 'facturacli/:idfac/:numcli', component: FacturacliComponent, canActivate : [AuthGuard] },
   { path: 'solicitud/:numcli', component: DatossolicitComponent, canActivate : [AuthGuard] },

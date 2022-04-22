@@ -39,6 +39,7 @@ export class FacturacliComponent implements OnInit {
   strfeccierre_z = "";
   linkcliente = "";
   msgerror_z = "";
+  clientecred = false;
   
 
 
@@ -108,6 +109,7 @@ export class FacturacliComponent implements OnInit {
         this.preciolista_z = this.cliente.preciolista;
         this.ubiage = this.cliente.ubica;
         this.fechavta = this.cliente.fechavta;
+        this.clientecred = (this.cliente.qom != "C");
         this.busca_factura();
         if(this.idfac == -1 ) {
           this.crear_factura();
@@ -144,7 +146,7 @@ export class FacturacliComponent implements OnInit {
             this.idfac = this.factura.idfac;
             this.busca_renfacfo(this.factura.idfac);
             this.prodfin_z = ( this.preciolista_z * ( 16 / 100 + 1 )) -  this.servic_z;
-            this.prodfin_z = this.cargoscli_z - this.prodfin_z;
+            this.prodfin_z = Math.round (this.cargoscli_z - this.prodfin_z);
             if(this.prodfin_z < 0) this.prodfin_z = 0;
             this.factura.prodfin = this.prodfin_z;
             this.escerrada = ( this.factura.status == "C");
