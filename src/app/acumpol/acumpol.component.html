@@ -1,0 +1,43 @@
+<div id="datospoliza">
+    <label for="tienda">
+        Codigo
+        <input size="5" [disabled]="!datospolenabled_z" type="text" name="tienda" [(ngModel)]="tda_z" id="tienda" placeholder="tienda">
+    </label>
+    <label for="nomtda"> {{nomtda_z }} </label>
+    <label for="fechainicial">
+        Fecha Inicial
+        <input size="20" type="date"  name="fechainicial"  [(ngModel)]="strfechaini" id="fechainicial">
+    </label>
+    <label for="fechafinal">
+        Fecha Final
+        <input size="20" type="date"  name="fechafinal"  [(ngModel)]="strfechafin" id="fechafinal">
+    </label>
+    <button mat-raised-button color="primary" (click)="buscarpolizas()">Aceptar</button>
+</div>
+<hr>
+<div *ngIf="polizas">
+    <table border="1" class="hover">
+        <thead>
+            <th>Detaller</th>
+            <th>Fecha</th>
+            <th>Importe</th>
+            <th>Bonificaciones</th>
+            <th>Recargos</th>
+            <th>Neto</th>
+            <th>Valor.Mcia</th>
+            <th>Financiamiento</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let poliza of polizas">
+                <td> <a routerLink="/consupol/{{poliza.tda}}/{{poliza.fecha}}"><button mat-raised-button color="primary" > Detalles</button></a> </td>
+                <td> {{poliza.fecha}}</td>
+                <td align="right"> {{poliza.impor | currency}} </td>
+                <td align="right"> {{poliza.bonif | currency}} </td>
+                <td align="right"> {{poliza.recar | currency}}</td>
+                <td align="right"> {{poliza.impor - poliza.bonif + poliza.recar | currency}} </td>
+                <td align="right"> {{poliza.valormercancia | currency}} </td>
+                <td align="right"> {{poliza.financiamiento | currency}} </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

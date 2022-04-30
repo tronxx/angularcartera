@@ -105,6 +105,16 @@ export class ClientesService {
       window.open(miurl, "_blank");
   }
 
+  imprimir_letras_altas(params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Debug: Estoy en Imprimir letras altas ", params);
+    var miurl = this.url + "altas/serviciosaltas.php?modo=impresion_letras" + 
+      "&codigo="+misparams.numcli + "&letrainicial="+misparams.letrainicial+
+      "&letrafinal=" + misparams.letrafinal;
+      console.log("Debug url: ", miurl);
+      window.open(miurl, "_blank");
+  }
+
   obtencartaprom ( parametros: string): Observable<Cartapro[]> {
     
     let respu_z = "";
@@ -931,13 +941,29 @@ export class ClientesService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  buscar_cliente_altas_letras_pendientes( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: Estoy en buscar_cliente_altas_letras_pendientes:", parametros);
+    return this.http.post<any>(miurl, JSON.stringify( parametros), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched buscar_cliente_altas_letras_pendientes')),
+      catchError(this.handleError<any>('Ocurrio un error en Post obten buscar_cliente_altas_letras_pendientes '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+
   grabar_solicitud_altas( parametros: string): Observable<any> {
     
     let respu_z = "";
     let miurl = this.url + "altas/serviciosaltas.php"
     const headers = { 'content-type': 'text/plain'};
     const body=parametros;
-    console.log("Debug: Estoy en grabar_solicitud_altas parametros:", parametros);
+    // console.log("Debug: Estoy en grabar_solicitud_altas parametros:", parametros);
     let misparams = JSON.parse(parametros);
 
     return this.http.post<any>(miurl, JSON.stringify( misparams), {'headers':headers}).
@@ -952,7 +978,7 @@ export class ClientesService {
 
   obten_pdf_cfdi_factura(params:string) {
     let misparams = JSON.parse(params);
-    console.log("Debug: Estoy en obtenpdfcfdi ", params);
+    // console.log("Debug: Estoy en obtenpdfcfdi ", params);
     var miurl = this.url + "altas/serviciosaltas.php?modo=descarga_pdf_cfdi_factura&uuid="+misparams.uuid + "&rotarfac="+misparams.rotar;
     window.open(miurl, "_blank");
   }
@@ -967,11 +993,26 @@ export class ClientesService {
     '&codigofinal='+misparams.codigofinal +
     '&ubicacioninicial=' + '.' +
     '&ubicacionfinal='+'zz';
-    console.log("Debug: imprime_relvtas", miurl);
+    // console.log("Debug: imprime_relvtas", miurl);
     window.open(miurl, "_blank");
 
   }
 
+  imprime_repcomis(params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Estoy en serviciosaltas:", misparams);
+    let miurl = this.url + "altas/serviciosaltas.php?" +
+    'modo=reporte_comisiones' + 
+    '&fechainicial=' + misparams.fechainicial +
+    '&fechafinal=' + misparams.fechafinal +
+    '&codigoinicial='+misparams.codigoinicial +
+    '&codigofinal='+misparams.codigofinal +
+    '&ubicacioninicial=' + misparams.ubicacioninicial  +
+    '&ubicacionfinal='+misparams.ubicacionfinal ;
+    // console.log("Debug: imprime_repcomis", miurl);
+    window.open(miurl, "_blank");
+
+  }
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

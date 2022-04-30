@@ -22,7 +22,7 @@
             <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
             Edo.Cta
         </button>
-        <button [disabled]="!(clientecred && letraspend)" mat-raised-button color="primary" (click)="imprimir_edocta()" >
+        <button [disabled]="!(clientecred && letraspend)" mat-raised-button color="primary" (click)="imprimir_letras()" >
                 <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
                 Letras
         </button>
@@ -265,6 +265,8 @@
                                 <input type="text" size="10" name="ivafac" id="ivafac" value = "{{factura.iva | currency}}" >
                                 <label for="totalfac">Total</label> 
                                 <input type="text" size="10" name="totalfac" id="totalfac" value ="{{factura.total | currency}}">
+                                <label *ngIf="clientecred" for="totalgral">Total General</label> 
+                                <input *ngIf="clientecred" readonly type="text" size="10" name="totalgral" id="totalfac" value ="{{factura.total + factura.prodfin | currency}}">
                                  <br>
                                 <label class="ancho80" for="uuidfac">UUID</label> 
                                 <input type="text" size="40" name="uuidfac" id="uuidfac" value ="{{factura.uuid}}">

@@ -39,7 +39,8 @@ export class FacturacliComponent implements OnInit {
   strfeccierre_z = "";
   linkcliente = "";
   msgerror_z = "";
-  
+  clientecred = false;
+  rotarfac = false;
 
 
   constructor(
@@ -53,9 +54,27 @@ export class FacturacliComponent implements OnInit {
   ngOnInit(): void {
     this.codcli_z = String(this.route.snapshot.paramMap.get('numcli'));
     this.idfac = Number(this.route.snapshot.paramMap.get('idfac'));
+
     const micli = this.buscar_cliente(this.codcli_z);
     this.linkcliente = "/altacli/" + this.codcli_z;
+    this.carga_rotar_factura();
     
+  }
+
+  carga_rotar_factura() {
+    let mistorage_z  = localStorage.getItem('rotarfac') || "{}";
+    let usrreg_z =  JSON.parse(mistorage_z);
+    this.rotarfac = usrreg_z.rotarfac
+
+  }
+
+  graba_rotar_factura() {
+    let mistorage_z = {
+      "rotarfac": this.rotarfac
+    }
+    console.log("Grabando Rotarfac:", JSON.stringify(mistorage_z) );
+    
+    localStorage.setItem("rotarfac", JSON.stringify(mistorage_z));
   }
 
   crear_factura() {
@@ -108,6 +127,7 @@ export class FacturacliComponent implements OnInit {
         this.preciolista_z = this.cliente.preciolista;
         this.ubiage = this.cliente.ubica;
         this.fechavta = this.cliente.fechavta;
+        this.clientecred = (this.cliente.qom != "C");
         this.busca_factura();
         if(this.idfac == -1 ) {
           this.crear_factura();
@@ -144,7 +164,7 @@ export class FacturacliComponent implements OnInit {
             this.idfac = this.factura.idfac;
             this.busca_renfacfo(this.factura.idfac);
             this.prodfin_z = ( this.preciolista_z * ( 16 / 100 + 1 )) -  this.servic_z;
-            this.prodfin_z = this.cargoscli_z - this.prodfin_z;
+            this.prodfin_z = Math.round (this.cargoscli_z - this.prodfin_z);
             if(this.prodfin_z < 0) this.prodfin_z = 0;
             this.factura.prodfin = this.prodfin_z;
             this.escerrada = ( this.factura.status == "C");
@@ -390,9 +410,13 @@ imprimir_factura() {
 }
 
 descarga_pdf_fac(uuid: string) {
+  let strrotarfac_z = "NO";
+  if (this.rotarfac) {
+    strrotarfac_z = "ROTAR";
+  }
   let params_z = {
     uuid: uuid,
-    rotar: "NO",
+    rotar: strrotarfac_z
   }
   this.servicioclientes.obten_pdf_cfdi_factura(JSON.stringify(params_z));
 

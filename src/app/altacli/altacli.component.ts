@@ -28,6 +28,7 @@ import { DlgdatoscliComponent } from './dlgdatoscli/dlgdatoscli.component';
 import { DlgdatosmovcliComponent } from './dlgdatosmovcli/dlgdatosmovcli.component';
 import { DlgDatosVndComponent } from './dlg-datos-vnd/dlg-datos-vnd.component';
 import { DlgfacturaComponent } from './dlgfactura/dlgfactura.component';
+import { DlgimpriletrasComponent } from '../common/dlgimpriletras/dlgimpriletras.component';
 
 @Component({
   selector: 'app-altacli',
@@ -362,10 +363,11 @@ export class AltacliComponent implements OnInit {
       numcli: this.numcli_z
     }
     this.letraspend = true;
-    this.servicioclientes.buscar_status_cliente_cerrado(JSON.stringify(params_z)).subscribe(
+    this.servicioclientes.buscar_cliente_altas_letras_pendientes(JSON.stringify(params_z)).subscribe(
       respu => {
         if(respu) {
           this.letraspend = (respu.seimprimierontodaslasletras == "false");
+          this.alerta("Letras Pendientes:" + this.letraspend + ":" + respu.seimprimierontodaslasletras);
          }
       }
     );
@@ -765,7 +767,7 @@ busca_factura(idcli_z : number) {
             let precon = ( this.nvocli.preciolista * ( this.nvocli.piva / 100 + 1 )) -  this.nvocli.servicio;
             precon = this.nvocli.cargos - precon 
             if(precon < 0) precon = 0;
-            this.factura.prodfin = precon;
+            this.factura.prodfin = Math.round(precon);
             idfac_z = this.factura.idfac;
             this.busca_renfacfo(this.factura.idfac);
             this.linkfactura = "/facturacli/" + idfac_z.toString() + "/" + this.numcli_z;
@@ -846,6 +848,36 @@ cerrarcliente() {
       } 
     }
   );
+}
+
+imprimir_letras() {
+  let ltaini_z = 1;
+  let ltafin_z = 0;
+  if(this.cliente) {
+    ltafin_z = this.cliente.nulet;
+    if(this.cliente.letra1) {
+      ltaini_z = 0;
+    }
+  }
+  let params_z = {
+    "ltaini": ltaini_z,
+    "ltafin": ltafin_z,
+    "title": "Seleccione Las letras a Imprimir"
+  }
+  const dialogref = this.dialog.open(DlgimpriletrasComponent, {
+    width:'350px',
+    data: JSON.stringify( params_z)
+  });
+  dialogref.afterClosed().subscribe(res => {
+    if(res) {
+      let params_z = {
+        "numcli": this.numcli_z,
+        "letrainicial": res.ltaini,
+        "letrafinal": res.ltafin
+      };
+      this.servicioclientes.imprimir_letras_altas(JSON.stringify(params_z));
+    }
+  });
 }
 
 

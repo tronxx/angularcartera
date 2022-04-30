@@ -1,4 +1,3 @@
-import { getAttrsForDirectiveMatching } from '@angular/compiler/src/render3/view/util';
 import { Component, OnInit } from '@angular/core';
 import { ClientesService } from '../services/clientes.service';
 import { PolizasService } from '../services/polizas.service';
@@ -13,9 +12,9 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import { DialogBodyComponent } from '../dialog-body/dialog-body.component';
 import { DlgbuscliComponent } from '../common/dlgbuscli/dlgbuscli.component';
 import { MatIconModule } from '@angular/material/icon'; 
-import { stringify } from '@angular/compiler/src/util';
 import { Compania } from '../models/config';
 import { Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-consupol',
@@ -32,24 +31,6 @@ export class ConsupolComponent implements OnInit {
   uuid_z = "";
   cia_z ?: Compania;
 
-  xcia_z =     {
-    "Urldatos":"http://mds1/www/cgi/cartera/",
-    "Empresa": "Diaz y Solis SA de CV",
-    "Rfc": "MDS870209190",
-    "Direc": "Calle 67 x 60 y 62 Centro",
-    "CP": "97000",
-    "Logo":"",
-    "AplicarContingencia":"true",
-    "DiasContingencia":"90",
-    "FechaContingencia":"20200401",
-    "Clave":"MDS",
-    "PrecioListaMinimoCarta":"2300.00",
-    "MesesMinimoCarta": "9",
-    "CartaSaldadosMesesAntes": "2",
-    "DiasBonificacion":"5"
-  };
-
-  
   clienteactivo_z = false;
   polizaactiva_z = false;
   aceptarpago = false;
@@ -64,8 +45,6 @@ export class ConsupolComponent implements OnInit {
   poltimbrado_z = "";
   rectimbrado_z = "";
   statuspol_z = "";
-
-  
   
   cobratario = {
     "idpromot": 0,
@@ -98,8 +77,8 @@ export class ConsupolComponent implements OnInit {
   
   
   fechahoy_z  = new Date();
-  strfecha_z = this.fecha_a_str  (this.fechahoy_z, "YYYY-mm-dd");
-  vence_z  = new Date();
+  fechaayer_z = new Date (this.fechahoy_z.getTime() - (1 * 24 * 60 * 60 *  1000));
+  strfecha_z = this.fecha_a_str  (this.fechaayer_z, "YYYY-mm-dd");
   fechapol_z = this.strfecha_z;
   
 
@@ -107,17 +86,32 @@ export class ConsupolComponent implements OnInit {
     private servicioclientes: ClientesService,
     public dialog: MatDialog, 
     public datepipe: DatePipe,
-     private serviciopolizas: PolizasService
+    private serviciopolizas: PolizasService,
+    private router: Router,
+    private route: ActivatedRoute,
+
   ) { }
 
   ngOnInit(): void {
     var mistorage_z  = localStorage.getItem('token') || "{}";
     this.usrreg_z =  JSON.parse(mistorage_z);
-    //console.log("Usuario:" + mistorage_z);
     this.errorespoliza=[];
     this.buscar_codigos_poliza();
     this.cia_z =  this.serviciopolizas.obtendatoscia();
+    let mitda_z = String(this.route.snapshot.paramMap.get('tda'));
+    let mifechapol_z =  String(this.route.snapshot.paramMap.get('fecha'));
+    if (mifechapol_z) {
+      this.fechapol_z = mifechapol_z;
+    }
+    if(mitda_z) {
+      this.tda_z = mitda_z;
+    }
+    
     if (this.usrreg_z.nivel == "S") this.datospolenabled_z=true;
+    //this.tda_z  =  String(this.route.snapshot.paramMap.get('tda'));
+    //this.fechapol_z =  String(this.route.snapshot.paramMap.get('fecha'));
+    //this.alerta("fechapol:"+  this.fechapol_z + " tda:" + this.tda_z);
+    this.buscar_poliza();
   }
 
   aceptarpoliza() {
@@ -144,13 +138,16 @@ export class ConsupolComponent implements OnInit {
     respu => {
       this.errorespoliza=[];
       console.log("Debug: buscar_poliza ", respu);
-      this.poliza = respu;
-      this.polizaactiva_z = true;
-      this.tda_z = this.poliza.tda;
-      this.fechapol_z = this.poliza.fecha;
-      this.polizaactiva_z = true;
-      this.idpoliza = this.poliza.idpoliza;
-      this.buscar_renpol();
+      if(respu.idpoliza) {
+        this.poliza = respu;
+        this.polizaactiva_z = true;
+        this.tda_z = this.poliza.tda;
+        this.fechapol_z = this.poliza.fecha;
+        this.polizaactiva_z = true;
+        this.idpoliza = this.poliza.idpoliza;
+        this.buscar_renpol();
+  
+      }
     }
   )
   this.datos_poliza();
@@ -158,7 +155,7 @@ export class ConsupolComponent implements OnInit {
 }
 
 
-  buscar_codigos_poliza() {
+buscar_codigos_poliza() {
     var params = {
       "modo":"buscar_codigos_polizas",
       "idusuario": this.usrreg_z.idusuario

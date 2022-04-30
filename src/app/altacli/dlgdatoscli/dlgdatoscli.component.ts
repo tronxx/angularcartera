@@ -390,7 +390,9 @@ export class DlgdatoscliComponent implements OnInit {
         ubiage : this.nvocli.ubica,
         ticte: this.nvocli.ticte
       }
-        this.servicioclientes.buscar_tarjetas_tc(JSON.stringify(params_z)).subscribe(
+      //console.log('Ticte:', this.nvocli.ticte);
+      
+      this.servicioclientes.buscar_tarjetas_tc(JSON.stringify(params_z)).subscribe(
         respu => {
           if(respu) {
             this.tarjetastc = respu;
