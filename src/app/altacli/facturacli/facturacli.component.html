@@ -27,6 +27,10 @@
                                 <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
                                 Imprimir Factura
                             </button>
+                            <label for="rotarfac">
+                                Rotar Factura al Imprimir
+                                <input type="checkbox" name="rotarfac" id="rotarfac" [(ngModel)]="rotarfac" (blur)="graba_rotar_factura()">
+                            </label>
                             <br>
                                 <div *ngIf="cliente">
                                     <label class="ancho80" for=""> Codigo</label>

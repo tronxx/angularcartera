@@ -40,7 +40,7 @@ export class FacturacliComponent implements OnInit {
   linkcliente = "";
   msgerror_z = "";
   clientecred = false;
-  
+  rotarfac = false;
 
 
   constructor(
@@ -54,9 +54,27 @@ export class FacturacliComponent implements OnInit {
   ngOnInit(): void {
     this.codcli_z = String(this.route.snapshot.paramMap.get('numcli'));
     this.idfac = Number(this.route.snapshot.paramMap.get('idfac'));
+
     const micli = this.buscar_cliente(this.codcli_z);
     this.linkcliente = "/altacli/" + this.codcli_z;
+    this.carga_rotar_factura();
     
+  }
+
+  carga_rotar_factura() {
+    let mistorage_z  = localStorage.getItem('rotarfac') || "{}";
+    let usrreg_z =  JSON.parse(mistorage_z);
+    this.rotarfac = usrreg_z.rotarfac
+
+  }
+
+  graba_rotar_factura() {
+    let mistorage_z = {
+      "rotarfac": this.rotarfac
+    }
+    console.log("Grabando Rotarfac:", JSON.stringify(mistorage_z) );
+    
+    localStorage.setItem("rotarfac", JSON.stringify(mistorage_z));
   }
 
   crear_factura() {
@@ -392,9 +410,13 @@ imprimir_factura() {
 }
 
 descarga_pdf_fac(uuid: string) {
+  let strrotarfac_z = "NO";
+  if (this.rotarfac) {
+    strrotarfac_z = "ROTAR";
+  }
   let params_z = {
     uuid: uuid,
-    rotar: "NO",
+    rotar: strrotarfac_z
   }
   this.servicioclientes.obten_pdf_cfdi_factura(JSON.stringify(params_z));
 
