@@ -25,6 +25,7 @@ import { Serie } from '../models/serie';
 import { Seriefac } from '../models/seriesfac';
 import { Usocfdi } from '../models/usocfdi';
 import { Metodopagocfdi } from '../models/metodopagocfdi';
+import { Reltrasp } from '../models/reltrasp';
 
 @Injectable({
   providedIn: 'root'
@@ -1009,6 +1010,33 @@ export class ClientesService {
     '&codigofinal='+misparams.codigofinal +
     '&ubicacioninicial=' + misparams.ubicacioninicial  +
     '&ubicacionfinal='+misparams.ubicacionfinal ;
+    // console.log("Debug: imprime_repcomis", miurl);
+    window.open(miurl, "_blank");
+
+  }
+
+  obtenreltrasp ( parametros: string): Observable<Reltrasp[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "clientes/servicios.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    
+    return this.http.post<Reltrasp[]>(miurl, parametros, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Ubivta')),
+      catchError(this.handleError<Reltrasp[]>('Ocurrio un error en Post obten Ubivta'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  imprime_reltrasp(params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Estoy en serviciosaltas imprime_reltrasp:", misparams);
+    let miurl = this.url + "clientes/servicios.php?" +
+    'modo=reporte_traspasos' + 
+    '&fecha=' + misparams.fecha +
+    '&numeroreporte=' + misparams.numeroreporte;
     // console.log("Debug: imprime_repcomis", miurl);
     window.open(miurl, "_blank");
 

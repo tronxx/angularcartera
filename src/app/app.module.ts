@@ -49,6 +49,7 @@ import { DlgbuscaseriesComponent } from './common/dlgbuscaseries/dlgbuscaseries.
 import { DlgimpriletrasComponent } from './common/dlgimpriletras/dlgimpriletras.component';
 import { ReportecomisComponent } from './reportecomis/reportecomis.component';
 import { AcumpolComponent } from './acumpol/acumpol.component';
+import { DlgreltraspComponent } from './common/dlgreltrasp/dlgreltrasp.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,8 @@ import { AcumpolComponent } from './acumpol/acumpol.component';
     DlgbuscaseriesComponent,
     DlgimpriletrasComponent,
     ReportecomisComponent,
-    AcumpolComponent
+    AcumpolComponent,
+    DlgreltraspComponent
   ],
   imports: [
     BrowserModule,

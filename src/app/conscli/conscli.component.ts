@@ -6,7 +6,7 @@ import { ClientesService } from '../services/clientes.service'
 import { ConfiguracionService } from '../services/configuracion.service';
 import { Cliente } from '../models/clientes';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-
+import { DlgreltraspComponent } from '../common/dlgreltrasp/dlgreltrasp.component';
 @Component({
   selector: 'app-conscli',
   templateUrl: './conscli.component.html',
@@ -65,6 +65,21 @@ export class ConscliComponent implements OnInit {
         this.clientes = respu;
       }
     )
+  }
+
+  impresion_reltrasp() {
+    let message = "Relacion de Traspasos";
+    const dialogref = this.dialog.open(DlgreltraspComponent, {
+      width:'650px',
+      data: message
+    });
+    dialogref.afterClosed().subscribe(res => {
+      if (res) {
+        let params = res;
+        this.servicioclientes.imprime_reltrasp(JSON.stringify( params));
+      }
+    });
+
   }
 
   onNoClick() {
