@@ -9,14 +9,28 @@
         </option>
     </select>
     <div *ngIf="reltrasp">
-        Poblacion Inicial: {{reltrasp.ciudadinicial}} <br>
-        Poblacion Final: {{reltrasp.ciudadfinal}} <br>
-        Dia Inicial: {{reltrasp.diainicial}} <br>
-        Dia Final: {{reltrasp.diafinal}} <br>
-        Codigos:  <br>
-        <label for="" *ngFor="let codigo of reltrasp.codigos">
-            {{codigo.codigo}}
-        </label>
+        <table border="1">
+            <tr>
+                <td>Poblacion Inicial: {{reltrasp.ciudadinicial}}  </td> 
+            </tr>
+            <tr>
+                <td>Poblacion Final: {{reltrasp.ciudadfinal}} </td>
+            </tr>
+            <tr>
+                <td>Dia Inicial: {{reltrasp.diainicial}}  <br>
+                    Dia Final: {{reltrasp.diafinal}} 
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Codigos:  <br>
+                    <label for="" *ngFor="let codigo of reltrasp.codigos">
+                        {{codigo.codigo}}
+                    </label>
+            
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
 <div mat-dialog-actions  style="display: flex; justify-content: flex-end;">
