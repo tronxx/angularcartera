@@ -12,7 +12,7 @@
                 <br>
                 <label class="ancho80" for="metpag">Met.Pago {{factura.cvemetodopago }} </label> 
                 <select name="metpag" id="metpag" value="{{factura.cvemetodopago}}" 
-                [(ngModel)]= "factura.metodopago" >
+                [(ngModel)]= "factura.cvemetodopago" >
                    <option *ngFor="let mimetodopago of metodospago" value="{{mimetodopago.clave}}"
                    [selected]="factura.cvemetodopago == mimetodopago.clave">
                    {{mimetodopago.clave}} {{mimetodopago.descri}}

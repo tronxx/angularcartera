@@ -52,7 +52,7 @@ export class DlgdatosfacturaComponent implements OnInit {
     this.fechavta =params_z.fechavta;
     this.factura = params_z.factura;
     this.busca_catalogos();
-    // console.log("Debug: dlgdatosfactura modo", params_z);
+    console.log("Debug: dlgdatosfactura modo", params_z.factura);
     if(params_z.modo == "NUEVO") {
       this.busca_serie_y_folio();
     }
