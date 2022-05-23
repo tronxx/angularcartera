@@ -44,7 +44,7 @@ export class DlgrenfacComponent implements OnInit {
   
   nuevorenfac = {
     renfac: this.renfac,
-    esmoto: this.esmoto,
+    esmoto: "",
     piva: 16,
     linea: "",
     seriemotor: "",
@@ -118,6 +118,7 @@ export class DlgrenfacComponent implements OnInit {
       this.renfac.preciou = this.articulo.preciou;
       this.nuevorenfac.linea = this.articulo.linea;
       this.datoshabilitados = true;
+      this.nuevorenfac.esmoto = "N";
       if(this.articulo.linea == "MOTO") {
         this.esmoto = true;
         this.seriemanual = true;
@@ -134,7 +135,8 @@ export class DlgrenfacComponent implements OnInit {
           this.seriemanual = false;
         } 
       }
-  
+      if(this.esmoto) this.nuevorenfac.esmoto = "S";
+
     }
 
   }

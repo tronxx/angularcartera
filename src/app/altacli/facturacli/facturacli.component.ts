@@ -47,8 +47,8 @@ export class FacturacliComponent implements OnInit {
     public dialog: MatDialog, 
     private configuracion: ConfiguracionService,
     private servicioclientes: ClientesService,
-    private route : ActivatedRoute
-
+    private route : ActivatedRoute,
+    private miroute: Router
   ) { }
 
   ngOnInit(): void {
@@ -194,6 +194,8 @@ export class FacturacliComponent implements OnInit {
           idcli:this.idcli,
           factura:res
         }
+        console.log('datos modificados:', res);
+        
         this.servicioclientes.crear_factura_altas(JSON.stringify(params_z)).subscribe( resalta=> {
 
           if(resalta.status == "OK") {
@@ -422,6 +424,20 @@ descarga_pdf_fac(uuid: string) {
 
 }
 
-
+regresar() {
+  if(this.factura) {
+    if(this.factura.status != "C") {
+      let params_z = {
+        idcli: this.idcli,
+        idfac: this.idfac,
+        fechacierre: this.fechacierre_z
+      }
+      this.servicioclientes.afectar_cliente_articulos(JSON.stringify(params_z)).subscribe( resalta=> {
+        const msgok = "OK";
+      })
+    }
+  }
+  this.miroute.navigateByUrl('altacli/' + this.codcli_z);
+}
 
 }

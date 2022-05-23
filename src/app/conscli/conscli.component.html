@@ -6,12 +6,16 @@
         <input type="date" id="fechafin" name="fechafin" [(ngModel)]="mimodelo.fechafin">
     </label>
     <label >Codigo Inicial:
-        <input type="text" id="codigoini" size="10" name="codigoini" [(ngModel)]="mimodelo.codigoini">
+        <input type="text" id="codigoini" size="5" name="codigoini" [(ngModel)]="mimodelo.codigoini">
     </label>
     <label >Codigo Final
-        <input type="text" id="codigofin" size="10" name="codigofin" [(ngModel)]="mimodelo.codigofin">
+        <input type="text" id="codigofin" size="5" name="codigofin" [(ngModel)]="mimodelo.codigofin">
     </label>
     <button mat-raised-button color="primary" type="submit" > Aceptar</button>
+    <button mat-raised-button color="primary" (click)="impresion_reltrasp()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon">print</mat-icon>
+        Relacion de Traspasos
+    </button>
 
 </form>
 

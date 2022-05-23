@@ -1,11 +1,9 @@
 <div>
     <h2>Datos de Factura</h2>
-    <a routerLink="{{linkcliente}}"> 
-        <button mat-raised-button color="primary"  >
+        <button mat-raised-button color="primary" (click)="regresar()"  >
             <mat-icon aria-hidden="false" aria-label="Example new icon">keyboard_arrow_left</mat-icon>
              Regresar
             </button>
-    </a>
 
     <form #formularioCliente="ngForm" *ngIf= "factura">
         <div name="factura">
