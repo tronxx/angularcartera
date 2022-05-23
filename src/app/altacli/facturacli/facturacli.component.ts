@@ -425,7 +425,18 @@ descarga_pdf_fac(uuid: string) {
 }
 
 regresar() {
-  this.alerta("Voy a altacli/"+ this.codcli_z);
+  if(this.factura) {
+    if(this.factura.status != "C") {
+      let params_z = {
+        idcli: this.idcli,
+        idfac: this.idfac,
+        fechacierre: this.fechacierre_z
+      }
+      this.servicioclientes.afectar_cliente_articulos(JSON.stringify(params_z)).subscribe( resalta=> {
+        const msgok = "OK";
+      })
+    }
+  }
   this.miroute.navigateByUrl('altacli/' + this.codcli_z);
 }
 

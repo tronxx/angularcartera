@@ -673,7 +673,7 @@ export class ClientesService {
       codigo: misparams.codigo
     }
 
-    console.log("Debug: Estoy en busca busca_articulo ", parametros);
+    console.log("Debug: Estoy en  busca_codigo_inven ", parametros);
   
     return this.http.post<Articulo>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
     pipe(
@@ -720,7 +720,7 @@ export class ClientesService {
       seriemotor: misparams.seriemotor
     }
 
-    console.log("Debug: Estoy en busca busca_articulo ", parametros);
+    console.log("Debug: Estoy en busca_serie_moto ", parametros);
   
     return this.http.post<Serie>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
     pipe(
@@ -743,7 +743,7 @@ export class ClientesService {
       almacen: misparams.almacen
     }
 
-    console.log("Debug: Estoy en busca busca_articulo ", parametros);
+    console.log("Debug: Estoy en busca_series_disponibles ", parametros);
   
     return this.http.post<Serie[]>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
     pipe(
@@ -899,6 +899,30 @@ export class ClientesService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  afectar_cliente_articulos( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: Estoy en afectar_cliente_articulos parametros:", parametros);
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "afectar_cliente_articulos.",
+      idfac: misparams.idfac,
+      idcli: misparams.idcli
+    }
+
+    console.log("Debug: Estoy en afectar_cliente_articulos   ", misparamnvo);
+  
+    return this.http.post<any>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched agregar_renfac_altas ')),
+      catchError(this.handleError<any>('Ocurrio un error en Post obten agregar_renfac_altas '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
   cerrar_cliente_altas( parametros: string): Observable<any> {
     
     let respu_z = "";
@@ -927,7 +951,7 @@ export class ClientesService {
     let miurl = this.url + "altas/serviciosaltas.php"
     const headers = { 'content-type': 'text/plain'};
     const body=parametros;
-    console.log("Debug: Estoy en cerrar_cliente_altas parametros:", parametros);
+    console.log("Debug: Estoy en buscar_status_cliente_cerrado parametros:", parametros);
     let misparams = JSON.parse(parametros);
     let misparamnvo = {
       modo: "obtener_status_cierre_cliente_altas",
@@ -936,8 +960,8 @@ export class ClientesService {
 
     return this.http.post<any>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
     pipe(
-      tap(_ => this.log('fetched cerrar_cliente_altas')),
-      catchError(this.handleError<any>('Ocurrio un error en Post obten agregar_renfac_altas '))
+      tap(_ => this.log('fetched buscar_status_cliente_cerrado')),
+      catchError(this.handleError<any>('Ocurrio un error en Post buscar_status_cliente_cerrado '))
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
