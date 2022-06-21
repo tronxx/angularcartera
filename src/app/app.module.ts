@@ -26,7 +26,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule  } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressBarModule } from '@angular/material/progress-bar'
-
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
 import { DlgedoctaComponent } from './common/dlgedocta/dlgedocta.component';
 import { DlgbuscliComponent } from './common/dlgbuscli/dlgbuscli.component';
 import { DetallescliComponent } from './detallescli/detallescli.component';
@@ -50,6 +50,8 @@ import { DlgimpriletrasComponent } from './common/dlgimpriletras/dlgimpriletras.
 import { ReportecomisComponent } from './reportecomis/reportecomis.component';
 import { AcumpolComponent } from './acumpol/acumpol.component';
 import { DlgreltraspComponent } from './common/dlgreltrasp/dlgreltrasp.component';
+import { CapvtasComponent } from './capvtas/capvtas.component';
+import { DlgDatosvtaComponent } from './capvtas/dlg-datosvta/dlg-datosvta.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +85,9 @@ import { DlgreltraspComponent } from './common/dlgreltrasp/dlgreltrasp.component
     DlgimpriletrasComponent,
     ReportecomisComponent,
     AcumpolComponent,
-    DlgreltraspComponent
+    DlgreltraspComponent,
+    CapvtasComponent,
+    DlgDatosvtaComponent
   ],
   imports: [
     BrowserModule,
@@ -99,6 +103,7 @@ import { DlgreltraspComponent } from './common/dlgreltrasp/dlgreltrasp.component
     MatCardModule,
     MatSelectModule,
     MatProgressBarModule,
+    MatSlideToggleModule,
     BrowserAnimationsModule
   ],
   providers: [ UsuariosService, 

@@ -1,0 +1,133 @@
+<div>
+    <h2>Datos de la Nueva Venta</h2>
+    <label >Proporcione los productos y seleccione el tipo de Venta</label><br>
+        <button mat-raised-button color="primary" (click)="regresar()"  >
+            <mat-icon aria-hidden="false" aria-label="Example new icon">keyboard_arrow_left</mat-icon>
+             Regresar
+            </button>
+
+    <form #formularioCliente="ngForm">
+        <label class="ancho80" for="ubicacion">Ubicacion </label>
+        <select name="ubicacion" id="ubicacion" value="ubica"
+             [(ngModel)]= "ubica" (blur)="selecciona_tarjetas_tc()"  >
+            <option *ngFor="let miubica of ubivta" value="{{miubica.ubica}}"
+              [selected]="ubica == miubica.ubica">
+              {{miubica.ubica}} {{miubica.nombre}}
+              </option>
+        </select>
+        <br>
+        <label class="ancho80" for="ticte">Tipo Cte</label>
+        <select name="ticte" id="ticte" value="{{ticte}}" 
+             [(ngModel)]= "ticte" (blur)="selecciona_tarjetas_tc()" >
+            <option *ngFor="let miticte of tictes_z" value="{{miticte.clave}}"
+              [selected]="ticte == miticte.clave">
+              {{miticte.clave}} {{miticte.descri}}
+              </option>
+        </select>
+        <br>
+        <div *ngIf="contarjetatc">
+            <label class="ancho80" for="tipotc">Tarjeta</label>
+            <select name="tipotc" id="tipotc" value="{{mitarjetatc}" 
+             [(ngModel)]= "mitarjetatc"  (blur)="calcular_totales()"  >
+               <option *ngFor="let mitipotc of tarjetastc" value="{{mitipotc.clave}}"
+               [selected]="mitarjetatc == mitipotc.clave">
+               {{mitipotc.clave}} {{mitipotc.descri}}
+               </option>
+            </select>
+        </div>
+        <br>
+        <div>
+            <button mat-raised-button color="primary" (click)="agregar_renfac()" >
+                <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
+                Agregar Renglon
+            </button>
+            <br>
+    
+            <table border="1" class="hover">
+                <thead>
+                    <tr>
+                        <th>Codigo</th>
+                        <th>Descripcion</th>
+                        <th>Cantidad</th>
+                        <th>Precio.U</th>
+                        <th>Importe</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let mirenfac of articuloscotizados; first as isFirst">
+                        <td>{{mirenfac.codigo}}</td>
+                        <td>{{mirenfac.concepto}} </td>
+                        <td> {{mirenfac.canti}} </td>
+                        <td>
+                            <label for="" *ngIf="oferta && mirenfac.esoferta">Oferta <mat-icon> local_offer</mat-icon></label> 
+                            {{mirenfac.importe | currency }}
+                        </td>
+                        <td> {{mirenfac.importe + mirenfac.iva | currency}} </td>
+                        <button [disabled]="escerrada" mat-raised-button color="warn" (click)="eliminar_renfac(mirenfac)" >
+                            <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
+                            Eliminar
+                        </button>
+                        <button  *ngIf="!isFirst" mat-raised-button color="primary" (click)="subir_renfac(mirenfac)" >
+                            <mat-icon aria-hidden="false" aria-label="Example new icon">keyboard_arrow_up</mat-icon>
+                            Subir
+                        </button>
+    
+                    </tr>
+                </tbody>
+            </table>
+    
+        </div>
+        <div>
+            <label class="ancho160" for="importe">Importe</label>
+            <input type="text" readonly name="importe" id="importe" value = "{{totimporte | currency}} ">
+            <br>
+            <label class="ancho160" for="iva">Iva</label>
+            <input type="text" id="iva" readonly name="iva" value="{{totiva | currency}} ">
+            <br>
+            <label class="ancho160" for="total">Total</label>
+            <input type="text" id="total" name="total" value="{{tottotal | currency}} ">
+            <br>
+            <div *ngIf ="!escredito && descto"> 
+                <label class="ancho160" for="descto">Descuento</label>
+                <input type="text" readonly value = "{{descto | currency}}">
+            </div>
+            <div *ngIf="escredito">
+                <label class="ancho160" for="enganche">Enganche</label>
+                <input type="number" name="enganche" id="enganche" size="10" 
+                [(ngModel)]="enganche" (blur)="calcular_totales()">
+                
+                <br>
+                <label for="nulets">Numero Letras
+                    <select name="nulets" id="nulets" value="{{nulet}}" 
+                     [(ngModel)]= "nulet" (blur)="calcular_totales()">
+                    <option *ngFor="let miletra of nulets" value="{{miletra.nulets}}"
+                      [selected]="nulet == miletra.nulets">
+                      {{miletra.nulets}}
+                      </option>
+                    </select>
+                </label>
+    
+                <label for="preciolet">Importe por Letra</label>
+                <input type="text" id="preciolet" readonly name="preciolet" value="{{preciolet | currency}} ">
+                <br>
+                <label class="ancho160" for="prodfin">Prod.Financieros</label>
+                <input type="text" id="prodfin" readonly name="prodfin" value="{{totprodfin | currency}} ">
+            </div>
+            <label class="ancho160" for="totgral">Total Venta</label>
+            <input type="text" id="totgral" readonly name="totgral" value="{{totgral | currency}} ">
+            <br>
+            <div *ngIf="hayerror">
+                <p class="error">{{msgerror_z}} <mat-icon class="red-icon">warning</mat-icon> </p>
+            </div>
+        </div>
+        <div *ngIf="esvalido">
+            <button mat-raised-button color="primary" (click)="aceptar()"  >
+                <mat-icon aria-hidden="false" aria-label="Example new icon">check_circle_outline</mat-icon>
+                 Proceder a Levantar la Venta
+                </button>
+            </div>
+    
+    </form>
+</div>
+

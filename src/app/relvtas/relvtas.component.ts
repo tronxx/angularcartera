@@ -31,7 +31,9 @@ export class RelvtasComponent implements OnInit {
     fechaini: this.strfecha_z.substring(0,8) + '01',
     fechafin: this.strfecha_z,
     codigoini: '23',
-    codigofin: '23'
+    codigofin: '23',
+    ubicacioninicial: '',
+    ubicacionfinal: 'zz'
   }
 
 
@@ -52,7 +54,7 @@ export class RelvtasComponent implements OnInit {
 
     this.mimodelo.clavecia = misdatosrelvta.cvecia;
     let registro_z = localStorage.getItem(cverelvta_z) || "{}";
-    var misdatosiniciales_z = JSON.parse(registro_z);
+    let misdatosiniciales_z = JSON.parse(registro_z);
     if(this.dia_z < "10") {
       let minvomes_z = Number(this.mes_z) - 1;
       let minvoanu_z = Number(this.anu_z);
@@ -65,6 +67,8 @@ export class RelvtasComponent implements OnInit {
     }
     this.mimodelo.codigoini = misdatosiniciales_z.codigoini;
     this.mimodelo.codigofin = misdatosiniciales_z.codigofin;
+    this.mimodelo.ubicacioninicial = misdatosiniciales_z.ubicacioninicial;
+    this.mimodelo.ubicacionfinal = misdatosiniciales_z.ubicacionfinal;
   }
 
   onSubmit() {
@@ -84,8 +88,8 @@ export class RelvtasComponent implements OnInit {
       fechafinal : this.mimodelo.fechafin,
       codigoinicial: this.mimodelo.codigoini,
       codigofinal : this.mimodelo.codigofin,
-      ubicacioninicial : '',
-      ubicaconfinal: 'zz'
+      ubicacioninicial : this.mimodelo.ubicacioninicial,
+      ubicacionfinal: this.mimodelo.ubicacionfinal
     }
     this.servicioclientes.imprime_relvtas(JSON.stringify(params_z));
   }
@@ -96,8 +100,8 @@ export class RelvtasComponent implements OnInit {
       fechafinal : this.mimodelo.fechafin,
       codigoinicial: this.mimodelo.codigoini,
       codigofinal : this.mimodelo.codigofin,
-      ubicacioninicial : "",
-      ubicacionfinal: 'zz',
+      ubicacioninicial : this.mimodelo.ubicacioninicial,
+      ubicacionfinal: this.mimodelo.ubicacionfinal,
       title: "Datos Reporte Comisiones"
     }
     const dialogref = this.dialog.open(ReportecomisComponent, {

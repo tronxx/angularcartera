@@ -7,10 +7,16 @@ Ventas
         <input type="date" id="fechafin" name="fechafin" [(ngModel)]="mimodelo.fechafin">
     </label>
     <label >Codigo Inicial:
-        <input type="text" id="codigoini" size="10" name="codigoini" [(ngModel)]="mimodelo.codigoini">
+        <input type="text" id="codigoini" size="5" name="codigoini" [(ngModel)]="mimodelo.codigoini">
     </label>
     <label >Codigo Final
-        <input type="text" id="codigofin" size="10" name="codigofin" [(ngModel)]="mimodelo.codigofin">
+        <input type="text" id="codigofin" size="5" name="codigofin" [(ngModel)]="mimodelo.codigofin">
+    </label>
+    <label >Ubicacion Inicial:
+        <input type="text" id="ubicaini" size="5" name="ubicaini" [(ngModel)]="mimodelo.ubicacioninicial">
+    </label>
+    <label >Ubicacion Final:
+        <input type="text" id="ubicafin" size="5" name="ubicafin" [(ngModel)]="mimodelo.ubicacionfinal">
     </label>
     <button mat-raised-button color="primary"  type="submit" class="btn btn-primary" > Aceptar</button>
     {{mimodelo.clavecia}} 
@@ -38,6 +44,7 @@ Ventas
             <th>Codigo</th>
             <th>Nombre</th>
             <th>Direccion</th>
+            <th>Ubicación</th>
             <th>Q/M</th>
             <th>Enganche</th>
             <th>P.LIsta</th>
@@ -55,6 +62,7 @@ Ventas
             <td>{{cliente.numcli}} </td>
             <td>{{cliente.nombre}} </td>
             <td>{{cliente.direc}} </td>
+            <td>{{cliente.ubica}} </td>
             <td>{{cliente.qom}} </td>
             <td align ="right">{{cliente.enganche | currency }} </td>
             <td align ="right">{{cliente.preciolista | currency }} </td>

@@ -10,6 +10,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { DialogBodyComponent } from '../../dialog-body/dialog-body.component';
 import { DlgbuscliComponent } from '../../common/dlgbuscli/dlgbuscli.component';
 import { MatIconModule } from '@angular/material/icon'; 
+import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
+
 import { Cliente } from '../../models/clientes';
 import { Aval } from '../../models/aval';
 import { Movclis } from '../../models/movclis';
@@ -155,8 +157,6 @@ export class DlgdatoscliComponent implements OnInit {
     nompil2: ""
   }
 
-
-
   constructor(public dialog: MatDialog, 
     public dialogRef: MatDialogRef<DlgdatoscliComponent>,
     @Inject(MAT_DIALOG_DATA) public message : string,
@@ -300,6 +300,7 @@ export class DlgdatoscliComponent implements OnInit {
         this.nvocli.numpred = this.cliente.numpred;
         this.nvocli.codpost = this.cliente.codpost;
         this.nvocli.colonia = this.cliente.colonia;
+        this.nvocli.status = this.cliente.status;
         if(this.nvocli.ticte == "TC") {
           this.contarjetatc = true;
           this.busca_tipos_tarjetas();

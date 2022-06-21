@@ -1,9 +1,15 @@
 <h1>Bienvendo</h1>
-<img src="assets/images/logo.png" alt="">
-<ul>
-    <li *ngFor="let opcion of menus_z" >
-      <button mat-raised-button> 
-        <a routerLink="{{opcion.link}}"> {{opcion.titulo}} </a> 
-      </button>
-    </li>
-</ul>
+<table>
+  <tr>
+    <td>
+      <ul>
+        <li *ngFor="let opcion of menus_z" >
+          <button mat-raised-button> 
+            <a routerLink="{{opcion.link}}"> {{opcion.titulo}} </a> 
+          </button>
+        </li>
+      </ul>
+    </td>
+    <td><img src="assets/images/logo.png" alt=""></td>
+  </tr>
+</table>

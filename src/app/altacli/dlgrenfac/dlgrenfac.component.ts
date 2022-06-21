@@ -72,6 +72,7 @@ export class DlgrenfacComponent implements OnInit {
   }
 
   closeyes() {
+    console.log("Cerrando dlgrenfac:", this.nuevorenfac);
     this.dialogRef.close(this.nuevorenfac);
   }
 
