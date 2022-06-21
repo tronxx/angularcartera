@@ -298,7 +298,7 @@ agregar_renfac() {
   });
   dialogmov.afterClosed().subscribe(res => {
     if (res) {
-      console.log("Debug: regreso de dlgrenfaccomponent:", res);
+      console.log("Debug: facturacli regreso de dlgrenfaccomponent:", res);
       let params_z = {
         modo:"agregar_ren_factura",
         idcli:this.idcli,

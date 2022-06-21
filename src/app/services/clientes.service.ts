@@ -6,26 +6,28 @@ import { Observable, of } from 'rxjs';
 import { Cliente } from '../models/clientes';
 import { Aval } from '../models/aval';
 import { ConfiguracionService } from './configuracion.service'
-import { Movclis } from '../models/movclis';
-import { Observcli } from '../models/observcli';
-import { Plazos } from '../models/plazos';
-import { Solicitud } from '../models/solicitud';
-import { Cartapro } from '../models/cartapro';
-import { Ubivta } from '../models/ubivta';
-import { Promotor } from '../models/promotor';
-import { Nulets } from '../models/nulets';
-import { Poblacs } from '../models/poblacs';
-import { Cliagentes } from '../models/cliagentes';
-import { Vendedor } from '../models/vendedor';
-import { Tarjetatc } from '../models/tipostarjetastc';
-import { Factura } from '../models/facturas';
-import { Renfacfo } from '../models/renfacfo';
-import { Articulo } from '../models/articulo';
-import { Serie } from '../models/serie';
-import { Seriefac } from '../models/seriesfac';
-import { Usocfdi } from '../models/usocfdi';
-import { Metodopagocfdi } from '../models/metodopagocfdi';
-import { Reltrasp } from '../models/reltrasp';
+import { Movclis } from '../models';
+import { Observcli } from '../models';
+import { Plazos } from '../models';
+import { Solicitud } from '../models';
+import { Cartapro } from '../models';
+import { Ubivta } from '../models';
+import { Promotor } from '../models';
+import { Nulets } from '../models';
+import { Poblacs } from '../models';
+import { Cliagentes } from '../models';
+import { Vendedor } from '../models';
+import { Tarjetatc } from '../models';
+import { Factura } from '../models';
+import { Renfacfo } from '../models';
+import { Articulo } from '../models';
+import { Serie } from '../models';
+import { Seriefac } from '../models';
+import { Usocfdi } from '../models';
+import { Metodopagocfdi } from '../models';
+import { Reltrasp } from '../models';
+import { Factorvtacred } from '../models';
+import { Tabladesctocont  } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -981,6 +983,20 @@ export class ClientesService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  buscar_aofertas_json(): Observable<any> {
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php?modo=buscar_ofertas_json";
+    const headers = { 'content-type': 'text/plain'};
+    const body="";
+    console.log("Debug: Estoy en buscar_ofertas_json:");
+    return this.http.get<any>(miurl, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('buscar_ofertas_json')),
+      catchError(this.handleError<any>('Ocurrio un error en Post buscar_ofertas_json '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
 
   grabar_solicitud_altas( parametros: string): Observable<any> {
     
@@ -1016,9 +1032,9 @@ export class ClientesService {
     '&fechafinal=' + misparams.fechafinal +
     '&codigoinicial='+misparams.codigoinicial +
     '&codigofinal='+misparams.codigofinal +
-    '&ubicacioninicial=' + '.' +
-    '&ubicacionfinal='+'zz';
-    // console.log("Debug: imprime_relvtas", miurl);
+    '&ubicacioninicial=' + misparams.ubicacioninicial +
+    '&ubicacionfinal='+ misparams.ubicacionfinal;
+    console.log("Debug: imprime_relvtas", miurl);
     window.open(miurl, "_blank");
 
   }
@@ -1065,6 +1081,39 @@ export class ClientesService {
     window.open(miurl, "_blank");
 
   }
+
+  obtenfactorvtacrd ( ): Observable<Factorvtacred[]> {
+    const headers = { 'content-type': 'text/plain'};
+    let miurl = this.url + "altas/serviciosaltas.php"
+    console.log("Debug: Estoy en obtenfactorvtacrd");
+    let misparamnvo = {
+      modo: "obtener_factorvtacrd."
+    }
+
+    return this.http.post<Factorvtacred[]>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched obtenfactorvtacrd')),
+      catchError(this.handleError<Factorvtacred[]>('Ocurrio un error en Post obtenfactorvtacrd'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  obtentabladesctocont ( ): Observable<Tabladesctocont []> {
+    const headers = { 'content-type': 'text/plain'};
+    let miurl = this.url + "altas/serviciosaltas.php"
+    console.log("Debug: Estoy en obtenfactorvtacrd");
+    let misparamnvo = {
+      modo: "obtener_tabladescocont."
+    }
+
+    return this.http.post<Tabladesctocont[]>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched obtenfactorvtacrd')),
+      catchError(this.handleError<Tabladesctocont[]>('Ocurrio un error en Post obtenfactorvtacrd'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

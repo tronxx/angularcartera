@@ -23,5 +23,7 @@ export { User } from './user.model'
 export { Usocfdi } from './usocfdi';
 export { Usuarioregistrado } from './usuarioregistrado';
 export { Vendedor } from './vendedor';
-
-
+export { Factorvtacred } from './factorvtacred';
+export { Tabladesctocont } from './tabladesctocont';
+export { Reltrasp } from './reltrasp';
+export { Ofertas } from './ofertas';

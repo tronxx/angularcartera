@@ -12,8 +12,9 @@
         <label id="messages" color="warn"> {{messages_z}} </label>
     </div>
 
-    <div *ngIf= "articulo" >
-        <label for="">Articulo Seleccionado: {{articulo.codigo}} {{articulo.descri}} </label>
+    <div>
+        <label >Articulo Seleccionado: </label> 
+        <label *ngIf= "articulo" > {{articulo.codigo}} {{articulo.descri}} </label>
     </div>
 
     <table id="tbl_articulos" border="1">
