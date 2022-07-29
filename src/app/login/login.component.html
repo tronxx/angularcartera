@@ -13,8 +13,9 @@
              type="submit" >Aceptar</button>
         </div>
         <span>
-            <div [hidden]="error.activo" class="alert alert-danger" role="alert">
-                Login Incorrecto
+            <div *ngIf="error.activo" class="alert alert-danger" role="alert">
+                Login Incorrecto 
+                <img src="../assets/images/sinacceso.jpg" width="200px" alt="Card image">
             </div>
         </span>
     </div>

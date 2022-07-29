@@ -63,7 +63,10 @@ export class PolizasComponent implements OnInit {
   cobratarioactivo_z = false;
   tipopagosel_z = "";
   tiporecobon_z = "";
-  
+  bonif_cerrada = true;
+  tipomovcerrado = true;
+  importecerrado = true;
+
   diascontingencia = 90;
   diasbon = 5;
   claveempresa = "";
@@ -102,6 +105,7 @@ export class PolizasComponent implements OnInit {
   serv_z = 0;
   impxcob_z = 0;
   recobon_z = 0;
+  recargo_z = 0;
   nulets_z = 0;
   bonifi_z = 0;
   idpoliza = 0;
@@ -221,7 +225,7 @@ export class PolizasComponent implements OnInit {
         "tda":this.tda_z
       }
       if(this.tda_z == "") {
-        this.alerta("El Codigo de la Poliza no puede estar vacio");
+        this.alerta("El Código de la Póliza no puede estar vacío");
         this.enespera = false;
         return;
 
@@ -419,7 +423,8 @@ export class PolizasComponent implements OnInit {
         this.datospago.dias = Math.floor( ( this.fechahoy_z.getTime() - this.vence_z.getTime()  ) / (86400000));
         //console.log("Debug: dias", this.datospago.dias, " Hoy:", this.fechahoy_z.getTime(), " Vence:", this.vence_z.getTime() );
         if(this.datospago.dias > this.diasbon ) {
-          this.datospago.recobon = Math.round( this.prlet_z * this.tasarecargo_z / 100);
+          this.recargo_z = Math.round( this.prlet_z * this.tasarecargo_z / 100);
+          this.datospago.recobon = this.recargo_z;
           this.tiporecobon_z = "RECARGO"
           this.tipomovsel_z = "R";
           this.msg_z += " Con Recargo";
@@ -511,6 +516,9 @@ export class PolizasComponent implements OnInit {
       }
     } else {
       this.datospago.concepto = "";
+      this.bonif_cerrada = false;
+      this.tipomovcerrado = false;
+      this.importecerrado = false;
       if (this.datospago.tipopago == "A") {
         this.datospago.concepto += "ACTA ";
         this.ultltaoculto_z = true;
@@ -521,20 +529,30 @@ export class PolizasComponent implements OnInit {
       if (this.datospago.tipopago == "C") {
         this.datospago.concepto += "LETRA ";
         this.ultltaoculto_z = false;
+        this.bonif_cerrada = true;
+        this.tipomovcerrado = true;
+        this.importecerrado = true;
       }
       if (this.datospago.tipopago == "S") {
         this.datospago.concepto += "SALDO ";
         this.ultltaoculto_z = true;
         this.datospago.ltafin = this.datospago.ltaini;
-        this.datospago.importe = this.impxcob_z;
-
+        this.bonif_cerrada = false;
       }
 
       nuletxpag_z = Number(this.datospago.ltafin) -  Number(this.datospago.ltaini ) + 1;
       this.datospago.concepto += this.datospago.ltaini.padStart(2, ' ');
       if( Number(this.datospago.ltafin) != Number(this.datospago.ltaini) ) {
         this.datospago.concepto += " - " + this.datospago.ltafin.padStart(2, ' ');
+        let prletconrec_z = this.calcula_bonif_o_rec(Number(this.datospago.ltaini));
+        let ulletconrec_z = this.calcula_bonif_o_rec(Number(this.datospago.ltafin));
+        if(prletconrec_z != ulletconrec_z) {
+           this.alerta("No puede mezclar letras atradas y al día");
+           this.cancelarpago();
+        }
+
       }
+
       this.datospago.concepto += "/" + this.nulets_z;
       if (this.datospago.tipopago == "C" || this.datospago.tipopago == "S" ) {
         if (this.datospago.tipopago == "C") {
@@ -542,7 +560,7 @@ export class PolizasComponent implements OnInit {
         }
 
         if(this.datospago.dias > 5 ) {
-          this.datospago.recobon = Math.round (this.prlet_z * (this.tasarecargo_z / 100) * (nuletxpag_z  ));
+          this.datospago.recobon = Math.round (this.recargo_z * nuletxpag_z  );
           this.datospago.neto = this.datospago.importe + this.datospago.recobon;
           factor_z = 1;
   
@@ -734,9 +752,20 @@ export class PolizasComponent implements OnInit {
             this.idrenpol = respu.idrenpol;
             this.uuid_z = respu.uuid;
             console.log("Debug: uuid", this.uuid_z);
-            if( this.uuid_z.length > 3) {
+            if( this.uuid_z.length > 3 ) {
               this.imprimir_txt();
+            } else {
+              if(this.datospago.tipomov == "B" && 
+                this.datospago.recobon > 0 && this.claveempresa == "EC") {
+                this.obtener_txt_bon_electro(respu);
+              }
             }
+            // this.alerta(" Tipomov:" + this.datospago.tipomov +
+            //   " tipopago:" + this.datospago.tipopago +
+            //   " respu Seriefacfon:" + respu.seriefacfon +
+            //   " Folio:" + respu.numfacfon +
+            //   " idrenpol :" + respu.idrenpol.toString()
+            // );
             console.log("Se agrego el movimiento:", respu);
           }
           this.buscar_renpol();
@@ -766,12 +795,22 @@ export class PolizasComponent implements OnInit {
     this.serviciopolizas.obtencarta(JSON.stringify( params));
   }
 
-
   imprimir_txt() {
     console.log("Debug: Estoy en Imprimir txt ", this.uuid_z );
     let params = { "uuid": this.uuid_z};
     this.serviciopolizas.obtentxtcfdi(JSON.stringify( params));
   }
+
+  obtener_txt_bon_electro(parametros_z: any) {
+    console.log("Debug: Estoy en Imprimir bon txt electro ", parametros_z );
+    let params = { 
+      "idrenpol": parametros_z.idrenpol,
+      "serie": parametros_z.seriefacfon,
+      "foliobon": parametros_z.numfacfon
+    };
+    this.serviciopolizas.obten_bon_electro(JSON.stringify( params));
+  }
+
 
   buscar_renpol() {
     let params = {
@@ -818,6 +857,37 @@ export class PolizasComponent implements OnInit {
   
   }
 
+  define_bonif_abierta() {
+    let miltafin_z = Number(this.datospago.ltafin);
+    this.bonif_cerrada = true;
+    if(this.tipopagosel_z == "A") {
+      this.bonif_cerrada = false;
+    } else {
+      if(this.datospago.conceptocompl == "CARTA" && (this.nulets_z == miltafin_z)) {
+        this.bonif_cerrada = false;
+      }
+    }
+  }
+
+
+  sel_tipopago() {
+    // this.alerta("1.- this.tipomovsel_z:" + this.tipomovsel_z + " Recobon:" + this.recobon_z.toString());
+    if(this.tipomovsel_z == "N") {
+      this.datospago.recobon = 0;
+    } else {
+      let conrec_z = this.calcula_bonif_o_rec(Number(this.datospago.ltaini));
+      let numerodeletras_z = Number(this.datospago.ltafin) - Number (this.datospago.ltaini) + 1;
+      if(conrec_z == "R") {
+        this.datospago.recobon = this.recargo_z * numerodeletras_z;
+      } else {
+        this.datospago.recobon = this.recobon_z * numerodeletras_z;
+      }
+      
+    }
+    this.calculaNeto();
+    // this.alerta("this.tipomovsel_z:" + this.tipomovsel_z);
+  }
+
   busca_aval(idcli_z : number) {
     var params_z = {
       modo : "buscar_aval",
@@ -835,6 +905,24 @@ export class PolizasComponent implements OnInit {
       }
     );
 
+  }
+
+  calcula_bonif_o_rec(miletra_z:number) {
+    let esrecobon_z = "B";
+    let dias_z = 0;
+    let mivenc_z = new Date();
+    if(this.cliente) {
+      mivenc_z = this.configuracion.calcula_venc(this.cliente.fechavta, this.cliente.qom, miletra_z);
+      dias_z = Math.floor( ( this.fechahoy_z.getTime() - mivenc_z.getTime()  ) / (86400000));
+      //console.log("Debug: dias", this.datospago.dias, " Hoy:", this.fechahoy_z.getTime(), " Vence:", this.vence_z.getTime() );
+      if(dias_z > this.diasbon ) {
+        esrecobon_z = "R";
+      } else {
+        esrecobon_z = "B";
+      }
+ 
+    }
+    return esrecobon_z;
   }
 
 

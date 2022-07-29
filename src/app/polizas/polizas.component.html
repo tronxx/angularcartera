@@ -15,7 +15,11 @@
           [disabled]="polizaactiva_z" id="cvepromo" placeholder="Iniciales">
        <label name="nombrepromo" id="nombrepromo" > <b> {{cobratario.nombre}} </b> </label>
     </label>
-    <button mat-raised-button color="primary" [hidden]="polizaactiva_z" (click)="aceptarpoliza()">Aceptar</button>
+    Empresa: {{ claveempresa}}
+    <button mat-raised-button 
+      color="primary" *ngIf="!polizaactiva_z" 
+      (click)="aceptarpoliza()"
+    >Aceptar</button>
     <div id="errorespoliza" [hidden]="!hayerrorpoliza()" >
         <label for="errorespoliza" > {{errorespoliza}} </label>
     </div>
@@ -122,13 +126,13 @@
                         <input id="concepto" name = "concepto" [disabled]="true" type="text" [(ngModel)]= "datospago.concepto">
                         <br>
                         Complemento del Concepto
-                        <input id="concepto2" name = "concepto2" type="text" [(ngModel)]= "datospago.conceptocompl">
+                        <input id="concepto2" name = "concepto2" type="text" [(ngModel)]= "datospago.conceptocompl" (blur)="define_bonif_abierta()">
 
                     </label>
                     <br>
                     <label for="tipomov">
                         Es con 
-                        <select name="tipomov" id="tipomov"  [(ngModel)]="tipomovsel_z" value="tipomovsel_z">
+                        <select name="tipomov" id="tipomov" [disabled]="tipomovcerrado"  [(ngModel)]="tipomovsel_z" (blur)="sel_tipopago()" value="tipomovsel_z">
                             <option *ngFor="let tipomov of tiposmov" value="{{tipomov.tipo}}" 
                                 [selected]="tipomovsel_z == tipomov.tipo">
                                 {{tipomov.descri}}
@@ -136,11 +140,11 @@
                         </select>
                     </label>
                     <label for="recobon">
-                        <input size = "10" type="text" name="recobon" id="recobon" (blur)="calculaNeto()" [(ngModel)] = "datospago.recobon" >
+                        <input size = "10" type="number" name="recobon" id="recobon" [disabled]="bonif_cerrada" (blur)="calculaNeto()" [(ngModel)] = "datospago.recobon" >
                     </label>
                     <label for="importe">
                         Importe
-                        <input size = "10" type="text" name="importe" id="importe" (blur)="calculaNeto()" [(ngModel)] = "datospago.importe" >
+                        <input size = "10" type="number" [disabled]="importecerrado" name="importe" id="importe" (blur)="calculaNeto()" [(ngModel)] = "datospago.importe" >
                     </label>
                     <label for="neto">
                         Neto:
