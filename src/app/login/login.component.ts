@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
   }
   
   error = {
-    activo: true
+    activo: false
   }
   
   pwdmd5_z : string = "";
@@ -98,12 +98,12 @@ export class LoginComponent implements OnInit {
               }
 
             );
-            this.error.activo = true;
+            this.error.activo = false;
             this.router.navigateByUrl('/main');
 
         } else {
           console.log("Usuaro Incorrecto");
-          this.error.activo = false;
+          this.error.activo = true;
           
         }
 

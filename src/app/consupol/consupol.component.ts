@@ -45,6 +45,7 @@ export class ConsupolComponent implements OnInit {
   poltimbrado_z = "";
   rectimbrado_z = "";
   statuspol_z = "";
+  claveempresa = "";
   
   cobratario = {
     "idpromot": 0,
@@ -98,6 +99,8 @@ export class ConsupolComponent implements OnInit {
     this.errorespoliza=[];
     this.buscar_codigos_poliza();
     this.cia_z =  this.serviciopolizas.obtendatoscia();
+    this.claveempresa = this.cia_z.Clave;
+
     let mitda_z = String(this.route.snapshot.paramMap.get('tda'));
     let mifechapol_z =  String(this.route.snapshot.paramMap.get('fecha'));
     if (mifechapol_z) {
@@ -304,9 +307,14 @@ cierra_poliza( params_z: string) {
       this.poltimbrado_z = mirespu_z.timbradopoliza;
       this.rectimbrado_z = mirespu_z.timbradorecargo;
       this.statuspol_z =  mirespu_z.status;
-      if(this.uuidpol_z && this.uuidpol_z != "-1") {
+      console.log("Ya se timbró la poliza", this.uuidpol_z, "Empresa:", this.claveempresa);
+      if(this.uuidpol_z && this.uuidpol_z != "-1" ) {
           let paramcompl_z = { "uuid": this.uuidpol_z };
-          this.serviciopolizas.obtentxtcomplmentopol(JSON.stringify(paramcompl_z));  
+          if(this.claveempresa == "EC") {
+            this.serviciopolizas.obten_pdf_cfdi(JSON.stringify(paramcompl_z));
+          } else {
+            this.serviciopolizas.obtentxtcomplmentopol(JSON.stringify(paramcompl_z));  
+          }
       }
       if(this.uuidrec_z && this.uuidrec_z != "-1" ) {
         let paramrec_z = { "uuid": this.uuidrec_z };

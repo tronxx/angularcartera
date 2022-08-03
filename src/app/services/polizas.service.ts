@@ -177,6 +177,17 @@ export class PolizasService {
     window.open(miurl, "_blank");
   }
 
+  obten_bon_electro (params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Debug: Estoy en obten_bon_electro ", params);
+    let miurl = this.url + "polizas/servicios.php?modo=obtener_txt_bon_electro.&idrenpol="+misparams.idrenpol;
+    miurl += "&foliobon=" + misparams.foliobon;
+    miurl += "&serie=" + misparams.serie;
+    console.log("Debug: Estoy en obten_bon_electro url", miurl);
+    window.open(miurl, "_blank");
+  }
+
+
   obtencarta(params:string) {
     let empresa = "xx";
     if (this.cia) {
@@ -281,7 +292,7 @@ export class PolizasService {
   obten_pdf_cfdi(params:string) {
     let misparams = JSON.parse(params);
     console.log("Debug: Estoy en obtenpdfcfdi ", params);
-    var miurl = this.url + "polizas/servicios.php?modo=descarga_pdf_cfdi&uuid="+misparams.uuid;
+    const miurl = this.url + "polizas/servicios.php?modo=descarga_pdf_cfdi&uuid="+misparams.uuid;
     window.open(miurl, "_blank");
   }
 

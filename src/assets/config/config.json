@@ -1,4 +1,5 @@
 [
+  
     {
       "Urldatos":"http://mds1/www/cgi/cartera/",
       "Empresa": "Diaz y Solis SA de CV",
@@ -14,21 +15,23 @@
       "MesesMinimoCarta": 9,
       "CartaSaldadosMesesAntes": 2,
       "DiasBonificacion":5
-    },
-    {
-      "Urldatos":"http://mds1/www/cgi/cartera/",
-      "Empresa": "ElectroClub del Sureste S de RL de CV",
-      "Rfc": "ESU160109EX9",
-      "Direc": "Calle 67 x 60 y 62 Centro",
-      "CP": "97000",
-      "Logo":"",
-      "AplicarContingencia":"true",
-      "DiasContingencia":90,
-      "FechaContingencia":"20200401",
-      "Clave":"EC",
-      "PrecioListaMinimoCarta":2300.00,
-      "MesesMinimoCarta": 8,
-      "CartaSaldadosMesesAntes": 1,
-      "DiasBonificacion":5
     }
+    ,
+    {
+        "Urldatos":"http://mds1/www/cgi/cartera/",
+        "Empresa": "ElectroClub del Sureste S de RL de CV",
+        "Rfc": "ESU160109EX9",
+        "Direc": "Calle 67 x 60 y 62 Centro",
+        "CP": "97000",
+        "Logo":"",
+        "AplicarContingencia":"true",
+        "DiasContingencia":90,
+        "FechaContingencia":"20200401",
+        "Clave":"EC",
+        "PrecioListaMinimoCarta":2300.00,
+        "MesesMinimoCarta": 8,
+        "CartaSaldadosMesesAntes": 1,
+        "DiasBonificacion":5
+      }
+
 ]
