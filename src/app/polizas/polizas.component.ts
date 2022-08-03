@@ -374,11 +374,11 @@ export class PolizasComponent implements OnInit {
               + this.nulets_z.toString() + " por " +  formatCurrency ( Number(this.impxcob_z) , 'en-US', '$');
             this.tipopagosel_z = "C";
             this.datospago.recobon = this.recobon_z;
-            this.calculaConcepto();
             this.ultltaoculto_z = false;
             this.datospago.importe = this.impxcob_z;
             this.activar_tipopago(["A", "C"]);
             this.generanumpagos(this.sigletra_z, this.nulets_z);
+            this.calculaConcepto();
           } else {
             this.ultltaoculto_z = true;
             this.sigletra_z = this.ltpag_z + 1;
@@ -398,7 +398,7 @@ export class PolizasComponent implements OnInit {
           this.datospago.ltafin = this.sigletra_z.toString().padStart(2, " ");
           this.datospago.tipomov = "B";
           this.datospago.recobon = 0;
- 
+          if(this.bonifi_z > 0 )  this.bonif_cerrada = false; else this.bonif_cerrada = true;
         } else {
           this.tipopagosel_z = "C";
           this.datospago.ltaini = "SE";
@@ -435,7 +435,7 @@ export class PolizasComponent implements OnInit {
             this.tipomovsel_z = "B";
             this.tiporecobon_z = "BONIFICACION";
             this.msg_z += " Con Bonificacion";
-            this.activartipomov(["B"]);
+            this.activartipomov(["B", "N"]);
           } else {
             this.tipomovsel_z = "B";
             this.datospago.recobon = 0;
@@ -525,6 +525,10 @@ export class PolizasComponent implements OnInit {
         this.datospago.ltafin = this.datospago.ltaini;
         factor_z = 0;
         this.datospago.recobon = 0;
+        if(this.bonifi_z < 1) {
+          this.bonif_cerrada = true;
+        }
+        this.activartipomov(["B", "N", "R"])
       }
       if (this.datospago.tipopago == "C") {
         this.datospago.concepto += "LETRA ";
@@ -547,7 +551,7 @@ export class PolizasComponent implements OnInit {
         let prletconrec_z = this.calcula_bonif_o_rec(Number(this.datospago.ltaini));
         let ulletconrec_z = this.calcula_bonif_o_rec(Number(this.datospago.ltafin));
         if(prletconrec_z != ulletconrec_z) {
-           this.alerta("No puede mezclar letras atradas y al día");
+           this.alerta("No puede mezclar letras atrasadas y al día");
            this.cancelarpago();
         }
 
@@ -872,15 +876,23 @@ export class PolizasComponent implements OnInit {
 
   sel_tipopago() {
     // this.alerta("1.- this.tipomovsel_z:" + this.tipomovsel_z + " Recobon:" + this.recobon_z.toString());
+    let numerodeletras_z = Number(this.datospago.ltafin) - Number (this.datospago.ltaini) + 1;
     if(this.tipomovsel_z == "N") {
       this.datospago.recobon = 0;
+      this.bonif_cerrada = true;
+    } else if (this.tipomovsel_z == "R") {
+      this.recargo_z = Math.round( this.prlet_z * this.tasarecargo_z / 100);
+      this.datospago.recobon = this.recargo_z * numerodeletras_z;
+      this.bonif_cerrada = false;
     } else {
       let conrec_z = this.calcula_bonif_o_rec(Number(this.datospago.ltaini));
-      let numerodeletras_z = Number(this.datospago.ltafin) - Number (this.datospago.ltaini) + 1;
       if(conrec_z == "R") {
         this.datospago.recobon = this.recargo_z * numerodeletras_z;
+        this.bonif_cerrada = false;
+        this.tipomovsel_z = "R";
       } else {
         this.datospago.recobon = this.recobon_z * numerodeletras_z;
+        if(this.bonifi_z > 0 )  this.bonif_cerrada = false; else this.bonif_cerrada = true; 
       }
       
     }
