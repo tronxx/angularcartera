@@ -52,6 +52,7 @@ import { AcumpolComponent } from './acumpol/acumpol.component';
 import { DlgreltraspComponent } from './common/dlgreltrasp/dlgreltrasp.component';
 import { CapvtasComponent } from './capvtas/capvtas.component';
 import { DlgDatosvtaComponent } from './capvtas/dlg-datosvta/dlg-datosvta.component';
+import { AgregarenpolComponent } from './polizas/agregarenpol/agregarenpol.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { DlgDatosvtaComponent } from './capvtas/dlg-datosvta/dlg-datosvta.compon
     AcumpolComponent,
     DlgreltraspComponent,
     CapvtasComponent,
-    DlgDatosvtaComponent
+    DlgDatosvtaComponent,
+    AgregarenpolComponent
   ],
   imports: [
     BrowserModule,

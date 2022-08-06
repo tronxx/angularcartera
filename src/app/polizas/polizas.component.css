@@ -88,3 +88,8 @@
     overflow: auto;
     display: block;
   }
+
+  button {
+    padding-left: 3px;
+    margin-right: 3px;
+  }

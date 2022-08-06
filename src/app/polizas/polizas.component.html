@@ -87,84 +87,16 @@
                                 </div>
                             </td>
                     </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label for="mensaje"> {{msg_z}} </label>
+                            <button mat-raised-button color="primary" (click)="cobrar()" >Cobrar</button>
+                            <button mat-raised-button color="warn" (click)="cancelarpago()" >Cancelar</button>
+                        </td>
+                    </tr>
                 </table>
 
                 </div>
-            </div>
-            <div>
-                <mat-card>
-                    <mat-card-title>Porporcione los datos del Pago</mat-card-title>
-                    <label for="tipopago">
-                        Pago
-                        <select name="tipopago" id="tipopago" (change)="calculaConcepto()" [(ngModel)]="tipopagosel_z" >
-                            <option *ngFor="let tipopago of tipospagos" 
-                                value="{{tipopago.clave}}"
-                                [selected]="tipopagosel_z == datospago.tipopago"
-                              >
-                                {{tipopago.descri}}
-                            </option>
-                        </select>
-                    </label>
-                    <label for="ltaini" >
-                        Letra Inicial
-                        <input size = "10" id="ltaini" [disabled]="true" (blur)="calculaConcepto()" name = "ltaini" type="text" [(ngModel)]= "datospago.ltaini">
-                    </label>
-                    <label for="ltafin" [hidden]="ultltaoculto_z">
-                        Letra Final
-                        <select name="listapagos" id="listapagos" value="{{sigletra_z}}" 
-                            (change)="calculaConcepto()" [(ngModel)]= "datospago.ltafin" >
-                            <option *ngFor="let miltafin of listaletras" value="{{miltafin}}"
-                            (blur)="calcula_bonif_extra()"
-                            [selected]="miltafin == datospago.ltafin">
-                            {{miltafin}}
-                        </option>
-
-                        </select>
-                    </label>
-                    <label for="concepto">
-                        Concepto
-                        <input id="concepto" name = "concepto" [disabled]="true" type="text" [(ngModel)]= "datospago.concepto">
-                        <br>
-                        Complemento del Concepto
-                        <input id="concepto2" name = "concepto2" type="text" [(ngModel)]= "datospago.conceptocompl" (blur)="define_bonif_abierta()">
-
-                    </label>
-                    <br>
-                    <label for="tipomov">
-                        Es con 
-                        <select name="tipomov" id="tipomov" [disabled]="tipomovcerrado"  [(ngModel)]="tipomovsel_z" (blur)="sel_tipopago()" value="tipomovsel_z">
-                            <option *ngFor="let tipomov of tiposmov" value="{{tipomov.tipo}}" 
-                                [selected]="tipomovsel_z == tipomov.tipo">
-                                {{tipomov.descri}}
-                            </option>
-                        </select>
-                    </label>
-                    <label for="recobon">
-                        <input size = "10" type="number" name="recobon" id="recobon" [disabled]="bonif_cerrada" (blur)="calculaNeto()" [(ngModel)] = "datospago.recobon" >
-                    </label>
-                    <label for="importe">
-                        Importe
-                        <input size = "10" type="number" [disabled]="importecerrado" name="importe" id="importe" (blur)="calculaNeto()" [(ngModel)] = "datospago.importe" >
-                    </label>
-                    <label for="neto">
-                        Neto:
-                        <input size = "10" type="text" name="neto" id="neto" [disabled]="true"
-                        value="{{datospago.neto | currency}} ">
-                    </label>
-                    <br>
-                    <label for="mensaje"> {{msg_z}} </label>
-                    <div id="errores"  [hidden]="!errorespago()">
-                        <label for="errores" class="lbl danger" > {{errores_z}} </label>
-                    </div>
-                    <mat-card-actions>
-                        <button  mat-raised-button color="primary" (click)="clickaceptarpago()" [disabled]="!aceptarpago">Aceptar</button>
-                        <button  mat-raised-button color="warn" (click)="cancelarpago()">Cancelar</button>
-    
-                    </mat-card-actions>
-                    <mat-card-footer>
-                        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                    </mat-card-footer>
-                </mat-card>
             </div>
         </div>
     </div>
