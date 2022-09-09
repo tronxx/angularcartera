@@ -3,14 +3,17 @@
         <div name="factura">
             <mat-card>
                 <mat-card-title>Datos de Renglon de Factura</mat-card-title>
-                <label class="ancho80" for="articulo">Articulo</label>
-                <input type="text" size="13" name="articulo" id="articulo" 
-                [(ngModel)] = "renfac.codigo"
-                oninput="this.value = this.value.toUpperCase()" 
-                >
-                <button mat-raised-button 
-                color="primary"   (click)="busca_articulo()">Aceptar Articulo</button>
-                <br>
+                <div *ngIf="noescomplementodatos_z">
+                    <label class="ancho80" for="articulo">Articulo</label>
+                    <input type="text" size="13" name="articulo" id="articulo" 
+                    [(ngModel)] = "renfac.codigo"
+                    oninput="this.value = this.value.toUpperCase()" 
+                    >
+                    <button mat-raised-button 
+                    color="primary"   (click)="busca_articulo()">Aceptar Articulo</button>
+                    <br>
+    
+                </div>
                 <label class="ancho80" for="descri">Descripcion</label>
                 <input type="text" name="descri" id="descri" size="40"
                 [disabled]="!datoshabilitados"
@@ -45,11 +48,13 @@
                     </label>
                 </div>
 
-                <label class="ancho80" for="preciou">Precio.U</label>
-                <input type="number" size="10" name="preciou" id="preciou"
-                [disabled]="!datoshabilitados"
-                [(ngModel)]="renfac.preciou">
-                <br>
+                <div *ngIf="noescomplementodatos_z">
+                    <label class="ancho80" for="preciou">Precio.U</label>
+                    <input type="number" size="10" name="preciou" id="preciou"
+                    [disabled]="!datoshabilitados"
+                    [(ngModel)]="renfac.preciou">
+                    <br>
+                </div>
                 <div *ngIf="esmoto">
                     <label for="seriemotor" class="ancho80">Serie Motor</label>
                     <input type="text" name="seriemotor" id="seriemotor" size="30"

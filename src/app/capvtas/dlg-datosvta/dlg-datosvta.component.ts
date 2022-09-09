@@ -120,6 +120,25 @@ export class DlgDatosvtaComponent implements OnInit {
     tarjetatc:""
   }
 
+  seriefac_z = "";
+  numfac_z = -1;
+
+  conaval = true;
+  
+  nvoaval = {
+    idcli : -1,
+    direc2: "",
+    nomav: "",
+    dirav1: "",
+    dirav2: "",
+    compra: "",
+    linea: "",
+    appat: "",
+    apmat: "",
+    nompil1: "",
+    nompil2: ""
+  }
+
 
 
   constructor(
@@ -138,6 +157,16 @@ export class DlgDatosvtaComponent implements OnInit {
     } else {
       this.codigodisabled = false;
     }
+    this.ubivta = params_z.ubica;
+    this.nvocli.ticte = params_z.ticte;
+    this.nvocli.enganche = params_z.enganche;
+    this.conaval = true;
+    if(params_z.ticte == "CC" || params_z.tite == "TC") {
+      this.conaval = false;
+      this.nvocli.qom = "C";
+    }
+
+    this.busca_serie_y_folio();
 
     this.obtencatalogos();
   }
@@ -271,6 +300,8 @@ export class DlgDatosvtaComponent implements OnInit {
 }
 
 closeyes() {
+  this.nvocli.numcli = this.numcli_z;
+  this.nvocli.factura = this.numfac_z;
   let respuesta = {
     modo:"",
     clienterespu: this.nvocli,
@@ -281,5 +312,39 @@ closeyes() {
 closeno() {
   this.dialogRef.close(false);
 }
+
+busca_serie_y_folio() {
+  var params_z = {
+    modo : "buscar_facturacion_una_serie",
+    ubiage : this.ubivta
+  }
+  console.log("Debug: Estoy en busca_seri_y_folio ", this.ubivta);
+  this.servicioclientes.busca_serie_factura(JSON.stringify(params_z)).subscribe(
+    respu => {
+      this.seriefac_z = respu.seriefac;
+      this.numfac_z = respu.ultimofolio;
+    }
+  );
+}
+
+buscarcliente() {
+  var params_z = {
+    modo : "buscar_un_cliente",
+    codigo: this.numcli_z,
+    idcli : -1
+  }
+
+  this.servicioclientes.buscaclientealta(JSON.stringify(params_z)).subscribe(
+    respu => {
+      if(respu) {
+        this.cliente = respu;
+        this.alerta("Este codigo ya Existe:" + this.cliente.nombre);
+      }
+    }
+  );
+
+}
+
+
 
 }

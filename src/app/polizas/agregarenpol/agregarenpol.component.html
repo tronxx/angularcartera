@@ -103,7 +103,19 @@
                             value="{{datospago.neto | currency}} ">
                         </label>
                         <br>
-                        <label for="mensaje"> {{msg_z}} </label>
+                        <label for="recibido">
+                            Recibido:
+                            <input size = "10" type="text" name="recibido" id="recibido" (keyup)="onChangeObj($event)"
+                            [(ngModel)]="recibido" >
+                            
+                        </label>
+                        <label for="cambio">
+                            Cambio:
+                            <input size = "10" type="text" name="cambio" id="cambio" [disabled]="true"
+                            value="{{cambio | currency}} ">
+                        </label>
+                        <br>
+                        <p> {{msg_z}}</p>
                         <div id="errores"  [hidden]="!errorespago()">
                             <label for="errores" class="lbl danger" > {{errores_z}} </label>
                         </div>

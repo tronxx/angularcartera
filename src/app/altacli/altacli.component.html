@@ -106,14 +106,9 @@
         </label>
         <br>
         <label class="ancho80" for="qom">Q/C</label>
-        <select name="qom" id="qom" >
-       <option *ngFor="let mimodo of modoqom_z" value="{{mimodo.clave}}"
-         [selected]="nvocli.qom == mimodo.clave">
-         {{mimodo.descri}}
-         </option>
-       </select>
+        <input type="text" readonly value="{{nvocli.qom}} ">
         <label for="nulet">Numero Letras
-            <input readonly type="number" name="nulet" id="nulet" size="5" [(ngModel)]="nvocli.nulet">
+            <input readonly type="text" name="nulet" id="nulet" size="5" value="{{nvocli.nulet}}">
         </label>
         <label for="canle">Precio x Letra
             <input readonly type="text" name="canle" id="canle" size="10" value ="{{nvocli.canle | currency}}">
@@ -253,33 +248,33 @@
                                 <label class="ancho80" for="seriefac">Serie</label> 
                                 <input type="text" size="5" readonly name="serifac" id="seriefac" value=" {{factura.serie}}"> 
                                 <label for="numfac">Numero</label> 
-                                <input type="text" size="8" name="numfac" id="numfac" value = "{{factura.numero}}" > 
+                                <input type="text" readonly size="8" name="numfac" id="numfac" value = "{{factura.numero}}" > 
                                 <label for="fechafac">Fecha</label> 
-                                <input type="text" size="10" name="fechafac" id="fechafac" value ="{{factura.fecha}}"> 
+                                <input type="text" readonly size="10" name="fechafac" id="fechafac" value ="{{factura.fecha}}"> 
                                 <br>
                                 <label class="ancho80" for="prodfin">Prod.F</label>
-                                <input type="text" size="10" name="prodfin" id="prodfin" value =" {{factura.prodfin | currency }}" >
+                                <input type="text" readonly size="10" name="prodfin" id="prodfin" value =" {{factura.prodfin | currency }}" >
                                 <label for="impfac"> Importe</label> 
-                                <input type="text" size="10" name="impfac" id="impfac" value ="{{factura.subtot | currency}}" >
+                                <input type="text" readonly size="10" name="impfac" id="impfac" value ="{{factura.subtot | currency}}" >
                                 <label for="ivafac">Iva</label>
-                                <input type="text" size="10" name="ivafac" id="ivafac" value = "{{factura.iva | currency}}" >
+                                <input type="text" readonly size="10" name="ivafac" id="ivafac" value = "{{factura.iva | currency}}" >
                                 <label for="totalfac">Total</label> 
-                                <input type="text" size="10" name="totalfac" id="totalfac" value ="{{factura.total | currency}}">
+                                <input type="text" readonly size="10" name="totalfac" id="totalfac" value ="{{factura.total | currency}}">
                                 <label *ngIf="clientecred" for="totalgral">Total General</label> 
                                 <input *ngIf="clientecred" readonly type="text" size="10" name="totalgral" id="totalfac" value ="{{factura.total + factura.prodfin | currency}}">
                                  <br>
                                 <label class="ancho80" for="uuidfac">UUID</label> 
-                                <input type="text" size="40" name="uuidfac" id="uuidfac" value ="{{factura.uuid}}">
+                                <input type="text" size="40" readonly  name="uuidfac" id="uuidfac" value ="{{factura.uuid}}">
                                 <br>
                                 <label class="ancho80" for="metpag">Met.Pago</label> 
-                                <input type="text" size="20" name="matpag" id="metpag" value ="{{factura.metodopago}} ">
+                                <input type="text" readonly size="20" name="matpag" id="metpag" value ="{{factura.metodopago}} ">
                                 <label for="usocfdi">Uso CFDI</label>
-                                <input type="text" size="20" name="usocfdi" id="usocfdi" value ="{{factura.cveusocfdi}}">
+                                <input type="text" readonly size="20" name="usocfdi" id="usocfdi" value ="{{factura.cveusocfdi}}">
                                 <br>
                                 <label class="ancho80" for="rfcfac">RFC</label>
-                                <input type="text" size="15"  name="rfcfac" id="rfcfac" value ="{{factura.rfc}}">
+                                <input type="text" readonly size="15"  name="rfcfac" id="rfcfac" value ="{{factura.rfc}}">
                                 <label for="emailfac">Correo</label>
-                                <input type="text" size="50" name="emailfac" id="emailfac" value ="{{factura.email}}">
+                                <input type="text" readonly size="50" name="emailfac" id="emailfac" value ="{{factura.email}}">
                     </td>
                     </tr>
                     <tr>

@@ -19,6 +19,7 @@ import { Factorvtacred } from '../models';
 import { Tabladesctocont } from '../models';
 import { Articulo } from '../models';
 import { Ofertas } from '../models';
+import { Vendedor } from '../models/vendedor';
 
 import { DlgDatosvtaComponent } from './dlg-datosvta/dlg-datosvta.component';
 import { DlgrenfacComponent } from '../altacli/dlgrenfac/dlgrenfac.component';
@@ -40,6 +41,12 @@ interface Nvorenfac {
   tasadescto: number;
   importe: number;
   iva: number;
+  seriemotor: string,
+  pedimento: string,
+  aduana: string,
+  marca: string,
+  serie: string,
+  folio: number
 };
 
 
@@ -50,6 +57,8 @@ interface Nvorenfac {
 })
 export class CapvtasComponent implements OnInit {
 
+  vendedores : Vendedor[] = [];
+  vendedor? : Vendedor;
   factura? : Factura;
   cliente? : Cliente;
   renfacfo : Renfacfo[] = [];
@@ -105,6 +114,8 @@ export class CapvtasComponent implements OnInit {
   linea_z = "";
   oferta = false;
   proferta = 0;
+  codvnd = "";
+  antvnd = "-1";
   hayerror = false;
   articuloscotizados : Nvorenfac[] = [];
   articulocotizado?: Nvorenfac;
@@ -144,6 +155,7 @@ export class CapvtasComponent implements OnInit {
     let mistorage_z  = localStorage.getItem('capvtas') || "{}";
     let usrreg_z =  JSON.parse(mistorage_z);
     this.ubica = usrreg_z.ubicacion;
+    this.codvnd = usrreg_z.codvnd;
     this.antubica = this.ubica;
   }
   
@@ -469,6 +481,17 @@ obtencatalogos() {
     }
   );
   this.buscanulets();
+  // Voy a Agregar la lista de los vendedores
+  params_z = {
+    modo:"buscar_agentes"
+  }
+  this.servicioclientes.buscar_agentes(JSON.stringify(params_z)).subscribe(
+    respu => {
+      this.vendedores = respu;
+    }
+
+  );
+
   
 }
 
@@ -500,12 +523,14 @@ selecciona_tarjetas_tc() {
   this.qom = "C";
   this.escredito = false;
   this.nulet = 0;
-  let capvtas = {
-    "ubicacion": this.ubica
-  };
-  if(this.antubica != this.ubica) {
+  if(this.antubica != this.ubica || this.antvnd != this.codvnd)  {
+    let capvtas = {
+      "ubicacion": this.ubica,
+      "codvnd": this.codvnd
+    };
     localStorage.setItem("capvtas", JSON.stringify( capvtas));
     this.antubica = this.ubica;
+    this.antvnd = this.codvnd;
   }
   
   if(this.ticte == "TC") {
@@ -561,8 +586,68 @@ aceptar() {
     this.alerta("Verifique los datos");
     return(-1);
   }
+  this.pide_datos_cliente();
+
   return(1);
 
+}
+
+pide_datos_cliente() {
+  if(this.ticte == "CC" || this.ticte == "TC") {
+     this.enganche = this.totgral;
+  }
+  let params_z = {
+    cliente:"11010101",
+    ticte: this.ticte,
+    ubica: this.ubica,
+    enganche: this.enganche
+  }
+  const dialogmov = this.dialog.open(DlgDatosvtaComponent, {
+    width:'700px',
+    data: JSON.stringify(params_z)
+  });
+  dialogmov.afterClosed().subscribe(res => { 
+    // Aqui ya tengo los datos del Cliente, y total P.Lista
+    // y total Cargos y QOM/TC
+    console.log("Regresando de pedir datos cliente", res);
+
+  });
+
+}
+
+acompletar_datos_renfac(renfac: Nvorenfac){
+  console.log("acompletar datos renfac", renfac);
+  
+   let id  = renfac.id;
+   let params_z = {
+    "noescomplementodatos": false,
+    "codigo": renfac.codigo,
+    "seriemotor": renfac.seriemotor,
+    "aduana": renfac.aduana,
+    "marca": renfac.marca,
+    "folio": renfac.folio,
+    "serie": renfac.serie,
+    "esmoto": renfac.esmoto,
+    "pedimento": renfac.pedimento
+   }
+   const dlgdatosrenfac= this.dialog.open(DlgrenfacComponent, {
+    width: '700px',
+    data: JSON.stringify(params_z)
+   });
+   dlgdatosrenfac.afterClosed().subscribe(res => {
+    console.log("Regresando del Dialog", res);
+
+     this.articuloscotizados[id].folio = res.renfac.folio;
+     this.articuloscotizados[id].serie = res.renfac.serie;
+     this.articuloscotizados[id].seriemotor = res.seriemotor;
+     this.articuloscotizados[id].aduana = res.aduana;
+     this.articuloscotizados[id].marca = res.marca;
+     this.articuloscotizados[id].pedimento = res.pedimento;
+     this.articuloscotizados[id].esmoto = res.esmoto;
+     console.log("ya actualicé", this.articuloscotizados[id]);
+
+   }
+  );
 }
 
 regresar() {

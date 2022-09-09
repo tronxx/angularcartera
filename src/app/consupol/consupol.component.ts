@@ -236,7 +236,7 @@ imprimirpoliza() {
   this.serviciopolizas.obtener_datos_poliza(JSON.stringify(params)).subscribe(
     respu => {
       let mirespu_z = respu;
-      console.log("Debug: 216 mirespu_z.status", mirespu_z.status);
+      //console.log("Debug: 216 mirespu_z.status", mirespu_z.status);
       if(mirespu_z.status != "C") {
         this.checa_si_cerrar_poliza("Poliza Abierta, Se va a Cerrar al Imprimir, seguro de continuar ?");
       } else {

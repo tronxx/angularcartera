@@ -16,6 +16,16 @@
               </option>
         </select>
         <br>
+        <label class="ancho80" for="vendedor">Vendedor</label>
+        <select name="codvnd" id="codvnd" 
+        [(ngModel)]= "codvnd" >
+            <option *ngFor="let mivendedor of vendedores" value="{{mivendedor.codvnd}}"
+            [selected]="mivendedor.codvnd == codvnd">
+            {{mivendedor.codvnd}} {{mivendedor.nombre}}
+            </option>
+        </select>
+        <br>
+
         <label class="ancho80" for="ticte">Tipo Cte</label>
         <select name="ticte" id="ticte" value="{{ticte}}" 
              [(ngModel)]= "ticte" (blur)="selecciona_tarjetas_tc()" >
@@ -39,7 +49,7 @@
         <div>
             <button mat-raised-button color="primary" (click)="agregar_renfac()" >
                 <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
-                Agregar Renglon
+                Agregar Artículo
             </button>
             <br>
     
@@ -57,21 +67,44 @@
                 <tbody>
                     <tr *ngFor="let mirenfac of articuloscotizados; first as isFirst">
                         <td>{{mirenfac.codigo}}</td>
-                        <td>{{mirenfac.concepto}} </td>
+                        <td>{{mirenfac.concepto}} 
+                            <div *ngIf="mirenfac.folio">
+                                <p> Folio: {{mirenfac.folio}} 
+                                    Serie: {{mirenfac.serie}}
+                                </p>
+                                <p *ngIf="mirenfac.esmoto">
+                                    Serie Motor: {{mirenfac.seriemotor}}
+                                    Pedimento: {{mirenfac.pedimento}}
+                                    Aduana: {{mirenfac.aduana}}
+                                    Marca: {{mirenfac.marca}}
+                                </p>
+    
+    
+                            </div>
+                        </td>
                         <td> {{mirenfac.canti}} </td>
                         <td>
-                            <label for="" *ngIf="oferta && mirenfac.esoferta">Oferta <mat-icon> local_offer</mat-icon></label> 
                             {{mirenfac.importe | currency }}
                         </td>
-                        <td> {{mirenfac.importe + mirenfac.iva | currency}} </td>
-                        <button [disabled]="escerrada" mat-raised-button color="warn" (click)="eliminar_renfac(mirenfac)" >
-                            <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
-                            Eliminar
-                        </button>
-                        <button  *ngIf="!isFirst" mat-raised-button color="primary" (click)="subir_renfac(mirenfac)" >
-                            <mat-icon aria-hidden="false" aria-label="Example new icon">keyboard_arrow_up</mat-icon>
-                            Subir
-                        </button>
+                        <td> 
+                            <label for="" *ngIf="oferta && mirenfac.esoferta">Oferta <mat-icon> local_offer</mat-icon></label> 
+                            {{mirenfac.importe + mirenfac.iva | currency}} 
+                        </td>
+                        <td>
+                            <button  mat-raised-button color="primary" (click)="acompletar_datos_renfac(mirenfac)" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
+                                Acompletar Datos
+                            </button>
+                            <button [disabled]="escerrada" mat-raised-button color="warn" (click)="eliminar_renfac(mirenfac)" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
+                                Eliminar
+                            </button>
+                            <button  *ngIf="!isFirst" mat-raised-button color="primary" (click)="subir_renfac(mirenfac)" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">keyboard_arrow_up</mat-icon>
+                                Subir
+                            </button>
+    
+                        </td>
     
                     </tr>
                 </tbody>

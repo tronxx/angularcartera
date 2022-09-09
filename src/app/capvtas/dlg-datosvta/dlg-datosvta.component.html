@@ -1,7 +1,9 @@
 <div mat-dialog-content>
     <form #formularioCliente="ngForm" (ngSubmit)="formularioEnviado()">
         <label for="codigo">Codigo
-            <input [disabled]="codigodisabled" type="text" name="codigo" id="codigo" size="12" [(ngModel)]="numcli_z">
+            <input [disabled]="codigodisabled" type="text" name="codigo" 
+            (blur)="buscarcliente()"
+            id="codigo" size="12" [(ngModel)]="numcli_z">
         </label>
 
         <div name="datoscliente">
@@ -16,68 +18,21 @@
                     </select>
         
                 </label>
-                <label for="ubicacion">Ubicacion 
-                    <select name="ubicacion" id="ubicacion" value="{{nvocli.ubica}}" 
-                     [(ngModel)]= "nvocli.ubica" (blur)="selecciona_tarjetas_tc()"  >
-                    <option *ngFor="let miubica of ubivta" value="{{miubica.ubica}}"
-                      [selected]="nvocli.ubica == miubica.ubica">
-                      {{miubica.ubica}} {{miubica.nombre}}
-                      </option>
-                    </select>
-                </label>
-                <label class="ancho80" for="seriefac">Serie</label> 
-                <input [disabled]="codigodisabled" type="text" size="5" [disabled]="codigodisabled" name="serifac" id="seriefac" > 
+                <label class="ancho80" for="seriefac">Serie Factura</label> 
+                <input [disabled]="codigodisabled" type="text" size="5" [(ngModel)]="seriefac_z" [disabled]="codigodisabled" name="serifac" id="seriefac" > 
                 <label for="numfac">Numero</label> 
-                <input [disabled]="codigodisabled"  type="text" size="8" name="numfac" id="numfac"  > 
+                <input [disabled]="codigodisabled"  type="text" size="8"  [(ngModel)]="numfac_z" name="numfac" id="numfac"  > 
                 <label  for="fechafac">Fecha</label> 
                 <input [disabled]="codigodisabled"  type="date" [(ngModel)]="fechavta_z" size="10" name="fechafac" id="fechafac"> 
             </div>
             <br>
 
-            <label for="qom">Periodicidad Pago
-                <select name="qom" id="qom" value="{{nvocli.qom}}" (blur)="selecciona_letras_cliente()" [(ngModel)]= "nvocli.qom" >
-                    <option *ngFor="let miqom of tipoqom" value="{{miqom.clave}}"
-                      [selected]="nvocli.qom == miqom.clave">
-                      {{miqom.descri}}
-                    </option>
-                </select>
-            </label>
-            <br>
-            <label for="ticte">Tipo Cte
-                <select name="ticte" id="ticte" value="{{nvocli.ticte}}" 
-                 [(ngModel)]= "nvocli.ticte" (blur)="selecciona_tarjetas_tc()" >
-                <option *ngFor="let miticte of tictes_z" value="{{miticte.clave}}"
-                  [selected]="nvocli.ticte == miticte.clave">
-                  {{miticte.clave}} {{miticte.descri}}
-                  </option>
-                </select>
-            </label>
-            <div *ngIf="contarjetatc">
-                <label for="tipotc">Tarjeta</label>
-                <select name="tipotc" id="tipotc" value="{{nvocli.tarjetatc}" 
-                 [(ngModel)]= "nvocli.tarjetatc" >
-                <option *ngFor="let mitipotc of tarjetastc" value="{{mitipotc.clave}}"
-                  [selected]="nvocli.tarjetatc == mitipotc.clave">
-                  {{mitipotc.clave}} {{mitipotc.descri}}
-                  </option>
-                </select>
-            </div>
-            <br>
             <label *ngIf="!canledisabled" for="enganche">Enganche
                 <input type="number" name="enganche" id="enganche" size="10" 
                 (blur)="calcu_precio_lista()" [(ngModel)]="nvocli.enganche">
             </label>
-            <label *ngIf="!canledisabled" for="nulets">Numero Letras
-                <select name="nulets" id="nulets" value="{{nvocli.nulet}}" 
-                 [(ngModel)]= "nvocli.nulet" >
-                <option *ngFor="let miletra of nulets" value="{{miletra.nulets}}"
-                  [selected]="nvocli.nulet == miletra.nulets">
-                  {{miletra.nulets}}
-                  </option>
-                </select>
-            </label>
     
-                <mat-card>
+            <mat-card>
                     <mat-card-title>Nombre del Cliente</mat-card-title>
                     <label class="ancho80" for="appat" size="10">Apellido Paterno</label>
                         <input type="text" name="appat" id="appat" size="30" [(ngModel)]="nvocli.appat" 
@@ -95,7 +50,7 @@
                     <label class="ancho80" for="nombre2"  size="10">Nombre2</label>
                         <input type="text" name="nombre2" id="nombre2" size="30" [(ngModel)]="nvocli.nompil2"
                         oninput="this.value = this.value.toUpperCase()" >
-                </mat-card>
+            </mat-card>
             <mat-card>
                 <mat-card-title>Direccion del Cliente</mat-card-title>
                 <label class="ancho80" for="calle">Calle y Cruzamientos</label>
@@ -130,6 +85,34 @@
             <label for="tasaiva">Tasa Iva
                 <input type="number" name="tasaiva" id="tasaiva" size="10" [(ngModel)]="nvocli.piva" >
             </label>
+            <mat-card *ngIf="conaval" >
+                <mat-card-title>Datos del Aval</mat-card-title>
+                <label class="ancho80" for="appataval" size="10">Apellido Paterno</label>
+                <input type="text" name="appataval" id="appataval" size="30" [(ngModel)]="nvoaval.appat" 
+                    oninput="this.value = this.value.toUpperCase()">
+    
+                <br>
+                <label class="ancho80" for="apmataval" size="10" >Apellido Materno</label>
+                <input type="text" name="apmataval" id="apmataval" size="30" [(ngModel)]="nvoaval.apmat" 
+                    oninput="this.value = this.value.toUpperCase()">
+                <br> 
+                <label class="ancho80" for="nombre1aval" size="10">Nombre1</label>
+                <input type="text" name="nombre1aval" id="nombre1aval" size="30" [(ngModel)]="nvoaval.nompil1"
+                    oninput="this.value = this.value.toUpperCase()" >
+                <br>
+                <label class="ancho80" for="nombre2aval"  size="10">Nombre2</label>
+                <input type="text" name="nombre2aval" id="nombre2aval" size="30" [(ngModel)]="nvoaval.nompil2"
+                    oninput="this.value = this.value.toUpperCase()" >
+                <br>
+                <label class="ancho80" for="dir1aval"  size="10">Direccion</label>
+                <input type="text" name="dir1aval" id="dir1aval" size="30" [(ngModel)]="nvoaval.dirav1"
+                        oninput="this.value = this.value.toUpperCase()" >
+                <br>
+                <label class="ancho80" for="dir2aval"  size="10">Direccion 2</label>
+                <input type="text" name="dir2aval" id="dir2aval" size="30" [(ngModel)]="nvoaval.dirav2"
+                                oninput="this.value = this.value.toUpperCase()" >
+            </mat-card>
+    
         </div>    
     </form>
     </div>

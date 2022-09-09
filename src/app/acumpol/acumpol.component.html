@@ -13,6 +13,10 @@
         <input size="20" type="date"  name="fechafinal"  [(ngModel)]="strfechafin" id="fechafinal">
     </label>
     <button mat-raised-button color="primary" (click)="buscarpolizas()">Aceptar</button>
+    <button mat-raised-button color="primary" (click)="imprimir_poliza()">
+        <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+        Imprimir  Poliza
+    </button>
 </div>
 <hr>
 <div *ngIf="polizas">

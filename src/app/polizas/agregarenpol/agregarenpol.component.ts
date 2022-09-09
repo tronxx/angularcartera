@@ -75,6 +75,8 @@ export class AgregarenpolComponent implements OnInit {
   PrecioListaMinimoCarta = 0;
   sdoparacarta_z = 0;
   compracli_z = "";
+  recibido=0;
+  cambio=0;
 
 
   tipospagos =[ 
@@ -212,7 +214,7 @@ export class AgregarenpolComponent implements OnInit {
       this.sdoparacarta_z = this.prlet_z * this.CartaSaldadosMesesAntes;
       if(this.qom_z == "Q") this.sdoparacarta_z / 2;
       this.tasarecargo_z = 10;
-      this.strfechavta = this.cliente.numcli.substring(2,6);
+      this.strfechavta = this.cliente.numcli.substring(2,8);
       //this.alerta("strfechavta = " + this.strfechavta);
       if( this.strfechavta >= "220101" ||
          (this.strfechavta >= "210901" && this.qom_z == "Q" && 
@@ -311,6 +313,8 @@ export class AgregarenpolComponent implements OnInit {
        //formatDate(this.vence_z, "dd-mm-YYYY", 'es-MX');
     }
     this.calculaConcepto();
+    this.recibido = this.datospago.neto;
+    this.calcula_cambio();
 
  }
 
@@ -472,6 +476,7 @@ calcula_bonif_extra () {
     message_z = message_z + " Meses Adelanto " + mesesanticip_z.toString();
     this.alerta(message_z);
     this.datospago.recobon += bonifextra_z;
+    this.calculaNeto();
   }
   
 }
@@ -499,6 +504,10 @@ calculaNeto () {
     this.datospago.neto = this.datospago.importe + this.datospago.recobon;
     //console.log("Debug Recargos:", this.datospago.importe, " ", this.datospago.recobon, " Neto", this.datospago.neto);
   }
+  
+  this.recibido = this.datospago.neto;
+  console.log("Voy a Calcular cambio: recibido:", this.recibido);
+  this.calcula_cambio();
   //console.log("Debug nETO:", this.datospago.neto);
 }
 
@@ -612,7 +621,14 @@ sel_tipopago() {
   // this.alerta("this.tipomovsel_z:" + this.tipomovsel_z);
 }
 
+calcula_cambio() {
+  this.cambio = this.recibido -  this.datospago.neto;
+}
 
+onChangeObj(recbido: any) {
+  this.calcula_cambio();
+
+}
 
 siaceptarpago() {
     let estemov_z = this.codcli_z + ":" + this.datospago.concepto + " " + this.datospago.conceptocompl +  ":" + this.datospago.importe.toString;

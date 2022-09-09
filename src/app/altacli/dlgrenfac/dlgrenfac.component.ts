@@ -57,6 +57,7 @@ export class DlgrenfacComponent implements OnInit {
   editdescri = false;
   seriemanual = false;
   almacen = "";
+  noescomplementodatos_z = false;
 
   constructor(
     public dialog: MatDialog, public dialogRef: MatDialogRef<DlgrenfacComponent>,
@@ -69,6 +70,18 @@ export class DlgrenfacComponent implements OnInit {
   ngOnInit(): void {
     this.renfac.canti = 1;
     let datosparam = JSON.parse(this.message);
+    if(datosparam.complementodatos) {
+      this.noescomplementodatos_z = datosparam.noescomplementodatos;
+    }
+    this.nuevorenfac.renfac.codigo = datosparam.codigo;
+    this.nuevorenfac.renfac.folio = datosparam.folio;
+    this.nuevorenfac.renfac.serie = datosparam.serie;
+    this.nuevorenfac.esmoto = datosparam.esmoto;
+    this.nuevorenfac.seriemotor = datosparam.seriemotor;
+    this.nuevorenfac.pedimento = datosparam.pedimento;
+    this.nuevorenfac.aduana = datosparam.aduana;
+    this.nuevorenfac.marca = datosparam.marca;
+    if(datosparam.codigo) this.busca_articulo();
   }
 
   closeyes() {
@@ -144,7 +157,7 @@ export class DlgrenfacComponent implements OnInit {
 
   verstatus() {
     this.seriemanual = !this.seriemanual;
-    console.log("Estatus seriemanual:", this.seriemanual);
+    //console.log("Estatus seriemanual:", this.seriemanual);
     
   }
 
