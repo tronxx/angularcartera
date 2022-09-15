@@ -12,6 +12,9 @@ import { Renfacfo } from '../../models';
 import { Cliente } from '../../models/clientes';
 import { DlgrenfacComponent } from '../dlgrenfac/dlgrenfac.component';
 import { DlgdatosfacturaComponent  } from '../dlgdatosfactura/dlgdatosfactura.component';
+import { Ofertas } from '../../models';
+import { Factorvtacred } from '../../models';
+import { Tabladesctocont } from '../../models';
 
 @Component({
   selector: 'app-facturacli',
@@ -41,6 +44,11 @@ export class FacturacliComponent implements OnInit {
   msgerror_z = "";
   clientecred = false;
   rotarfac = false;
+  factortvtacrd? : Factorvtacred;
+  factoresvtacrd: Factorvtacred[] = [];
+  tabladesctocont? : Tabladesctocont;
+  tabladesctoscont : Tabladesctocont[] = [];
+  ofertas: Ofertas[] = [];
 
 
   constructor(
@@ -58,6 +66,7 @@ export class FacturacliComponent implements OnInit {
     const micli = this.buscar_cliente(this.codcli_z);
     this.linkcliente = "/altacli/" + this.codcli_z;
     this.carga_rotar_factura();
+    this.carga_ofertas();
     
   }
 
@@ -290,7 +299,12 @@ eliminar_renfac(mirenfac: Renfacfo) {
 agregar_renfac() {
   let params = {
     idcli: this.idcli,
-    modo: "NUEVO"
+    modo: "NUEVO",
+    ticte: this.cliente?.ticte,
+    qom: this.cliente?.qom,
+    nulets: this.cliente?.nulet,
+    tarjeta: 'TARJETA',
+    complementodatos: false
   }
   const dialogmov = this.dialog.open(DlgrenfacComponent, {
     width:'700px',
@@ -439,5 +453,15 @@ regresar() {
   }
   this.miroute.navigateByUrl('altacli/' + this.codcli_z);
 }
+
+carga_ofertas(){
+  this.servicioclientes.buscar_aofertas_json().subscribe(
+    respu => {
+      this.ofertas = respu;
+    }
+  );
+  
+}
+
 
 }

@@ -49,7 +49,9 @@
                 </div>
 
                 <div *ngIf="noescomplementodatos_z">
-                    <label class="ancho80" for="preciou">Precio.U</label>
+                    <label class="ancho80" for="preciou">Precio.U
+                        <mat-icon *ngIf="nuevorenfac.oferta == conoferta"> local_offer</mat-icon>
+                    </label>
                     <input type="number" size="10" name="preciou" id="preciou"
                     [disabled]="!datoshabilitados"
                     [(ngModel)]="renfac.preciou">

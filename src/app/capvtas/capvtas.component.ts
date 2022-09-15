@@ -24,6 +24,7 @@ import { Vendedor } from '../models/vendedor';
 import { DlgDatosvtaComponent } from './dlg-datosvta/dlg-datosvta.component';
 import { DlgrenfacComponent } from '../altacli/dlgrenfac/dlgrenfac.component';
 import { DlgbusarticuloComponent } from '../common/dlgbusarticulo/dlgbusarticulo.component';
+import { DatossolicitComponent } from '../altacli/datossolicit/datossolicit.component';
 
 interface Nvorenfac {
   id: number;
@@ -592,7 +593,7 @@ aceptar() {
 
 }
 
-pide_datos_cliente() {
+async pide_datos_cliente() {
   if(this.ticte == "CC" || this.ticte == "TC") {
      this.enganche = this.totgral;
   }
@@ -606,10 +607,16 @@ pide_datos_cliente() {
     width:'700px',
     data: JSON.stringify(params_z)
   });
-  dialogmov.afterClosed().subscribe(res => { 
+  dialogmov.afterClosed().subscribe(async res => { 
     // Aqui ya tengo los datos del Cliente, y total P.Lista
     // y total Cargos y QOM/TC
-    console.log("Regresando de pedir datos cliente", res);
+    try {
+      const respu = await this.grabar_cliente(JSON.stringify(res));
+      let idcli = respu.idcli;
+      this.alerta("Se ha agregado al cliente" + idcli.toString());
+    } catch {
+      
+    }
 
   });
 
@@ -651,6 +658,36 @@ acompletar_datos_renfac(renfac: Nvorenfac){
 }
 
 regresar() {
+
+}
+
+async grabar_cliente(datoscliente: string): Promise <any> {
+  let mirespu = {}
+  let nvocli = JSON.parse(datoscliente);
+  nvocli.modo = "agregar_cliente";
+  nvocli.clienterespu.modo="agregar_cliente";
+
+  nvocli.modo = "agregar_cliente";
+  nvocli.fechavta = "2022-09-09";
+  nvocli.clienterespu.qom = this.qom;
+  nvocli.clienterespu.ticte = this.ticte;
+  nvocli.clienterespu.ubica = this.ubica;
+  nvocli.clienterespu.opcion = "";
+  nvocli.clienterespu.enganche = this.enganche;
+  nvocli.clienterespu.nulet = this.nulet;
+  nvocli.clienterespu.canle = this.preciolet;
+  nvocli.clienterespu.cargos = this.totgral;
+  nvocli.clienterespu.preciolista = this.preciolista_z;
+  nvocli.clienterespu.tarjetatc = this.mitarjetatc;
+  this.servicioclientes.agrega_nuevo_cliente(JSON.stringify(nvocli)).subscribe( res =>{
+    mirespu = res;
+  });
+  return (mirespu);
+
+}
+
+async agregar_factura(datosagente: string): Promise <any> {
+  
 
 }
 
