@@ -18,12 +18,15 @@
                     </select>
         
                 </label>
-                <label class="ancho80" for="seriefac">Serie Factura</label> 
-                <input [disabled]="codigodisabled" type="text" size="5" [(ngModel)]="seriefac_z" [disabled]="codigodisabled" name="serifac" id="seriefac" > 
-                <label for="numfac">Numero</label> 
-                <input [disabled]="codigodisabled"  type="text" size="8"  [(ngModel)]="numfac_z" name="numfac" id="numfac"  > 
-                <label  for="fechafac">Fecha</label> 
-                <input [disabled]="codigodisabled"  type="date" [(ngModel)]="fechavta_z" size="10" name="fechafac" id="fechafac"> 
+                <div>
+                    <h2>Datos de la Factura</h2>
+                    <label class="ancho80" for="seriefac">Serie Factura</label> 
+                    <input [disabled]="codigodisabled" type="text" size="5" [(ngModel)]="seriefac_z" [disabled]="codigodisabled" name="serifac" id="seriefac" > 
+                    <label for="numfac">Numero</label> 
+                    <input [disabled]="codigodisabled"  type="text" size="8"  [(ngModel)]="numfac_z" name="numfac" id="numfac"  > 
+                    <label  for="fechafac">Fecha</label> 
+                    <input [disabled]="codigodisabled"  type="date" [(ngModel)]="fechavta_z" size="10" name="fechafac" id="fechafac"> 
+                </div>
             </div>
             <br>
 

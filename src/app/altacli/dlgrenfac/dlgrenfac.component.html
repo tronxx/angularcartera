@@ -10,7 +10,7 @@
                     oninput="this.value = this.value.toUpperCase()" 
                     >
                     <button mat-raised-button 
-                    color="primary"   (click)="busca_articulo()">Aceptar Articulo</button>
+                    color="primary"   (click)="busca_articulo()">Buscar Articulo</button>
                     <br>
     
                 </div>
@@ -33,13 +33,14 @@
                                     {{miserie.serie}}
                                 </option>
                             </select>
-                            <label for="">La serie no está en la lista
-                                <input type="checkbox" [(ngModel)]="seriemanual" 
-                                name="seriemaual" id="seriemaual" (click)="verstatus()" >
-                            </label>
+                            <br>
+                            <mat-slide-toggle name="seriemaual" id="seriemaual" 
+                            (click)="verstatus()" [(ngModel)]="seriemanual">
+                              La serie no está en la lista
+                            </mat-slide-toggle>
                         </div>
         
-                        <input *ngIf="seriemanual" type="text" name="serie" id="serie" size="20"
+                        <input *ngIf="seriemanual" type="text" name="serie" id="serie" size="30"
                         [(ngModel)] = "renfac.serie"
                         [disabled]="!datoshabilitados"
                         (blur)="valida_serie()"
@@ -51,6 +52,7 @@
                 <div *ngIf="noescomplementodatos_z">
                     <label class="ancho80" for="preciou">Precio.U
                         <mat-icon *ngIf="nuevorenfac.oferta == conoferta"> local_offer</mat-icon>
+                        Oferta
                     </label>
                     <input type="number" size="10" name="preciou" id="preciou"
                     [disabled]="!datoshabilitados"

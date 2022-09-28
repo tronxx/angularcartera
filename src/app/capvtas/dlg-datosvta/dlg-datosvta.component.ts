@@ -161,7 +161,7 @@ export class DlgDatosvtaComponent implements OnInit {
     this.nvocli.ticte = params_z.ticte;
     this.nvocli.enganche = params_z.enganche;
     this.conaval = true;
-    if(params_z.ticte == "CC" || params_z.tite == "TC") {
+    if(params_z.ticte == "CC" || params_z.ticte == "TC") {
       this.conaval = false;
       this.nvocli.qom = "C";
     }

@@ -838,6 +838,26 @@ export class ClientesService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  crear_factura_capvtas( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: Estoy en crea_factura_capvtas parametros:", parametros);
+    let misparams = JSON.parse(parametros);
+
+    console.log("Debug: Estoy en crea_factura_capvtas ", misparams);
+  
+    return this.http.post<any>(miurl, JSON.stringify( misparams), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Facturas')),
+      catchError(this.handleError<any>('Ocurrio un error en Post obten busca_factura_altas'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+
   agregar_renfac_altas( parametros: string): Observable<any> {
     
     let respu_z = "";

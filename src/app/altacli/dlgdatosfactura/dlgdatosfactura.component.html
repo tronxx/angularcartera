@@ -10,7 +10,7 @@
                 <label for="fechafac">Fecha</label> 
                 <input type="date" size="10" name="fechafac" id="fechafac" [(ngModel)] ="factura.fecha"> 
                 <br>
-                <label class="ancho80" for="metpag">Met.Pago {{factura.cvemetodopago }} </label> 
+                <label class="ancho80" for="metpag">Met.Pago</label> 
                 <select name="metpag" id="metpag" value="{{factura.cvemetodopago}}" 
                 [(ngModel)]= "factura.cvemetodopago" >
                    <option *ngFor="let mimetodopago of metodospago" value="{{mimetodopago.clave}}"

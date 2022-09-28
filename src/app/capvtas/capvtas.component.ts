@@ -25,6 +25,7 @@ import { DlgDatosvtaComponent } from './dlg-datosvta/dlg-datosvta.component';
 import { DlgrenfacComponent } from '../altacli/dlgrenfac/dlgrenfac.component';
 import { DlgbusarticuloComponent } from '../common/dlgbusarticulo/dlgbusarticulo.component';
 import { DatossolicitComponent } from '../altacli/datossolicit/datossolicit.component';
+import { DlgdatosfacturaComponent  } from '../altacli/dlgdatosfactura/dlgdatosfactura.component';
 
 interface Nvorenfac {
   id: number;
@@ -77,6 +78,7 @@ export class CapvtasComponent implements OnInit {
  
 
   codcli_z = "";
+  codigo_z = "";
   idcli = 0;
   idfac = 0;
   cargoscli_z = 0;
@@ -121,6 +123,8 @@ export class CapvtasComponent implements OnInit {
   articuloscotizados : Nvorenfac[] = [];
   articulocotizado?: Nvorenfac;
   esvalido=false;
+  esmoto = "S";
+  datosfactura_z = "";
   
   tictes_z = [
     { clave:"PC", descri:"PRIMER CREDITO"},
@@ -141,8 +145,7 @@ export class CapvtasComponent implements OnInit {
     public dialog: MatDialog, 
     private configuracion: ConfiguracionService,
     private servicioclientes: ClientesService,
-    private route : ActivatedRoute,
-    private miroute: Router
+    private route : Router
 
   ) { }
 
@@ -177,9 +180,11 @@ export class CapvtasComponent implements OnInit {
   }
 
   agregar_renfac() {
+    console.log("El codigo es", this.codigo_z);
+    
     const dialogmov = this.dialog.open(DlgbusarticuloComponent, {
       width:'700px',
-      data: ""
+      data: this.codigo_z
     });
     let piva = 16;
     let proferta = 0;
@@ -308,7 +313,7 @@ export class CapvtasComponent implements OnInit {
         this.msgerror_z = "Forma de Pago Invalida";
       } else {
         if(!hayoferta) {
-          this.descto = this.tottotal * this.factordscto / 100;
+          this.descto = Math.floor(this.tottotal * this.factordscto / 100);
           this.totgral = this.tottotal - this.descto;
         }
       }
@@ -425,41 +430,6 @@ alerta(mensaje: string) {
   });
   dialogref.afterClosed().subscribe(res => {
     //console.log("Debug", res);
-  });
-
-}
-
-crear_factura() {
-  let params_z = {
-    fechavta: this.fechavta,
-    factura:  <Factura> { },
-    ubiage: this.ubica,
-    modo: "NUEVO"
-  }
-  params_z.factura.idcli = this.idcli;
-  params_z.factura.idfac = -1;
-  const dialogmov = this.dialog.open(DlgDatosvtaComponent, {
-    width:'700px',
-    data: JSON.stringify(params_z)
-  });
-  dialogmov.afterClosed().subscribe(res => {
-    if (res) {
-      let params_z = {
-        modo:"NUEVOx",
-        idcli:this.idcli,
-        factura:res
-      }
-      this.servicioclientes.crear_factura_altas(JSON.stringify(params_z)).subscribe( resalta=> {
-
-        if(resalta.status == "OK") {
-          this.busca_factura();
-        } else {
-          this.alerta("Error:" + resalta.error);
-          console.log("Debug: Error", resalta);
-        }
-      });
-
-    }
   });
 
 }
@@ -611,6 +581,7 @@ async pide_datos_cliente() {
     // Aqui ya tengo los datos del Cliente, y total P.Lista
     // y total Cargos y QOM/TC
     try {
+      let nfac = res.factura;
       const respu = await this.grabar_cliente(JSON.stringify(res));
       let idcli = respu.idcli;
       this.alerta("Se ha agregado al cliente" + idcli.toString());
@@ -627,7 +598,8 @@ acompletar_datos_renfac(renfac: Nvorenfac){
   
    let id  = renfac.id;
    let params_z = {
-    "noescomplementodatos": false,
+    "escomplementodatos": "SI",
+    "pedircodigo": "NO",
     "codigo": renfac.codigo,
     "seriemotor": renfac.seriemotor,
     "aduana": renfac.aduana,
@@ -677,12 +649,72 @@ async grabar_cliente(datoscliente: string): Promise <any> {
   nvocli.clienterespu.nulet = this.nulet;
   nvocli.clienterespu.canle = this.preciolet;
   nvocli.clienterespu.cargos = this.totgral;
-  nvocli.clienterespu.preciolista = this.preciolista_z;
+  nvocli.clienterespu.preciolista = (this.tottotal - this.descto) / ( 1 + nvocli.clienterespu.piva / 100);
   nvocli.clienterespu.tarjetatc = this.mitarjetatc;
+
   this.servicioclientes.agrega_nuevo_cliente(JSON.stringify(nvocli)).subscribe( res =>{
     mirespu = res;
+    let factura_z = JSON.parse(this.datosfactura_z);
+    factura_z.idcli = nvocli.idcli;
+    let miotrorenfac : Nvorenfac[] = [];
+    this.articuloscotizados.forEach(ren => {
+      if(ren.esoferta) {
+        ren.preciou = ren.proferta
+      }
+      miotrorenfac.push(ren)
+    });
+
+    let params_z = {
+      modo:"crear_cli_fac_capvtas",
+      idcli:res.idcli,
+      codigo:res.codigo,
+      factura:factura_z,
+      numrenglones:this.articuloscotizados.length,
+      renglones:miotrorenfac
+    }
+    console.log("Datos p Agregar Fac:", params_z);
+    
+    this.servicioclientes.crear_factura_capvtas(JSON.stringify(params_z)).subscribe( resalta=> {
+
+       if(resalta.status == "OK") {
+        this.alerta("Cliente Agregado");
+        let minvourl_z = [
+          '/altacli/' + res.codigo
+        ];
+        //this.alerta("Voy a hacer route navigate: " + minvourl_z + " Respu:" + JSON.stringify(mirespu_z));
+        this.route.navigate(minvourl_z)
+
+       } else {
+         this.alerta("Error:" + resalta.error);
+         console.log("Debug: Error", resalta);
+       }
+    });
+
+
   });
   return (mirespu);
+
+}
+
+pedir_datos_fac() {
+  let params_z = {
+    fechavta:  this.configuracion.fecha_a_str(new Date(), "YYYY-mm-dd"),
+    factura:  <Factura> { },
+    ubiage: this.ubica,
+    modo: "NUEVO"
+  }
+  params_z.factura.idcli = this.idcli;
+  params_z.factura.idfac = -1;
+  const dialogmov = this.dialog.open(DlgdatosfacturaComponent, {
+    width:'700px',
+    data: JSON.stringify(params_z)
+  });
+  dialogmov.afterClosed().subscribe(res => {
+    if(res) {
+      this.datosfactura_z = JSON.stringify(res);
+    }
+
+  });
 
 }
 

@@ -35,6 +35,7 @@ export class FacturacliComponent implements OnInit {
   prodfin_z = 0;
   fechavta = ""
   ubiage = "";
+  tarjetatc_z ="";
   tempo_z = "Tempo:";
   escerrada = false;
   fechacierre_z = new Date();
@@ -303,8 +304,9 @@ agregar_renfac() {
     ticte: this.cliente?.ticte,
     qom: this.cliente?.qom,
     nulets: this.cliente?.nulet,
-    tarjeta: 'TARJETA',
-    complementodatos: false
+    ubica: this.cliente?.ubica,
+    tarjeta: this.tarjetatc_z,
+    complementodatos: "N"
   }
   const dialogmov = this.dialog.open(DlgrenfacComponent, {
     width:'700px',
@@ -463,5 +465,20 @@ carga_ofertas(){
   
 }
 
+busca_mi_tc(idcli_z : number) {
+  var params_z = {
+    modo : "buscar_cli_tarjeta_tc",
+    codigo: this.codcli_z,
+    idcli : idcli_z
+  }
+  console.log("Debug: Estoy en busca tarjeta tc cliente ", idcli_z);
+  this.servicioclientes.buscar_cli_tarjetas_tc(JSON.stringify(params_z)).subscribe(
+    respu => {
+      if(respu) {
+        this.tarjetatc_z = respu.clave;
+      } 
+    }
+  );
+}
 
 }
