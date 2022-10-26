@@ -39,6 +39,9 @@ export class DlgbusarticuloComponent implements OnInit {
       respu => {
         if(respu.length > 0) {
           this.articulos = respu;
+          if(this.articulos.length < 2) {
+            this.select_articulo(this.articulos[0]);
+          }
         } else {
           this.messages_z = "No hay Articulos que coincidan";
           console.log("Debug: No hay Articulos que coincidan:", this.codigo_z);

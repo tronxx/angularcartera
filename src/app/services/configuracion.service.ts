@@ -258,6 +258,9 @@ export class ConfiguracionService {
     if(formato == "YYYYmmdd") {
       strfecha_z = anu_z + mes_z +  dia_z;
     }
+    if(formato == "yymmdd") {
+      strfecha_z = anu_z.substring(2,4) + mes_z +  dia_z;
+    }
 
     if(formato == "dd-mm-YYYY") {
       strfecha_z = dia_z +  "-" + mes_z + "-" + anu_z ;

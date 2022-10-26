@@ -7,6 +7,10 @@
             </button>
 
     <form #formularioCliente="ngForm">
+        <label class="ancho80" for="codcartera">Codigo Cartera</label>
+        <input type="text" name="codcartera" id="codcartera" size="10" 
+        [(ngModel)]="codcartera_z" (blur)="grabar_datos_venta()" >
+        <br>
         <label class="ancho80" for="ubicacion">Ubicacion </label>
         <select name="ubicacion" id="ubicacion" value="ubica"
              [(ngModel)]= "ubica" (blur)="selecciona_tarjetas_tc()"  >
@@ -15,6 +19,15 @@
               {{miubica.ubica}} {{miubica.nombre}}
               </option>
         </select>
+        <label for="status">Status
+            <select name="status" id="status" value="{{nvoclistatus}}" 
+             [(ngModel)]= "nvoclistatus" (blur)="verficar_cambio_status()" >
+             <option *ngFor="let mistatus of statuscli" value="{{mistatus.clave}}"
+              [selected]="nvoclistatus == mistatus.clave">
+              {{mistatus.descri}}
+             </option>
+            </select>
+        </label>
         <br>
         <label class="ancho80" for="vendedor">Vendedor</label>
         <select name="codvnd" id="codvnd" 
@@ -72,9 +85,11 @@
                         <td>{{mirenfac.codigo}}</td>
                         <td>{{mirenfac.concepto}} 
                             <div *ngIf="mirenfac.folio">
-                                <p> Folio: {{mirenfac.folio}} 
+                                 Folio: {{mirenfac.folio}} 
+                                 <p *ngIf="mirenfac.serie">
                                     Serie: {{mirenfac.serie}}
-                                </p>
+                                 </p>
+                                
                                 <p *ngIf="mirenfac.esmoto == esmoto">
                                     Serie Motor: {{mirenfac.seriemotor}}
                                     Pedimento: {{mirenfac.pedimento}}
@@ -152,6 +167,7 @@
             </div>
             <label class="ancho160" for="totgral">Total Venta</label>
             <input type="text" id="totgral" readonly name="totgral" value="{{totgral | currency}} ">
+            <label for="">Tasa Descto {{this.factordscto}} </label>
             <br>
             <div *ngIf="hayerror">
                 <p class="error">{{msgerror_z}} <mat-icon class="red-icon">warning</mat-icon> </p>
@@ -162,10 +178,11 @@
                 <mat-icon aria-hidden="false" aria-label="Example new icon">receipt</mat-icon>
                  Acompletar datos Factura
                 </button>
-            <button mat-raised-button color="primary" (click)="aceptar()"  >
+            <button [disabled]="!yapedidatos" mat-raised-button color="primary" (click)="aceptar()"  >
                 <mat-icon aria-hidden="false" aria-label="Example new icon">check_circle_outline</mat-icon>
                  Proceder a Levantar la Venta
                 </button>
+                <p>Para Proceder a Levantar la Venta debe Acompletar los datos de Factura</p>
             </div>
     
     </form>

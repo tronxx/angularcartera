@@ -30,15 +30,17 @@
     </div>
     
     <div name="datoscliente">
-            <label class="ancho80"  for="nomcli" size="10">Nombre</label>
-            <input readonly type="text" name="nombre" id="nombre" size="40" [(ngModel)]="nvocli.nombre" >
+            <label class="ancho80"  for="nomcli" size="10" >Nombre</label>
+            <input readonly type="text" name="nombre" id="nombre" size="40" 
+            [class.editgray]="esstatus1" value= {{nvocli.nombre}} >
+            {{nvocli.status}}
             <label for="emailcli">Email Cliente</label>
             <input readonly type="text" name="emailcli" id="emailcli" size="30" [(ngModel)]="nvocli.email" >
             <br>
             <label class="ancho80" for="direc">Direccion</label>
             <input readonly type="text" name="direc" id="direc" size="50" [(ngModel)]="nvocli.direc" >
             <label for="pordesc">% Descto
-            <input readonly type="number" name="pordesc" id="pordesc" size="10" [(ngModel)]="nvocli.pdsc" >
+            <input readonly type="number" name="pordesc" id="pordesc" size="5" [(ngModel)]="nvocli.pdsc" >
             </label>
             <label for="ubicacion">Ubicacion 
                 <input readonly type="text" id="ubicacion" name="ubicacion" size="5" [(ngModel)]="nvocli.ubica" >
@@ -57,7 +59,7 @@
         <br>
         <div *ngIf="conaval && aval">
             <label class="ancho80"  for="nomaval" size="10">Aval</label>
-            <input readonly type="text" name="nomaval" id="nomaval" size="40" [(ngModel)]="aval.nomav" >
+            <input readonly type="text" name="nomaval" id="nomaval" size="40" value="{{aval.nomav}} " >
             <label class="ancho80" for="diraval">Direccion</label>
             <input readonly type="text" name="diraval" id="diraval" size="50" value="{{aval.dirav1 + aval.dirav2}}" >
             <br>
@@ -75,57 +77,62 @@
             <input type="text" readonly name="tipotarjetatc" value="{{nvocli.tarjetatc}}">
         </label>
         <label for="mescum">Cumpleaños
-            <input readonly type="text" size="10" name="mescum" id="mescum" [(ngModel)]= "mescum" > /
-            <input readonly type="text" size="5" name="diacum" id="diacum" [(ngModel)]= "nvocli.diacum" >
+            <input readonly type="text" size="10" name="mescum" id="mescum" value = "{{mescum}} / {{nvocli.diacum}} " > 
         </label>
         <br>
         <label class="ancho80" for="jefgpo">Jefe Grupo</label>
-        <input readonly type="text" name="jefgpo" id="jefgpo" size="4" [(ngModel)]="nvocli.promotor">
+        <input readonly type="text" name="jefgpo" id="jefgpo" size="4" value="{{nvocli.promotor}} ">
         <label for="comjef">Comision Jefe Grupo
             <input readonly type="text" name="comjef" id="comjef" size="10" value="{{nvocli.comisionprom | currency}}">
         </label>
         <label for="fpagcom">Fecha Pago Comision
-            <input readonly type="text" name="fpagcom" id="fpagcom" size="10" [(ngModel)]="nvocli.pgocom" >
+            <input readonly type="text" name="fpagcom" id="fpagcom" size="10" value="{{nvocli.pgocom}} " >
         </label>
 
         <label for="tasaiva">Tasa Iva
-            <input readonly type="number" name="tasaiva" id="tasaiva" size="4" [(ngModel)]="nvocli.piva" >
+            <input readonly type="text" name="tasaiva" id="tasaiva" size="3" value ="{{nvocli.piva}} " >
         </label>
 
         <br>
         <label class="ancho80" for="servicio">Servicio</label>
-        <input readonly type="text" name="servicio" id="servicio" size="10" value="{{nvocli.servicio| currency}}">
+        <input readonly type="text" name="servicio" id="servicio" size="6" value="{{nvocli.servicio| currency}}">
         <label for="enganche">Enganche
-            <input readonly type="text" name="enganche" id="enganche" size="10" value="{{nvocli.enganche | currency}}">
+            <input readonly type="text" name="enganche" id="enganche" size="6" value="{{nvocli.enganche | currency}}">
         </label>
         <label for="precon">Precio.Lista
-            <input readonly type="text" name="precon" id="precon" size="10" value="{{nvocli.preciolista | currency}}">
+            <input readonly type="text" name="precon" id="precon" size="6" value="{{nvocli.preciolista | currency}}">
         </label>
         <label for="letra1">Letra 1/1
-            <input readonly type="number" name="letra1" id="letra1" value="{{nvocli.letra1 | currency}}" size="10" [(ngModel)]="nvocli.letra1">
+            <input readonly type="number" name="letra1" id="letra1" size="6" value="{{nvocli.letra1 | currency}}" size="10" [(ngModel)]="nvocli.letra1">
         </label>
         <br>
         <label class="ancho80" for="qom">Q/C</label>
-        <input type="text" readonly value="{{nvocli.qom}} ">
+        <input type="text" readonly size="3" value="{{nvocli.qom}} ">
         <label for="nulet">Numero Letras
-            <input readonly type="text" name="nulet" id="nulet" size="5" value="{{nvocli.nulet}}">
+            <input readonly type="text" name="nulet" id="nulet" size="3" value="{{nvocli.nulet}}">
         </label>
         <label for="canle">Precio x Letra
-            <input readonly type="text" name="canle" id="canle" size="10" value ="{{nvocli.canle | currency}}">
+            <input readonly type="text" name="canle" id="canle" size="6" value ="{{nvocli.canle | currency}}">
         </label>
         <label for="bonif">Bonificacion
-            <input readonly type="text" name="bonif" id="bonif" size="10" value="{{nvocli.bonificacion | currency}}">
+            <input readonly type="text" name="bonif" id="bonif" size="6" value="{{nvocli.bonificacion | currency}}">
         </label>
         <br>
         <label class="ancho80" for="cargos">Cargos</label>
-            <input readonly type="text" name="cargos" id="cargos" value =" {{nvocli.cargos | currency}}">
+            <input readonly type="text" name="cargos" id="cargos" size="6" value =" {{nvocli.cargos | currency}}">
         <label for="cargos">Abonos
-            <input readonly type="text" name="abonos" id="abonos" value =" {{nvocli.cargos | currency}}">
+            <input readonly type="text" name="abonos" id="abonos" size="6" value =" {{nvocli.abonos | currency}}">
         </label>
         <label for="cargos">Saldo
-            <input readonly type="text" name="saldo" id="saldo" value = "{{nvocli.cargos - nvocli.abonos |currency}}" >
+            <input readonly type="text" name="saldo" id="saldo" size="6" value = "{{nvocli.cargos - nvocli.abonos |currency}}" >
         </label>
+        <label class="labelgray" *ngIf="!clienteabierto" for="fechacierre"> Cierre: {{fechacierre_z}} </label>
         <br>
+        
+        <div *ngIf="factura_al_momento">
+            <label for="esmodificable" >Este tipo de Cliente no Permite Modifcar datos económicos</label>
+        </div>
+
         <label class="ancho80" for="compra">Compra</label>
         <input readonly type="text" name="compra" id="compra" size="70" [(ngModel)]="nvocli.compra">
         <label for="idcli">Idcli

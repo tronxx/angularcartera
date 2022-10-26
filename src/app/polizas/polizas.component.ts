@@ -530,6 +530,8 @@ export class PolizasComponent implements OnInit {
             this.alerta("No se pudo agregar ");
             this.enespera = false;
           }
+          this.buscar_renpol();
+          this.checacarta();
           if(respu.exito) {
             this.idrenpol = respu.idrenpol;
             this.uuid_z = respu.uuid;
@@ -550,8 +552,6 @@ export class PolizasComponent implements OnInit {
             // );
             console.log("Se agrego el movimiento:", respu);
           }
-          this.buscar_renpol();
-          this.checacarta();
           this.clienteactivo_z = false;
         }
         this.enespera = false;

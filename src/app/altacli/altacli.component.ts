@@ -55,6 +55,7 @@ export class AltacliComponent implements OnInit {
   conaval = true;
   contarjetatc = false;
   yaagentes_z = false;
+  factura_al_momento = false;
   modoqom_z = [ { clave:"C", descri:"CONTADO"}];
   linkfactura = "";
   linksolicitud = "";
@@ -155,8 +156,10 @@ export class AltacliComponent implements OnInit {
   }
 
   clienteabierto = false;
+  fechacierre_z = "";
   letraspend = false;
   clientecred = false;
+  esstatus1 = false;
 
   constructor(public dialog: MatDialog, 
     private route: ActivatedRoute,
@@ -205,6 +208,7 @@ export class AltacliComponent implements OnInit {
           this.solicitudcli_z = false;
           this.facturacli_z = false;
           this.buscastatuscerrado();
+          this.buscastatusmodificable();
 
           //this.busca_aval(this.cliente.idcli);
           //this.busca_movclis(this.cliente.idcli);
@@ -229,6 +233,27 @@ export class AltacliComponent implements OnInit {
 
   }
 
+  buscastatusmodificable() {
+    var params_z = {
+      modo : "obtener_status_vta_facturacion_inmediata",
+      numcli: this.numcli_z
+    }
+    console.log("buscastatusmodificable", params_z);
+    
+    this.factura_al_momento = false;
+    this.servicioclientes.buscar_status_cliente_modificable(JSON.stringify(params_z)).subscribe(
+      respu => {
+        if(respu) {
+          console.log("Respuesta buscar status cliente modificable", respu);
+          
+          this.factura_al_momento = (respu.facturalmomento == "SI");
+         }
+      }
+    );
+
+  }
+
+
   buscastatuscerrado() {
     var params_z = {
       modo : "obtener_status_cierre_cliente_altas",
@@ -239,6 +264,7 @@ export class AltacliComponent implements OnInit {
       respu => {
         if(respu) {
           this.clienteabierto = (respu.status == "VENTA_ABIERTA");
+          this.fechacierre_z = respu.fecha;
          }
       }
     );
@@ -285,6 +311,8 @@ export class AltacliComponent implements OnInit {
     if(this.cliente) {
       this.nvocli.idcli = this.cliente.idcli;
       this.nvocli.numcli = this.cliente.numcli;
+      this.nvocli.status = this.cliente.status;
+      this.esstatus1 = (this.cliente.status == "*")
       this.nvocli.nombre = this.cliente.nombre;
       this.nvocli.direc = this.cliente.direc;
       this.nvocli.appat = this.cliente.appat;

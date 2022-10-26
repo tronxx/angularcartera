@@ -17,6 +17,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { newArray, stringify } from '@angular/compiler/src/util';
 import { Compania } from '../../models/config';
 
+// 30-Sep-2022
+// Se modifica que la bonificación adelantada
+// Se calcule a partir de 1 mes
+
 @Component({
   selector: 'app-agregarenpol',
   templateUrl: './agregarenpol.component.html',
@@ -466,7 +470,7 @@ calcula_bonif_extra () {
   mesesanticip_z = miltafin_z  - miltaini_z - 1;
   if(this.qom_z == "Q") mesesanticip_z = Math.floor( mesesanticip_z / 2);
   mesesanticip_z -= 1;
-  if( mesesanticip_z < 2) return;
+  if( mesesanticip_z < 1) return;
   mub_z = this.calcula_mub();
   bonifextra_z = ( ( this.prlista_z * ( 1 + this.pivacli_z / 100)  ) - this.engan_z  ) * mesesanticip_z * mub_z / 100;
   bonifextra_z = Math.round( bonifextra_z - 0.50);

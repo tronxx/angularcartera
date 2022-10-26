@@ -18,4 +18,12 @@ fieldset {
     display: inline-block;
     width: 80px;
 }
-  
+
+.labelgray {
+    background-color:lightgray;
+    border:1px solid;   
+}
+
+.editgray {
+    background-color:lightgray;
+}

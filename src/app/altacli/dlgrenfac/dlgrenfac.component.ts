@@ -44,7 +44,7 @@ export class DlgrenfacComponent implements OnInit {
   seriemotorvalida = true;
   renfacvalido = true;
   yabusqueinven = false;
-  datoshabilitados = false;
+  datoshabilitados = true;
   ticte = "";
   qom = "";
   nlets = 0;
@@ -177,6 +177,7 @@ export class DlgrenfacComponent implements OnInit {
         let tasadecto = this.buscar_tasa_descto_cont(this.linea_z, this.ticte, this.tarjeta);
         this.nuevorenfac.renfac.preciou *= (1 - (tasadecto / 100) );
       }
+      this.nuevorenfac.renfac.preciou = Math.round(this.nuevorenfac.renfac.preciou);
 
       this.nuevorenfac.linea = this.articulo.linea;
       this.datoshabilitados = true;

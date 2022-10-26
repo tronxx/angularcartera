@@ -34,10 +34,10 @@
                                 </option>
                             </select>
                             <br>
-                            <mat-slide-toggle name="seriemaual" id="seriemaual" 
-                            (click)="verstatus()" [(ngModel)]="seriemanual">
-                              La serie no está en la lista
-                            </mat-slide-toggle>
+                            <label for="seriemanual">
+                                La serie no está en la Lista 
+                                <input type="checkbox" name="seriemanual" id="seriemanual" [(ngModel)]="seriemanual" (click)="verstatus()" >
+                            </label>
                         </div>
         
                         <input *ngIf="seriemanual" type="text" name="serie" id="serie" size="30"

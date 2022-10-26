@@ -7,29 +7,6 @@
         </label>
 
         <div name="datoscliente">
-            <div>
-                <label for="status">Status
-                    <select name="status" id="status" value="{{nvocli.status}}" 
-                     [(ngModel)]= "nvocli.status" >
-                     <option *ngFor="let mistatus of statuscli" value="{{mistatus.clave}}"
-                      [selected]="nvocli.status == mistatus.clave">
-                      {{mistatus.descri}}
-                     </option>
-                    </select>
-        
-                </label>
-                <div>
-                    <h2>Datos de la Factura</h2>
-                    <label class="ancho80" for="seriefac">Serie Factura</label> 
-                    <input [disabled]="codigodisabled" type="text" size="5" [(ngModel)]="seriefac_z" [disabled]="codigodisabled" name="serifac" id="seriefac" > 
-                    <label for="numfac">Numero</label> 
-                    <input [disabled]="codigodisabled"  type="text" size="8"  [(ngModel)]="numfac_z" name="numfac" id="numfac"  > 
-                    <label  for="fechafac">Fecha</label> 
-                    <input [disabled]="codigodisabled"  type="date" [(ngModel)]="fechavta_z" size="10" name="fechafac" id="fechafac"> 
-                </div>
-            </div>
-            <br>
-
             <label *ngIf="!canledisabled" for="enganche">Enganche
                 <input type="number" name="enganche" id="enganche" size="10" 
                 (blur)="calcu_precio_lista()" [(ngModel)]="nvocli.enganche">
@@ -85,9 +62,6 @@
                 <input type="text" name="emailcli" id="emailcli" size="30" [(ngModel)]="nvocli.email" >
             </mat-card>
             <br>
-            <label for="tasaiva">Tasa Iva
-                <input type="number" name="tasaiva" id="tasaiva" size="10" [(ngModel)]="nvocli.piva" >
-            </label>
             <mat-card *ngIf="conaval" >
                 <mat-card-title>Datos del Aval</mat-card-title>
                 <label class="ancho80" for="appataval" size="10">Apellido Paterno</label>

@@ -765,7 +765,8 @@ export class ClientesService {
     let misparams = JSON.parse(parametros);
     let misparamnvo = {
       modo: "buscar_facturacion_una_serie",
-      ubiage: misparams.ubiage
+      ubiage: misparams.ubiage,
+      statuscli: misparams.statuscli
     }
 
     console.log("Debug: Estoy en busca busca_serie_factura ", parametros);
@@ -987,6 +988,51 @@ export class ClientesService {
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
+
+  buscar_status_cliente_modificable( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "obtener_status_vta_facturacion_inmediata",
+      codigo: misparams.numcli
+    }
+    console.log("Debug: Estoy en buscar_status_cliente_modificables parametros:", misparamnvo);
+
+    return this.http.post<any>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched buscar_status_cliente_modificable')),
+      catchError(this.handleError<any>('Ocurrio un error en Post buscar_status_cliente_modificable '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  grabar_status_cliente_modificable( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "grabar_status_vta_facturacion_inmediata",
+      codigo: misparams.numcli,
+      statusfacalmomento: "SI"
+    }
+    console.log("Debug: Estoy en buscar_status_cliente_modificables parametros:", misparamnvo);
+
+    return this.http.post<any>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched buscar_status_cliente_modificable')),
+      catchError(this.handleError<any>('Ocurrio un error en Post buscar_status_cliente_modificable '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+
 
   buscar_cliente_altas_letras_pendientes( parametros: string): Observable<any> {
     

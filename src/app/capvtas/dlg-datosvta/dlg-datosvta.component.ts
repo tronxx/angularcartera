@@ -161,12 +161,19 @@ export class DlgDatosvtaComponent implements OnInit {
     this.nvocli.ticte = params_z.ticte;
     this.nvocli.enganche = params_z.enganche;
     this.conaval = true;
+    this.numcli_z = params_z.codigo;
+    this.nvocli.status = "*";
+    console.log("Params Status ", params_z.status);
+    
+    if(params_z.status != undefined) {
+      this.nvocli.status = params_z.status;
+    }
     if(params_z.ticte == "CC" || params_z.ticte == "TC") {
       this.conaval = false;
       this.nvocli.qom = "C";
     }
 
-    this.busca_serie_y_folio();
+    //this.busca_serie_y_folio();
 
     this.obtencatalogos();
   }
@@ -305,6 +312,7 @@ closeyes() {
   let respuesta = {
     modo:"",
     clienterespu: this.nvocli,
+    avalrespu: this.nvoaval
   }
   this.dialogRef.close(respuesta);
 }
@@ -316,7 +324,8 @@ closeno() {
 busca_serie_y_folio() {
   var params_z = {
     modo : "buscar_facturacion_una_serie",
-    ubiage : this.ubivta
+    ubiage : this.ubivta,
+    statuscli : this.nvocli.status
   }
   console.log("Debug: Estoy en busca_seri_y_folio ", this.ubivta);
   this.servicioclientes.busca_serie_factura(JSON.stringify(params_z)).subscribe(

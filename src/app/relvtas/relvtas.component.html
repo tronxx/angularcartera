@@ -59,8 +59,8 @@ Ventas
     <tbody>
         <tr *ngFor="let cliente of clientes">
             <td> <a routerLink="/altacli/{{cliente.numcli}}"><button mat-raised-button color="primary" > Detalles</button></a> </td>
-            <td>{{cliente.numcli}} </td>
-            <td>{{cliente.nombre}} </td>
+            <td>{{cliente.numcli}}</td>
+            <td>{{cliente.nombre}} {{cliente.status}}</td>
             <td>{{cliente.direc}} </td>
             <td>{{cliente.ubica}} </td>
             <td>{{cliente.qom}} </td>

@@ -75,6 +75,7 @@ export class LoginComponent implements OnInit {
      //this.serviciousuarios.obtenusuario(this.Usuario.login).subscribe(
      //   mirespuesta => this.usuarios = mirespuesta
      //);
+     this.error.activo = true;
      this.serviciousuarios.obtenusuario(this.Usuario.login).subscribe(
       mirespuesta => {
         this.pwdrecortado_z = mirespuesta[0].passwd;
@@ -89,6 +90,7 @@ export class LoginComponent implements OnInit {
             this.registro_z.nivel = this.Usuario.nivel;
             this.registro_z.iniciales = this.Usuario.iniciales;
             this.registro_z.acceso  = "true";
+            
             this.registro_z.token = Md5.hashStr(this.Usuario.login + ":" + this.strfecha_z).toString();
                     
             localStorage.setItem("token", JSON.stringify( this.registro_z));
@@ -101,12 +103,7 @@ export class LoginComponent implements OnInit {
             this.error.activo = false;
             this.router.navigateByUrl('/main');
 
-        } else {
-          console.log("Usuaro Incorrecto");
-          this.error.activo = true;
-          
         }
-
       }
    );
 

@@ -43,6 +43,7 @@ export class FacturacliComponent implements OnInit {
   strfeccierre_z = "";
   linkcliente = "";
   msgerror_z = "";
+  statuscli_z = "";
   clientecred = false;
   rotarfac = false;
   factortvtacrd? : Factorvtacred;
@@ -92,6 +93,7 @@ export class FacturacliComponent implements OnInit {
       fechavta: this.fechavta,
       factura:  <Factura> { },
       ubiage: this.ubiage,
+      statuscli: this.statuscli_z,
       modo: "NUEVO"
     }
     params_z.factura.idcli = this.idcli;
@@ -137,6 +139,7 @@ export class FacturacliComponent implements OnInit {
         this.preciolista_z = this.cliente.preciolista;
         this.ubiage = this.cliente.ubica;
         this.fechavta = this.cliente.fechavta;
+        this.statuscli_z = this.cliente.status;
         this.clientecred = (this.cliente.qom != "C");
         this.busca_factura();
         if(this.idfac == -1 ) {

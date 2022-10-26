@@ -33,8 +33,10 @@ export class DlgdatosfacturaComponent implements OnInit {
 
   factura? : Factura;
   seriefac? : Seriefac;
-  fechavta = ""
+  fechavta = "";
+  statuscli = "";
   ubiage = "";
+  
   metodospago : Metodopagocfdi [] = [];
   usoscfdi : Usocfdi[] = [];
 
@@ -51,6 +53,7 @@ export class DlgdatosfacturaComponent implements OnInit {
     this.ubiage = params_z.ubiage;
     this.fechavta =params_z.fechavta;
     this.factura = params_z.factura;
+    this.statuscli = params_z.statuscli;
     this.busca_catalogos();
     console.log("Debug: dlgdatosfactura modo", params_z.factura);
     if(params_z.modo == "NUEVO") {
@@ -61,7 +64,8 @@ export class DlgdatosfacturaComponent implements OnInit {
   busca_serie_y_folio() {
     var params_z = {
       modo : "buscar_facturacion_una_serie",
-      ubiage : this.ubiage
+      ubiage : this.ubiage,
+      statuscli: this.statuscli
     }
     console.log("Debug: Estoy en busca_seri_y_folio ", this.ubiage);
     this.servicioclientes.busca_serie_factura(JSON.stringify(params_z)).subscribe(

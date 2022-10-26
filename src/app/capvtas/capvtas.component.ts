@@ -75,8 +75,10 @@ export class CapvtasComponent implements OnInit {
   tabladesctoscont : Tabladesctocont[] = [];
   articulo? : Articulo;
   ofertas: Ofertas[] = [];
- 
+  
 
+  codcartera_z = "";
+  antcod_z = "";
   codcli_z = "";
   codigo_z = "";
   idcli = 0;
@@ -120,11 +122,20 @@ export class CapvtasComponent implements OnInit {
   codvnd = "";
   antvnd = "-1";
   hayerror = false;
+  yapedidatos = false;
   articuloscotizados : Nvorenfac[] = [];
   articulocotizado?: Nvorenfac;
   esvalido=false;
   esmoto = "S";
   datosfactura_z = "";
+  nvoclistatus = "*";
+  anterstatus = "*";
+  statuscli = [
+    { clave:"*", descri:"Status1"},
+    { clave:"", descri:"Status2" }
+
+  ]
+
   
   tictes_z = [
     { clave:"PC", descri:"PRIMER CREDITO"},
@@ -160,7 +171,9 @@ export class CapvtasComponent implements OnInit {
     let usrreg_z =  JSON.parse(mistorage_z);
     this.ubica = usrreg_z.ubicacion;
     this.codvnd = usrreg_z.codvnd;
+    this.codcartera_z = usrreg_z.codcartera;
     this.antubica = this.ubica;
+    this.antcod_z = this.codcartera_z;
   }
   
   editar_factura() {
@@ -238,6 +251,14 @@ export class CapvtasComponent implements OnInit {
   
   }
 
+  verficar_cambio_status() {
+    if(this.nvoclistatus != this.anterstatus ) {
+      this.yapedidatos = false;
+      this.anterstatus = this.nvoclistatus;
+    }
+
+  }
+
   busca_oferta(codigo: string) {
     let poferta = 0;
     let fechahoy = this.configuracion.fecha_a_str(new Date(), "YYYY-mm-dd");
@@ -303,7 +324,7 @@ export class CapvtasComponent implements OnInit {
       }
       this.factorlet  = this.busca_factor_vtacrd(this.nulet);
       if(!this.factorlet) this.factorlet = 1 / this.nulet;
-      this.preciolet = Math.ceil(((this.tottotal - this.enganche) * this.factorlet));
+      this.preciolet = Math.round(((this.tottotal - this.enganche) * this.factorlet));
       this.totgral = this.enganche +  (this.preciolet * this.nulet);
       this.totprodfin = this.totgral - this.tottotal;
     } else {
@@ -489,20 +510,31 @@ buscanulets() {
 
 }
 
+grabar_datos_venta() {
+  console.log("Estoy en grabar_datos_venta()");
+  
+  if( this.antubica != this.ubica || 
+      this.antvnd != this.codvnd || 
+      this.antcod_z != this.codcartera_z
+  )  {
+    let capvtas = {
+      "ubicacion": this.ubica,
+      "codvnd": this.codvnd,
+      "codcartera": this.codcartera_z
+    };
+    localStorage.setItem("capvtas", JSON.stringify( capvtas));
+    this.antubica = this.ubica;
+    this.antvnd = this.codvnd;
+    this.antcod_z = this.codcartera_z;
+  }
+
+}
 selecciona_tarjetas_tc() {
   this.esvalido = false;
   this.qom = "C";
   this.escredito = false;
   this.nulet = 0;
-  if(this.antubica != this.ubica || this.antvnd != this.codvnd)  {
-    let capvtas = {
-      "ubicacion": this.ubica,
-      "codvnd": this.codvnd
-    };
-    localStorage.setItem("capvtas", JSON.stringify( capvtas));
-    this.antubica = this.ubica;
-    this.antvnd = this.codvnd;
-  }
+  this.grabar_datos_venta();
   
   if(this.ticte == "TC") {
     this.contarjetatc = true;
@@ -568,10 +600,11 @@ async pide_datos_cliente() {
      this.enganche = this.totgral;
   }
   let params_z = {
-    cliente:"11010101",
+    codigo:"27" + this.configuracion.fecha_a_str(new Date(), "yymmdd") + "99",
     ticte: this.ticte,
     ubica: this.ubica,
-    enganche: this.enganche
+    enganche: this.enganche,
+    status:this.nvoclistatus
   }
   const dialogmov = this.dialog.open(DlgDatosvtaComponent, {
     width:'700px',
@@ -581,7 +614,9 @@ async pide_datos_cliente() {
     // Aqui ya tengo los datos del Cliente, y total P.Lista
     // y total Cargos y QOM/TC
     try {
-      let nfac = res.factura;
+      let mifac_z = JSON.parse(this.datosfactura_z);
+      res.clienterespu.factura = mifac_z.numero;
+      res.clienterespu.status = this.nvoclistatus;
       const respu = await this.grabar_cliente(JSON.stringify(res));
       let idcli = respu.idcli;
       this.alerta("Se ha agregado al cliente" + idcli.toString());
@@ -634,6 +669,22 @@ regresar() {
 }
 
 async grabar_cliente(datoscliente: string): Promise <any> {
+  let miotrorenfac : Nvorenfac[] = [];
+  let opcion_z = "";
+  this.articuloscotizados.forEach(ren => {
+    if(this.qom == "C") {
+      if(this.ticte == "CC" && ren.esoferta) {
+          ren.preciou = ren.proferta
+          opcion_z = "O";
+      } else {
+          ren.preciou = ren.preciou * (1 - this.factordscto/100) * (ren.piva / 100 + 1);
+      }
+    } else{
+      ren.preciou = ren.preciou * (ren.piva / 100 + 1);
+    }
+    miotrorenfac.push(ren)
+  });
+
   let mirespu = {}
   let nvocli = JSON.parse(datoscliente);
   nvocli.modo = "agregar_cliente";
@@ -644,7 +695,7 @@ async grabar_cliente(datoscliente: string): Promise <any> {
   nvocli.clienterespu.qom = this.qom;
   nvocli.clienterespu.ticte = this.ticte;
   nvocli.clienterespu.ubica = this.ubica;
-  nvocli.clienterespu.opcion = "";
+  nvocli.clienterespu.opcion = opcion_z;
   nvocli.clienterespu.enganche = this.enganche;
   nvocli.clienterespu.nulet = this.nulet;
   nvocli.clienterespu.canle = this.preciolet;
@@ -654,15 +705,19 @@ async grabar_cliente(datoscliente: string): Promise <any> {
 
   this.servicioclientes.agrega_nuevo_cliente(JSON.stringify(nvocli)).subscribe( res =>{
     mirespu = res;
+    let paramsmodif_z = {
+      numcli: res.codigo,
+      statusfacalmomento: "SI"
+    }
+
+
+    this.servicioclientes.grabar_status_cliente_modificable(JSON.stringify(paramsmodif_z)).subscribe( resalta=> {
+      console.log("Se ha agregado status no modificable");
+      
+    });
+
     let factura_z = JSON.parse(this.datosfactura_z);
     factura_z.idcli = nvocli.idcli;
-    let miotrorenfac : Nvorenfac[] = [];
-    this.articuloscotizados.forEach(ren => {
-      if(ren.esoferta) {
-        ren.preciou = ren.proferta
-      }
-      miotrorenfac.push(ren)
-    });
 
     let params_z = {
       modo:"crear_cli_fac_capvtas",
@@ -701,6 +756,7 @@ pedir_datos_fac() {
     fechavta:  this.configuracion.fecha_a_str(new Date(), "YYYY-mm-dd"),
     factura:  <Factura> { },
     ubiage: this.ubica,
+    statuscli: this.nvoclistatus,
     modo: "NUEVO"
   }
   params_z.factura.idcli = this.idcli;
@@ -712,6 +768,7 @@ pedir_datos_fac() {
   dialogmov.afterClosed().subscribe(res => {
     if(res) {
       this.datosfactura_z = JSON.stringify(res);
+      this.yapedidatos = true;
     }
 
   });
