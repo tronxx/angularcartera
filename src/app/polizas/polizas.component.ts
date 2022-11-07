@@ -43,6 +43,7 @@ export class PolizasComponent implements OnInit {
   polizaactiva_z = false;
   aceptarpago = false;
   ultltaoculto_z = true;
+  esstatus1 = true;
   errores_z = [""];
   sinerrores = true;
   errorespoliza = [""]
@@ -308,6 +309,8 @@ export class PolizasComponent implements OnInit {
       respu => {
         if(respu) {
           this.cliente = respu;
+          this.esstatus1 = (this.cliente.status == "*");
+
           this.clienteactivo_z = true;
           this.calcular_datos_cliente();
         } else {

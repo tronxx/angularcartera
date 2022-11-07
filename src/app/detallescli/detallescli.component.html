@@ -16,16 +16,16 @@
 <table border="1">
     <tr>
         <td>
-            <label class="ancho80" for="codigo">Coódigo</label>
-            <input readonly  name="codigo" size="12" type="text" value=" {{cliente.numcli}}"> <br>
             <button mat-raised-button color="primary" (click)="impresion_edocta()">
                 <mat-icon aria-hidden="false" aria-label="Example home icon">print</mat-icon>
                 Estado Cuenta
             </button>
-                    
             <br>
+            <label class="ancho80" for="codigo">Coódigo</label>
+            <input readonly  name="codigo" size="12" type="text" value=" {{cliente.numcli}}"> <br>
             <label class="ancho80" for="nombre">Nombre</label>
-            <input readonly  name="nombre" size="40" type="text" value=" {{cliente.nombre}}"> <br>
+            <input readonly  name="nombre" size="40" type="text" 
+            [class.editgray]="esstatus1" value=" {{cliente.nombre}}"> <br>
             <label class="ancho80" for="direccion">Direccion</label>
             <input readonly name="direccion" type="text" size="40" value= "{{cliente.direc}}"><br>
             <label class="ancho80" for="poblacion">Poblacion</label>

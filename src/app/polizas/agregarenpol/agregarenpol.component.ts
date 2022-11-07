@@ -49,6 +49,7 @@ export class AgregarenpolComponent implements OnInit {
   listaletras = [""];
   enespera = false;
   ultimo_z = "";
+  esstatus1 = true;
 
   cobratario = {
     "idpromot": 0,
@@ -187,6 +188,7 @@ export class AgregarenpolComponent implements OnInit {
         if(respu) {
           this.cliente = respu;
           this.clienteactivo_z = true;
+          this.esstatus1 = (this.cliente.status == "*");
           this.calcular_datos_cliente();
         } else {
           this.alerta("Cliente Inexistente");

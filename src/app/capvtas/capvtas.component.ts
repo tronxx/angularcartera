@@ -600,7 +600,7 @@ async pide_datos_cliente() {
      this.enganche = this.totgral;
   }
   let params_z = {
-    codigo:"27" + this.configuracion.fecha_a_str(new Date(), "yymmdd") + "99",
+    codigo: this.codcartera_z + this.configuracion.fecha_a_str(new Date(), "yymmdd") + "99",
     ticte: this.ticte,
     ubica: this.ubica,
     enganche: this.enganche,

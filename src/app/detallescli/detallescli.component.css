@@ -24,4 +24,7 @@ input  {
     display: inline-block;
     width: 80px;
   }
-  
+
+.editgray {
+  background-color:cyan;
+}

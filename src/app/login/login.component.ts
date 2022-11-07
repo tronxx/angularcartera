@@ -75,10 +75,17 @@ export class LoginComponent implements OnInit {
      //this.serviciousuarios.obtenusuario(this.Usuario.login).subscribe(
      //   mirespuesta => this.usuarios = mirespuesta
      //);
-     this.error.activo = true;
      this.serviciousuarios.obtenusuario(this.Usuario.login).subscribe(
       mirespuesta => {
+        console.log('Ya regrese y estoy en subscribe');
+        if (mirespuesta == null || mirespuesta.length == 0) {
+          this.error.activo = true;
+          return;
+        }
         this.pwdrecortado_z = mirespuesta[0].passwd;
+        if(this.pwdrecortado_z == undefined) {
+          this.pwdrecortado_z = "-1";
+        }
         this.pwdrecortado_z = this.pwdrecortado_z.substring(0, this.pwdrecortado_z.length - 3);
         if( this.pwdrecortado_z === this.pwdmd5_z) {
           this.usuarios = mirespuesta;
@@ -103,8 +110,15 @@ export class LoginComponent implements OnInit {
             this.error.activo = false;
             this.router.navigateByUrl('/main');
 
+        } else {
+          this.error.activo = true;
         }
+      },
+      err => {
+        this.error.activo = true;
       }
+
+
    );
 
   }

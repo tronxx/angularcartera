@@ -9,3 +9,8 @@ label {
     overflow: auto;
     display: block;
   }
+
+  .labelgray {
+    background-color:lightgray;
+  }
+  
