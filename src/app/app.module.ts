@@ -25,7 +25,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule  } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
-import { MatProgressBarModule } from '@angular/material/progress-bar'
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSpinner } from '@angular/material/progress-spinner';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
 import { DlgedoctaComponent } from './common/dlgedocta/dlgedocta.component';
 import { DlgbuscliComponent } from './common/dlgbuscli/dlgbuscli.component';
@@ -54,6 +55,7 @@ import { CapvtasComponent } from './capvtas/capvtas.component';
 import { DlgDatosvtaComponent } from './capvtas/dlg-datosvta/dlg-datosvta.component';
 import { AgregarenpolComponent } from './polizas/agregarenpol/agregarenpol.component';
 import { DlgimpripolComponent } from './dlgimpripol/dlgimpripol.component';
+import { PolenganComponent } from './polengan/polengan.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +93,8 @@ import { DlgimpripolComponent } from './dlgimpripol/dlgimpripol.component';
     CapvtasComponent,
     DlgDatosvtaComponent,
     AgregarenpolComponent,
-    DlgimpripolComponent
+    DlgimpripolComponent,
+    PolenganComponent
   ],
   imports: [
     BrowserModule,

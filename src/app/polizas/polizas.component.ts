@@ -358,6 +358,7 @@ export class PolizasComponent implements OnInit {
   
 
   calcular_datos_cliente() {
+    let diasgracia_z = 0;
 
      if(this.cliente) {
        this.abonos_z  = this.cliente.abonos;
@@ -387,7 +388,7 @@ export class PolizasComponent implements OnInit {
        }
 
        this.busca_aval(this.cliente.idcli);
-       this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.qom_z, 1, this.nulets_z));
+       this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.qom_z, 1, this.nulets_z, diasgracia_z));
        //console.log('FechaStr:', this.strfechavta, 'Vencimientos:', this.listavencimientos_z);
        
        if(this.abonos_z >= (this.engan_z + this.serv_z) ) {
@@ -418,7 +419,10 @@ export class PolizasComponent implements OnInit {
             formatNumber( Number(this.impxcob_z) , 'en-US', '1.2-0');
 
         }
-        this.vence_z = this.configuracion.calcula_venc(this.cliente.fechavta, this.cliente.qom, this.sigletra_z);
+        let nvafvta_z  = new Date(this.cliente.fechavta.replace(/-/g, '\/'));
+        nvafvta_z  = new Date ( nvafvta_z.getDate() + diasgracia_z);
+
+        this.vence_z = this.configuracion.calcula_venc(this.configuracion.fecha_a_str(nvafvta_z, "YYYY-mm-dd"), this.cliente.qom, this.sigletra_z);
         this.msg_z += " Vence:" + this.configuracion.fecha_a_str(this.vence_z, "dd-mmm-YYYY");
         this.datospago.dias = Math.floor( ( this.fechahoy_z.getTime() - this.vence_z.getTime()  ) / (86400000));
         //console.log("Debug: dias", this.datospago.dias, " Hoy:", this.fechahoy_z.getTime(), " Vence:", this.vence_z.getTime() );

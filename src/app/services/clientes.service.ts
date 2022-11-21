@@ -74,6 +74,47 @@ export class ClientesService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  obtenrelvtas_enganches ( parametros: string): Observable<Cliente[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    
+    return this.http.post<Cliente[]>(miurl, parametros, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Clientes')),
+      catchError(this.handleError<Cliente[]>('Ocurrio un error en Post obten clientes'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  timbrar_enganches ( parametros: string): Observable<any> {
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    
+    return this.http.post<any>(miurl, parametros, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched timbrar_enganche')),
+      catchError(this.handleError<Cliente[]>('Ocurrio un error en Post timbrar enganche'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  
+  descarga_pdf_cfdi(params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Debug: Estoy en descargar_pdf_cfdi ", params);
+    var miurl = this.url + "altas/serviciosaltas.php?modo=descarga_pdf_cfdi" + 
+      "&uuid="+misparams.uuid;
+      console.log("Debug url: ", miurl);
+      window.open(miurl, "_blank");
+  }
+
+
+
   buscaclientealta ( parametros: string): Observable<Cliente> {
     
     let respu_z = "";
@@ -430,8 +471,8 @@ export class ClientesService {
       window.open(miurl, "_blank");
   }
 
-  busca_vencimientos (fechavta:string, qom:string, inicial:number, final:number) {
-    return (this.configuracion.generavencimientos(fechavta, qom, inicial, final));
+  busca_vencimientos (fechavta:string, qom:string, inicial:number, final:number, diasgracia:number) {
+    return (this.configuracion.generavencimientos(fechavta, qom, inicial, final, diasgracia));
   }
 
   busca_cliagentes_altas( parametros: string): Observable<Cliagentes[]> {

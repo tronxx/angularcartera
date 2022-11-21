@@ -116,7 +116,7 @@ export class ConfiguracionService {
         meses_z = Math.floor(this.cia.DiasContingencia / 30);
         dias_z = (this.cia.DiasContingencia % 30);
         vencimiento_z.setMonth(vencimiento_z.getMonth() + meses_z);
-        nvafecha_z = vencimiento_z.getTime() + (dias_z * 24 * 60 * 60 *  1000);
+        nvafecha_z = vencimiento_z.getDate() + dias_z ;
         vencimiento_z = new Date(nvafecha_z);
       }
   
@@ -219,11 +219,16 @@ export class ConfiguracionService {
     
   }
   
-  generavencimientos (fechavta:string, qom:string, inicio:number, final:number) {
+  generavencimientos (fechavta:string, qom:string, inicio:number, final:number, diasgracia_z: number) {
     let ii_z = 0;
     let letra = "";
     let vence = "";
+    let diasletra_z = 15;
+    let letrasgracia_z = 0 ;   
     let fecven = new Date();
+    if(qom == "Q") diasletra_z = 15;
+    if(qom == "M") diasletra_z = 30;
+     letrasgracia_z = Math.floor(diasgracia_z / diasletra_z);
 
     let listavencimientos_z= [];
     for (ii_z = inicio; ii_z <= final; ii_z++) {
@@ -232,7 +237,7 @@ export class ConfiguracionService {
       } else {
         letra = "SE";
       }
-      fecven = this.calcula_venc(fechavta, qom, ii_z);
+      fecven = this.calcula_venc(fechavta, qom, ii_z + letrasgracia_z);
       vence = this.fecha_a_str(fecven, "dd-mmm-YYYY");
       listavencimientos_z.push({letra, vence});
 

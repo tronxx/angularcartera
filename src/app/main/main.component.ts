@@ -18,7 +18,8 @@ export class MainComponent implements OnInit {
     { link: "/polizas", titulo: "Poliza de Cobranza", active:"active"  },
     { link: "/acumpol", titulo: "Consulta de Polizas", active:"active"  },
     { link: "/detallescli", titulo: "Detalles Cliente", active:"active"  },
-    { link: "/listaaltas", titulo: "Alta Clientes", active:"active"  }
+    { link: "/listaaltas", titulo: "Alta Clientes", active:"active"  },
+    { link: "/polengan", titulo: "Pólizas Enganche", active:"active"  }
     ,{ link: "/nvavta", titulo: "Facturacion", active:"active"  }
 
   ];
