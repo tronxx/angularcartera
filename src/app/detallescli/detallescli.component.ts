@@ -245,11 +245,10 @@ export class DetallescliComponent implements OnInit {
   mostrar_vencimientos() {
     let inicial = 1;
     let misven_z = "";
-    let diasgracia_z = 0;
     if (this.cliente) {
       misven_z = this.servicioclientes.busca_vencimientos(
         this.cliente.fechavta, this.cliente.qom, inicial, 
-        this.cliente.nulet, diasgracia_z
+        this.cliente.nulet, this.cliente.diasgracia
       );
       this.listavencimientos_z = JSON.parse(misven_z);
       // console.log("Debug: Mis vencimientos", misven_z);
