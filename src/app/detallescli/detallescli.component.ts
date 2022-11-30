@@ -46,6 +46,7 @@ export class DetallescliComponent implements OnInit {
   plazoscli_z = false;
   solicitudcli_z = false;
   esstatus1 = true;
+  conpromocion = false;
   listavencimientos_z = [ {
       "letra" : "",
       "vence" : ""
@@ -90,6 +91,10 @@ export class DetallescliComponent implements OnInit {
       respu => {
         if(respu) {
           this.cliente = respu;
+          this.conpromocion = false;
+          if(this.cliente.diasgracia > 0 ) {
+            this.conpromocion = true;
+          }
           this.busca_aval(this.cliente.idcli);
           this.busca_movclis(this.cliente.idcli);
           this.mostrar_vencimientos();

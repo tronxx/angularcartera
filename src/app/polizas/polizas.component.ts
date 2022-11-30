@@ -80,6 +80,7 @@ export class PolizasComponent implements OnInit {
   PrecioListaMinimoCarta = 0;
   sdoparacarta_z = 0;
   compracli_z = "";
+  conpromo_z = false;
 
 
   tipospagos =[ 
@@ -326,7 +327,7 @@ export class PolizasComponent implements OnInit {
         codigo: this.codcli_z
     }
     const dialogref = this.dialog.open(AgregarenpolComponent, {
-      width:'700px',
+      width:'800px',
       data: JSON.stringify(params_z)
     });
     dialogref.afterClosed().subscribe(res => {
@@ -358,8 +359,6 @@ export class PolizasComponent implements OnInit {
   
 
   calcular_datos_cliente() {
-    let diasgracia_z = 0;
-
      if(this.cliente) {
        this.abonos_z  = this.cliente.abonos;
        this.cargos_z = this.cliente.cargos;
@@ -386,9 +385,11 @@ export class PolizasComponent implements OnInit {
         ) {
            this.tasarecargo_z = 20;
        }
+       this.conpromo_z = false;
+       if(this.cliente.diasgracia > 0) this.conpromo_z = true;
 
        this.busca_aval(this.cliente.idcli);
-       this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.qom_z, 1, this.nulets_z, diasgracia_z));
+       this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.qom_z, 1, this.nulets_z, this.cliente.diasgracia));
        //console.log('FechaStr:', this.strfechavta, 'Vencimientos:', this.listavencimientos_z);
        
        if(this.abonos_z >= (this.engan_z + this.serv_z) ) {
@@ -420,7 +421,7 @@ export class PolizasComponent implements OnInit {
 
         }
         let nvafvta_z  = new Date(this.cliente.fechavta.replace(/-/g, '\/'));
-        nvafvta_z  = new Date ( nvafvta_z.getDate() + diasgracia_z);
+        nvafvta_z.setDate ( nvafvta_z.getDate() + this.cliente.diasgracia);
 
         this.vence_z = this.configuracion.calcula_venc(this.configuracion.fecha_a_str(nvafvta_z, "YYYY-mm-dd"), this.cliente.qom, this.sigletra_z);
         this.msg_z += " Vence:" + this.configuracion.fecha_a_str(this.vence_z, "dd-mmm-YYYY");
@@ -477,45 +478,7 @@ export class PolizasComponent implements OnInit {
     this.datospago.conceptocompl = "";
   }
 
-  calcula_venc <Date> (fechavta:string, qom_z:string, letra:number) {
-
-    let vencimiento_z = new Date(fechavta.replace(/-/g, '\/'));
-    let strfecvta =  this.configuracion.fecha_a_str  (vencimiento_z, "YYYYmmdd");
-    let dias_z = 15;
-    let nvafecha_z = 0;
-    let meses_z = 0;
-
-    if( this.AplicarContingencia  && strfecvta < this.FechaContingencia) {
-      meses_z = Math.floor(this.diascontingencia / 30);
-      dias_z = (this.diascontingencia % 30);
-      vencimiento_z.setMonth(vencimiento_z.getMonth() + meses_z);
-      nvafecha_z = vencimiento_z.getTime() + (dias_z * 24 * 60 * 60 *  1000);
-      vencimiento_z = new Date(nvafecha_z);
-    }
-    if(qom_z == "Q") {
-      meses_z = Math.floor(letra / 2);
-      dias_z = (letra % 2) * 15;
-    } else {
-      dias_z = 0;
-      meses_z = letra;
-    }
-    // console.log("Debug Meses:", meses_z, " Dias:", dias_z);
-    if(letra == 0) {
-      nvafecha_z = vencimiento_z.getTime() + (7 * 24 * 60 * 60 *  1000);
-    } else {
-      // console.log("Debug 1:" + fechavta, vencimiento_z);
-      //vencimiento_z.setMonth(10);
-      vencimiento_z.setMonth(vencimiento_z.getMonth() + meses_z);
-      // console.log("Debug 2:",vencimiento_z);
-      //vencimiento_z = vencimiento_z.setMonth(vencimiento_z.getMonth() + meses_z);
-      nvafecha_z =  vencimiento_z.getTime() + (dias_z * 24 * 60 * 60 * 1000);
-    }
-    vencimiento_z = new Date(nvafecha_z);
-    // console.log("Debug 3:",vencimiento_z);
-    return (vencimiento_z);
-
-  }
-
+  
   clickaceptarpago() {
   }
 

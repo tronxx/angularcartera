@@ -67,7 +67,9 @@
                                 Bonificacion: <b>{{cliente.bonificacion  | currency }} </b><br>
                                 Cargos: <b>{{cliente.cargos  | currency}}</b>  
                                 Abonos: <b>{{cliente.abonos  | currency }}</b> 
-                                Saldo: <b>{{ cliente.cargos - cliente.abonos  | currency }}</b><br>
+                                Saldo: <b>{{ cliente.cargos - cliente.abonos  | currency }}</b>
+                                <label  class="labelgray" *ngIf="conpromo_z" >Promcion: {{cliente.diasgracia}} </label>
+                                <br>
                                 Compra: <b>{{cliente.compra}} </b>
                                 <br>
             

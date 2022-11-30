@@ -29,6 +29,7 @@ import { DlgdatosmovcliComponent } from './dlgdatosmovcli/dlgdatosmovcli.compone
 import { DlgDatosVndComponent } from './dlg-datos-vnd/dlg-datos-vnd.component';
 import { DlgfacturaComponent } from './dlgfactura/dlgfactura.component';
 import { DlgimpriletrasComponent } from '../common/dlgimpriletras/dlgimpriletras.component';
+import { ConfiguracionService } from '../services/configuracion.service'
 
 @Component({
   selector: 'app-altacli',
@@ -59,6 +60,14 @@ export class AltacliComponent implements OnInit {
   modoqom_z = [ { clave:"C", descri:"CONTADO"}];
   linkfactura = "";
   linksolicitud = "";
+  conpromocion_z = false;
+  diasgra_z = 0;
+  promocion_z = {
+    promodic_inicio: "2022-12-01",
+    promodic_fin: "2022-12-31",
+    promodic_dias:"15",
+    promodic_mesesminimo:5
+  }
 
   tictes_z = [
     { clave:"PC", descri:"PRIMER CREDITO"},
@@ -165,6 +174,7 @@ export class AltacliComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private servicioclientes: ClientesService,
+    private config: ConfiguracionService,
     private router: Router
     ) { }
 
@@ -198,7 +208,7 @@ export class AltacliComponent implements OnInit {
       codigo: this.numcli_z,
       idcli : -1
     }
-  
+    
     this.servicioclientes.buscaclientealta(JSON.stringify(params_z)).subscribe(
       respu => {
         if(respu) {
@@ -209,6 +219,7 @@ export class AltacliComponent implements OnInit {
           this.facturacli_z = false;
           this.buscastatuscerrado();
           this.buscastatusmodificable();
+          this.buscadiasgracia();
 
           //this.busca_aval(this.cliente.idcli);
           //this.busca_movclis(this.cliente.idcli);
@@ -252,6 +263,29 @@ export class AltacliComponent implements OnInit {
     );
 
   }
+
+  buscadiasgracia() {
+    var params_z = {
+      modo : "obtener_dias_promocion",
+      codigo: this.numcli_z
+    }
+    console.log("buscasdiasgracia", params_z);
+    
+    this.conpromocion_z = false;
+    this.diasgra_z = 0;
+    this.servicioclientes.altas_buscar_dias_promocion(JSON.stringify(params_z)).subscribe(
+      respu => {
+        if(respu) {
+          if(respu.diasgracia > 0) {
+            this.conpromocion_z = true;
+            this.diasgra_z = respu.diasgracia;
+          }
+         }
+      }
+    );
+
+  }
+
 
 
   buscastatuscerrado() {
@@ -304,6 +338,7 @@ export class AltacliComponent implements OnInit {
         this.ubivta = respu;
       }
     );
+    this.promocion_z = this.config.obtenpromocion();
   }
   
 
@@ -444,6 +479,10 @@ export class AltacliComponent implements OnInit {
       if (res) {
         res.modo = "agregar_cliente";
         res.clienterespu.modo="agregar_cliente";
+        this.nvocli.numcli = res.clienterespu.numcli;
+        this.nvocli.fechavta = res.clienterespu.fechavta;
+        this.nvocli.qom = res.clienterespu.qom;
+        this.nvocli.nulet = res.clienterespu.nulet;
         this.servicioclientes.agrega_nuevo_cliente(JSON.stringify(res)).subscribe(
           respu => {
             if(respu) {
@@ -451,6 +490,7 @@ export class AltacliComponent implements OnInit {
                 this.alerta(respu.error);
               } else {
                 this.buscarcliente();
+                this.grabar_promocion_cliente();
               }
             } else {
               this.alerta("Ocurrió un error en alta");
@@ -460,6 +500,40 @@ export class AltacliComponent implements OnInit {
       }
       console.log("Debug: Regrese de Asignar datos", res);
     });
+  }
+
+  
+  grabar_promocion_cliente() {
+    let mesesvta = this.nvocli.nulet;
+    if(this.nvocli.qom == "Q") mesesvta = mesesvta * 2;
+    let fvta_z = "20" + this.numcli_z.substring(2,4) + "-" + 
+      this.numcli_z.substring(4,6) + "-" + 
+      this.numcli_z.substring(6,8);
+    
+    //console.log("Grabando promocion cliente Fechavta:", fvta_z, " Meses", mesesvta);
+    
+    if(fvta_z < this.promocion_z.promodic_inicio ||
+      fvta_z  > this.promocion_z.promodic_fin)
+    return;
+    if(this.nvocli.qom == 'C') return;
+    if(mesesvta < this.promocion_z.promodic_mesesminimo) return;
+    //this.alerta("Se va a grabar la promocion");
+
+      var params_z = {
+          modo : "grabar_dias_promocion",
+          diasgracia: this.promocion_z.promodic_dias,
+          codigo: this.numcli_z
+      }
+      console.log("Grabar promocion", params_z);
+        
+      this.conpromocion_z = false;
+      this.diasgra_z = 0;
+      this.servicioclientes.altas_agregar_dias_promocion(JSON.stringify(params_z)).subscribe(
+        respu => {
+          console.log("Se agrego los dias de promicion");
+        }
+      );
+    
   }
 
   modificarcliente () {

@@ -41,5 +41,6 @@ export interface Cliente {
     codpost: string;
     colonia: string;
     email: string;
+    diasgracia: number;
 
 }

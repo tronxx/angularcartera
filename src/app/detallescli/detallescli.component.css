@@ -28,3 +28,7 @@ input  {
 .editgray {
   background-color:cyan;
 }
+
+.labelgray {
+  background-color:lightgray;
+}

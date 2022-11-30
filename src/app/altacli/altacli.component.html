@@ -127,6 +127,7 @@
             <input readonly type="text" name="saldo" id="saldo" size="6" value = "{{nvocli.cargos - nvocli.abonos |currency}}" >
         </label>
         <label class="labelgray" *ngIf="!clienteabierto" for="fechacierre"> Cierre: {{fechacierre_z}} </label>
+        <label class="labelgray" *ngIf="conpromocion_z" > Promocion: {{diasgra_z}} </label>
         <br>
         
         <div *ngIf="factura_al_momento">

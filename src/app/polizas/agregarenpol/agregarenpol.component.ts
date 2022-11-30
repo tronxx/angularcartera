@@ -38,6 +38,7 @@ export class AgregarenpolComponent implements OnInit {
   codcli_z = "";
   uuid_z = "";
   cia_z?: Compania;
+  conpromo_z = false;
   
   clienteactivo_z = false;
   polizaactiva_z = false;
@@ -189,6 +190,7 @@ export class AgregarenpolComponent implements OnInit {
           this.cliente = respu;
           this.clienteactivo_z = true;
           this.esstatus1 = (this.cliente.status == "*");
+          //this.buscadiasgracia();
           this.calcular_datos_cliente();
         } else {
           this.alerta("Cliente Inexistente");
@@ -199,7 +201,7 @@ export class AgregarenpolComponent implements OnInit {
 
   }
 
-  calcular_datos_cliente() {
+    calcular_datos_cliente() {
 
     if(this.cliente) {
       this.abonos_z  = this.cliente.abonos;
@@ -228,9 +230,13 @@ export class AgregarenpolComponent implements OnInit {
        ) {
           this.tasarecargo_z = 20;
       }
+      this.conpromo_z = false;
+      if(this.cliente.diasgracia > 0) {
+        this.conpromo_z = true;
+      }
 
       this.busca_aval(this.cliente.idcli);
-      this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.qom_z, 1, this.nulets_z));
+      this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.qom_z, 1, this.nulets_z, this.cliente.diasgracia));
       //console.log('FechaStr:', this.strfechavta, 'Vencimientos:', this.listavencimientos_z);
       
 
@@ -291,7 +297,11 @@ export class AgregarenpolComponent implements OnInit {
 
 
        }
-       this.vence_z = this.configuracion.calcula_venc(this.cliente.fechavta, this.cliente.qom, this.sigletra_z);
+       let fecbase_z = new Date(this.cliente.fechavta.replace(/-/g, '\/'));
+       fecbase_z.setDate (fecbase_z.getDate() + this.cliente.diasgracia);       
+       let fechavta = this.configuracion.fecha_a_str(fecbase_z, "YYYY-mm-dd");
+   
+       this.vence_z = this.configuracion.calcula_venc(fechavta, this.cliente.qom, this.sigletra_z);
        this.msg_z += " Vence:" + this.configuracion.fecha_a_str(this.vence_z, "dd-mmm-YYYY");
        this.datospago.dias = Math.floor( ( this.fechaactual_z.getTime() - this.vence_z.getTime()  ) / (86400000));
        //console.log("Debug: dias", this.datospago.dias, " Hoy:", this.fechahoy_z.getTime(), " Vence:", this.vence_z.getTime() );

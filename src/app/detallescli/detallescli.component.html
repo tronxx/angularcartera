@@ -58,13 +58,14 @@
             <input readonly name="qom" type="text" size="3" value= "{{ cliente.qom }}">
             <label for="canle">Precio x Letra</label>
             <input readonly name="canle" type="text" size="10" value= "{{ cliente.canle | currency }}"> 
+            <br>
             <label for="bonif">Bonificacion</label>
             <input readonly name="bonif" type="text" size="10" value= "{{ cliente.bonificacion | currency }}"><br>
+            <label *ngIf="conpromocion"  class="labelgray" >Dias Promocion {{ cliente.diasgracia }} </label> <br>
         </td>
         <td>
             Vencimientos:<br>
             <div class="boxscroll">
-
                 <ul>
                     <li for="" *ngFor="let mivencimiento of listavencimientos_z" >
                         Letra: {{mivencimiento.letra}}/{{cliente.nulet}}

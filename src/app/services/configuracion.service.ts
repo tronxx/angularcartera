@@ -100,6 +100,19 @@ export class ConfiguracionService {
     return(this.cias[this.config.cia]);
   }
 
+  obtenpromocion () {
+    let micia = this.cias[this.config.cia];
+    let promcion = {
+      promodic_inicio: micia.promodic_inicio,
+      promodic_fin: micia.promodic_fin,
+      promodic_dias:micia.promodic_dias,
+      promodic_mesesminimo: micia.mesesminimo
+    }
+    return (promcion);
+  }
+
+
+
   calcula_venc <Date> (fechavta:string, qom_z:string, letra:number) {
 
     let vencimiento_z = new Date(fechavta.replace(/-/g, '\/'));
@@ -224,11 +237,12 @@ export class ConfiguracionService {
     let letra = "";
     let vence = "";
     let diasletra_z = 15;
-    let letrasgracia_z = 0 ;   
     let fecven = new Date();
     if(qom == "Q") diasletra_z = 15;
     if(qom == "M") diasletra_z = 30;
-     letrasgracia_z = Math.floor(diasgracia_z / diasletra_z);
+    let fecbase_z = new Date(fechavta.replace(/-/g, '\/'));
+    fecbase_z.setDate (fecbase_z.getDate() + diasgracia_z);
+    fechavta = this.fecha_a_str(fecbase_z, "YYYY-mm-dd");
 
     let listavencimientos_z= [];
     for (ii_z = inicio; ii_z <= final; ii_z++) {
@@ -237,7 +251,7 @@ export class ConfiguracionService {
       } else {
         letra = "SE";
       }
-      fecven = this.calcula_venc(fechavta, qom, ii_z + letrasgracia_z);
+      fecven = this.calcula_venc(fechavta, qom, ii_z );
       vence = this.fecha_a_str(fecven, "dd-mmm-YYYY");
       listavencimientos_z.push({letra, vence});
 

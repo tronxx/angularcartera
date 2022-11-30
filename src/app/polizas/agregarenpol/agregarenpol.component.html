@@ -17,7 +17,9 @@
                                     Bonificacion: <b>{{cliente.bonificacion  | currency }} </b><br>
                                     Cargos: <b>{{cliente.cargos  | currency}}</b>  
                                     Abonos: <b>{{cliente.abonos  | currency }}</b> 
-                                    Saldo: <b>{{ cliente.cargos - cliente.abonos  | currency }}</b><br>
+                                    Saldo: <b>{{ cliente.cargos - cliente.abonos  | currency }}</b>
+                                    <label  class="labelgray" *ngIf="conpromo_z" >Promcion: {{cliente.diasgracia}} </label>
+                                    <br>
                                     Compra: <b>{{cliente.compra}} </b>
                                     <br>
                 
@@ -93,10 +95,12 @@
                         <label for="recobon">
                             <input size = "10" type="number" name="recobon" id="recobon" [disabled]="bonif_cerrada" (blur)="calculaNeto()" [(ngModel)] = "datospago.recobon" >
                         </label>
+                        <br>
                         <label for="importe">
                             Importe
                             <input size = "10" type="number" [disabled]="importecerrado" name="importe" id="importe" (blur)="calculaNeto()" [(ngModel)] = "datospago.importe" >
                         </label>
+                        
                         <label for="neto">
                             Neto:
                             <input size = "10" type="text" name="neto" id="neto" [disabled]="true"

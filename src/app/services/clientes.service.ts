@@ -1009,6 +1009,58 @@ export class ClientesService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  cartera_buscar_dias_promocion( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "clientes/servicios.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: Estoy en cartera_buscar_dias_promocion parametros:", parametros);
+    let misparams = JSON.parse(parametros);
+    return this.http.post<any>(miurl, JSON.stringify( misparams), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched cartera_buscar_dias_promocion')),
+      catchError(this.handleError<any>('Ocurrio un error en Post obten cartera_buscar_dias_promocion '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+
+
+  altas_buscar_dias_promocion( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: altas_buscar_dias_promocion parametros:", parametros);
+    let misparams = JSON.parse(parametros);
+    return this.http.post<any>(miurl, JSON.stringify( misparams), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched altas_buscar_dias_promocion')),
+      catchError(this.handleError<any>('Ocurrio un error en Post altas_buscar_dias_promocion '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  altas_agregar_dias_promocion( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: Estoy en altas_agregar_dias_promocion:", parametros);
+    let misparams = JSON.parse(parametros);
+
+    return this.http.post<any>(miurl, JSON.stringify( misparams), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched cerrar_cliente_altas')),
+      catchError(this.handleError<any>('Ocurrio un error en Post obten agregar_renfac_altas '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+
   buscar_status_cliente_cerrado( parametros: string): Observable<any> {
     
     let respu_z = "";
