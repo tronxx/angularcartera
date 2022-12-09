@@ -866,7 +866,7 @@ busca_factura(idcli_z : number) {
         if(respu) {
           this.factura = respu[0];
           if(this.factura) {
-            let precon = ( this.nvocli.preciolista * ( this.nvocli.piva / 100 + 1 )) -  this.nvocli.servicio;
+            let precon = ( this.nvocli.preciolista * ( this.nvocli.piva / 100 + 1 )) +  this.nvocli.servicio;
             precon = this.nvocli.cargos - precon 
             if(precon < 0) precon = 0;
             this.factura.prodfin = Math.round(precon);

@@ -63,9 +63,12 @@
                                 <input type="text" readonly size="10" name="ivafac" id="ivafac" value = "{{factura.iva | currency}}" >
                                 <label for="totalfac">Total</label> 
                                 <input type="text" readonly size="10" name="totalfac" id="totalfac" value ="{{factura.total | currency}}">
+                                <br>
+                                <label class="ancho80" for="servicio">Servicio</label> 
+                                <input type="text" readonly size="10" name="totalfac" id="totalfac" value ="{{servic_z | currency}}">
 
-                                <label *ngIf="clientecred" for="totalgral">Total General</label> 
-                                <input *ngIf="clientecred" readonly type="text" size="10" name="totalgral" id="totalfac" value ="{{factura.total + factura.prodfin | currency}}">
+                                <label  for="totalgral">Total General</label> 
+                                <input  readonly type="text" size="10" name="totalgral" id="totalfac" value ="{{factura.total + factura.prodfin + servic_z | currency}}">
 
                                  <br>
                                 <label class="ancho80" for="uuidfac">UUID</label> 

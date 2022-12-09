@@ -176,7 +176,7 @@ export class FacturacliComponent implements OnInit {
           if(this.factura) {
             this.idfac = this.factura.idfac;
             this.busca_renfacfo(this.factura.idfac);
-            this.prodfin_z = ( this.preciolista_z * ( 16 / 100 + 1 )) -  this.servic_z;
+            this.prodfin_z = ( this.preciolista_z * ( 16 / 100 + 1 )) +  this.servic_z;
             this.prodfin_z = Math.round (this.cargoscli_z - this.prodfin_z);
             if(this.prodfin_z < 0) this.prodfin_z = 0;
             this.factura.prodfin = this.prodfin_z;
