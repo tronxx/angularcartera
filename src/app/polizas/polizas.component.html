@@ -24,10 +24,10 @@
         <label for="errorespoliza" > {{errorespoliza}} </label>
     </div>
 </div>
-<div [hidden]="!enespera" >
-    <img src="/assets/images/espera.gif" alt="">
-
+<div class="overlay" *ngIf="enespera">
+    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
 </div>
+
 <hr>
 <div id="datoscliente" [hidden]="!polizaactiva_z" >
     <div [hidden]="clienteactivo_z" id="pedircodigo">
