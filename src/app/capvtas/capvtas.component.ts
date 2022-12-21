@@ -26,6 +26,7 @@ import { DlgrenfacComponent } from '../altacli/dlgrenfac/dlgrenfac.component';
 import { DlgbusarticuloComponent } from '../common/dlgbusarticulo/dlgbusarticulo.component';
 import { DatossolicitComponent } from '../altacli/datossolicit/datossolicit.component';
 import { DlgdatosfacturaComponent  } from '../altacli/dlgdatosfactura/dlgdatosfactura.component';
+import { SpinnerComponent } from '../common/spinner/spinner.component';
 
 interface Nvorenfac {
   id: number;
@@ -78,6 +79,7 @@ export class CapvtasComponent implements OnInit {
   
 
   codcartera_z = "";
+  enespera = true;
   antcod_z = "";
   codcli_z = "";
   codigo_z = "";
@@ -461,8 +463,10 @@ obtencatalogos() {
   }
 
   params_z.modo = "buscar_ubicacion_ventas";
+  this.enespera = true;
   this.servicioclientes.obtenubivta(JSON.stringify(params_z)).subscribe(
     respu => {
+      this.enespera = false;
       this.ubivta = respu;
     }
   );
@@ -617,11 +621,12 @@ async pide_datos_cliente() {
       let mifac_z = JSON.parse(this.datosfactura_z);
       res.clienterespu.factura = mifac_z.numero;
       res.clienterespu.status = this.nvoclistatus;
+      this.enespera = true;
       const respu = await this.grabar_cliente(JSON.stringify(res));
       let idcli = respu.idcli;
       this.alerta("Se ha agregado al cliente" + idcli.toString());
     } catch {
-      
+      this.enespera = false;
     }
 
   });

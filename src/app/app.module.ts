@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormControl, FormsModule } from '@angular/forms'
-import { HttpClientModule } from "@angular/common/http";
-
+import { HttpClientModule, HttpInterceptor, HTTP_INTERCEPTORS } from "@angular/common/http";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -56,6 +55,9 @@ import { DlgDatosvtaComponent } from './capvtas/dlg-datosvta/dlg-datosvta.compon
 import { AgregarenpolComponent } from './polizas/agregarenpol/agregarenpol.component';
 import { DlgimpripolComponent } from './dlgimpripol/dlgimpripol.component';
 import { PolenganComponent } from './polengan/polengan.component';
+import { SpinnerModule } from './common/spinner/spinner.module';
+import { SpinnerInterceptor } from './common/interceptors/spinner.interceptor';
+
 
 @NgModule({
   declarations: [
@@ -111,10 +113,13 @@ import { PolenganComponent } from './polengan/polengan.component';
     MatSelectModule,
     MatProgressBarModule,
     MatSlideToggleModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    SpinnerModule,
   ],
-  providers: [ UsuariosService, 
+  providers: [ 
+    UsuariosService, 
      ConfiguracionService,
+     {provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi:true},
      DatePipe],
   bootstrap: [AppComponent],
   entryComponents: [DialogBodyComponent,

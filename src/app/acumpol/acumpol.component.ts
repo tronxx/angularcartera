@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { DialogBodyComponent } from '../dialog-body/dialog-body.component';
 import { ReplaySubject } from 'rxjs';
+import { SpinnerComponent } from '../common/spinner/spinner.component';
 
 @Component({
   selector: 'app-acumpol',
@@ -29,6 +30,7 @@ export class AcumpolComponent implements OnInit {
   tda_z = "";
   datospolenabled_z = false;
   nomtda_z = "";
+  enespera = false;
   tdaspol_z? = {};
 
   cobratario = {
@@ -92,8 +94,10 @@ export class AcumpolComponent implements OnInit {
       "codigofinal":this.tda_z
     };
     //console.log("idusuario:" + this.usrreg_z.idusuario);
+    this.enespera = true;
     this.serviciopolizas.busca_acumulado_polizas(JSON.stringify(params)).subscribe(
       respu => {
+        this.enespera = false;
         this.polizas = respu;
       }
     )
@@ -105,11 +109,13 @@ export class AcumpolComponent implements OnInit {
       "modo":"buscar_codigos_polizas",
       "idusuario": this.usrreg_z.idusuario
     };
+    this.enespera = true;
     //console.log("idusuario:" + this.usrreg_z.idusuario);
     this.cobratario.cvepromo = this.usrreg_z.iniciales;
 
     this.serviciopolizas.busca_codigos_poliza(JSON.stringify(params)).subscribe(
       respu => {
+        this.enespera = false;
         this.tda_z = respu[0].clave;
         this.nomtda_z = respu[0].nombre;
         //console.log("Codigos:" + JSON.stringify(respu));

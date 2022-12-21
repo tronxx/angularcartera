@@ -15,6 +15,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { Compania } from '../models/config';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SpinnerComponent } from '../common/spinner/spinner.component';
+import { SpinnerService } from '../common/spinner.service';
 
 @Component({
   selector: 'app-consupol',
@@ -61,6 +63,7 @@ export class ConsupolComponent implements OnInit {
   tipopagosel_z = "";
   tiporecobon_z = "";
 
+
   usrreg_z = {
     "idusuario":0,
     "login":"",
@@ -90,6 +93,7 @@ export class ConsupolComponent implements OnInit {
     private serviciopolizas: PolizasService,
     private router: Router,
     private route: ActivatedRoute,
+    private spiinersrvc: SpinnerService,
 
   ) { }
 
@@ -137,6 +141,7 @@ export class ConsupolComponent implements OnInit {
       "crearpoliza":"N",
       "tda":this.tda_z
   }
+  
   this.serviciopolizas.buscapoliza(JSON.stringify(params)).subscribe(
     respu => {
       this.errorespoliza=[];
@@ -182,9 +187,11 @@ buscar_renpol() {
     "modo":"obtener_detalles_poliza",
     "idpoliza": this.idpoliza
   };
+  
   //console.log("idusuario:" + this.usrreg_z.idusuario);
   this.serviciopolizas.buscar_renpol(JSON.stringify(params)).subscribe(
     respu => {
+      
       this.renglonesPoliza = respu;
       if(this.poliza) {
          this.totalbonifcs_z = this.renglonesPoliza.reduce(( acc,
