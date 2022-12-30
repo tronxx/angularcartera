@@ -138,6 +138,7 @@ export class ConfiguracionService {
     let anu = vencimiento_z.getFullYear();
     let mes = vencimiento_z.getMonth() + 1;
     let dia = vencimiento_z.getDate();
+    let anusbrinca = 0;
     let diaoriginal = dia;
     
     if(qom_z == "Q") {
@@ -150,13 +151,15 @@ export class ConfiguracionService {
     } else {
       meses_z = letra;
     }
-    if(mes + meses_z > 12 ) {
-      anu += ( Math.floor( (mes + meses_z) /12 ));
-    }
     mes = mes + meses_z; 
-    if(mes > 12) { mes = mes % 12; }
+    if(mes > 12 ) {
+      anusbrinca = ( Math.floor( (mes) /12 ));
+      anu +=  anusbrinca;
+      mes = mes - (anusbrinca * 12);
+      if(mes < 1) mes = 12;
+    }
     let strfec = anu.toString() + "/" + mes.toString() + '/' + dia.toString();
-    //console.log("letra:", letra, "strfec:", strfec);
+    console.log("letra:", letra, "strfec:", strfec);
     
     if(qom_z == "Q" && esimpar_z ) {
         if(mes == 2 && dia > 28 ) {

@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { newArray, stringify } from '@angular/compiler/src/util';
 import { Compania } from '../models/config';
 import { AgregarenpolComponent} from './agregarenpol/agregarenpol.component';
+import { SpinnerComponent } from '../common/spinner/spinner.component';
 
 
 @Component({
@@ -48,7 +49,7 @@ export class PolizasComponent implements OnInit {
   sinerrores = true;
   errorespoliza = [""]
   listaletras = [""];
-  enespera = false;
+  
   ultimo_z = "";
   
   cobratario = {
@@ -220,7 +221,7 @@ export class PolizasComponent implements OnInit {
 
   buscar_poliza() {
 
-    this.enespera = true;
+    
       //this.buscar_codigos_poliza();
       var params = {
         "modo":"acceder_poliza",
@@ -230,7 +231,6 @@ export class PolizasComponent implements OnInit {
       }
       if(this.tda_z == "") {
         this.alerta("El Código de la Póliza no puede estar vacío");
-        this.enespera = false;
         return;
 
       }
@@ -249,7 +249,6 @@ export class PolizasComponent implements OnInit {
             this.idpoliza = this.poliza.idpoliza;
             this.buscar_renpol();
           }
-          this.enespera = false;
         }
       );
   }
@@ -486,7 +485,6 @@ export class PolizasComponent implements OnInit {
   }
 
   si_aceptarpago() {
-    this.enespera = true;
     this.datospago.idpoliza = this.idpoliza;
     this.datospago.idusuario = this.usrreg_z.idusuario;
     this.datospago.cobratario = this.cobratario.cvepromo;
@@ -498,7 +496,6 @@ export class PolizasComponent implements OnInit {
         if(respu) {
           if(respu.error) {
             this.alerta("No se pudo agregar ");
-            this.enespera = false;
           }
           this.buscar_renpol();
           this.checacarta();
@@ -524,7 +521,6 @@ export class PolizasComponent implements OnInit {
           }
           this.clienteactivo_z = false;
         }
-        this.enespera = false;
       }
     );
 

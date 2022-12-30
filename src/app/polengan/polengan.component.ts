@@ -13,6 +13,7 @@ import { Compania } from '../models/config';
 import { ConfiguracionService } from '../services/configuracion.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SpinnerComponent } from '../common/spinner/spinner.component';
 
 @Component({
   selector: 'app-polengan',

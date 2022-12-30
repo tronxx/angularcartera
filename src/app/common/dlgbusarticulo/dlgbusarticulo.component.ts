@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { ClientesService } from '../../services/clientes.service';
 import { Articulo } from '../../models/articulo';
 import { MatIconModule } from '@angular/material/icon/icon-module';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
   selector: 'app-dlgbusarticulo',

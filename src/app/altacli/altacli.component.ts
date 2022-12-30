@@ -30,6 +30,7 @@ import { DlgDatosVndComponent } from './dlg-datos-vnd/dlg-datos-vnd.component';
 import { DlgfacturaComponent } from './dlgfactura/dlgfactura.component';
 import { DlgimpriletrasComponent } from '../common/dlgimpriletras/dlgimpriletras.component';
 import { ConfiguracionService } from '../services/configuracion.service'
+import { SpinnerComponent } from '../common/spinner/spinner.component';
 
 @Component({
   selector: 'app-altacli',
@@ -196,6 +197,15 @@ export class AltacliComponent implements OnInit {
       this.nvocli.modo = "agregar_cliente";
       this.buscarcliente();
     } else {
+      let misdatosrelvta = {
+        cvecia:this.config.getcvecia(),
+        codigoini:"",
+        codigofin:""
+      } 
+      let cverelvta_z = "relvtas_" + misdatosrelvta.cvecia;
+      let registro_z = localStorage.getItem(cverelvta_z) || "{}";
+      let misdatosiniciales_z = JSON.parse(registro_z);
+      this.numcli_z = misdatosiniciales_z.codigoini + this.config.fecha_a_str(new Date(), "yymmdd") + "99";
       this.nvocli.modo = "modificar_cliente";
     }
     
@@ -208,7 +218,12 @@ export class AltacliComponent implements OnInit {
       codigo: this.numcli_z,
       idcli : -1
     }
-    
+    let estado_z = this.checa_nuevo_codigo(this.numcli_z);
+    if(estado_z.resultado == "ERROR") {
+      this.alerta(estado_z.error);
+      return;
+    }
+
     this.servicioclientes.buscaclientealta(JSON.stringify(params_z)).subscribe(
       respu => {
         if(respu) {
@@ -242,6 +257,46 @@ export class AltacliComponent implements OnInit {
       }
     );
 
+  }
+
+  checa_nuevo_codigo(numcli_z: String ) {
+    let result ={
+      resultado: "OK",
+      error: ""
+    }
+    let fechahoy = new Date();
+    let conse_z = numcli_z.substring(8,10);
+    this.nvocli.promotor = conse_z;
+    let codcartera_z = numcli_z.substring(0,2);
+    let diasdif = 0;
+    let fechavta = "20" + numcli_z.substring(2,4) + "-" + 
+    numcli_z.substring(4,6) + "-" + 
+    numcli_z.substring(6,8);
+
+    let fecvta =  new Date(fechavta.replace(/-/g, '\/'));
+    let strfecvta = this.config.fecha_a_str(fecvta, "YYYY-mm-dd");
+    let dias = Math.floor( ( fechahoy.getTime() - fecvta.getTime()  ) / (86400000));
+    console.log("Fecha Vta:", strfecvta, " Fecha:", fechavta, "Dias:", dias);
+    if(strfecvta != fechavta ) {
+      result.resultado = "ERROR";
+      result.error = " Fecha Inválida:" + fechavta ;
+    } else {
+      dias = Math.abs(dias);
+      if(dias > 20 ) {
+        result.resultado = "ERROR";
+        result.error += " Fecha Fuera de Rango:" + fechavta + " " + dias.toString() + " Dias";
+      }
+  
+    }
+    if ( codcartera_z != Number(codcartera_z).toString().padStart(2, "0")) {
+      result.resultado = "ERROR";
+      result.error += " Codigo de Cartera es incorrecto:" + codcartera_z;
+    }
+    if ( conse_z != Number(conse_z).toString().padStart(2, "0")) {
+      result.resultado = "ERROR";
+      result.error += " Consecutivo es Incorrecto:" + conse_z;
+    }
+    return (result);
   }
 
   buscastatusmodificable() {

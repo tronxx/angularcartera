@@ -15,6 +15,7 @@ import { DlgdatosfacturaComponent  } from '../dlgdatosfactura/dlgdatosfactura.co
 import { Ofertas } from '../../models';
 import { Factorvtacred } from '../../models';
 import { Tabladesctocont } from '../../models';
+import { SpinnerComponent } from '../../common/spinner/spinner.component';
 
 @Component({
   selector: 'app-facturacli',

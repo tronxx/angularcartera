@@ -3,6 +3,7 @@ import { User } from '../models/user.model';
 import { UsuariosService } from '../services/usuarios.service';
 import { Router } from '@angular/router';
 import { Md5 } from 'ts-md5';
+import { SpinnerComponent } from '../common/spinner/spinner.component';
 
 @Component({
   selector: 'app-login',
@@ -51,7 +52,7 @@ export class LoginComponent implements OnInit {
     public router: Router ) { }
 
   ngOnInit(): void {
-    console.log("Fecha de Hoy:" + this.strfecha_z);
+    // console.log("Fecha de Hoy:" + this.strfecha_z);
     this.cerrarsesion();
 
   }
@@ -77,7 +78,7 @@ export class LoginComponent implements OnInit {
      //);
      this.serviciousuarios.obtenusuario(this.Usuario.login).subscribe(
       mirespuesta => {
-        console.log('Ya regrese y estoy en subscribe');
+        // console.log('Ya regrese y estoy en subscribe');
         if (mirespuesta == null || mirespuesta.length == 0) {
           this.error.activo = true;
           return;
@@ -103,7 +104,7 @@ export class LoginComponent implements OnInit {
             localStorage.setItem("token", JSON.stringify( this.registro_z));
             this.serviciousuarios.graba_sesion(this.registro_z.token).subscribe(
               midatasesion => {
-                console.log("Sesion:"+ JSON.stringify(midatasesion));
+                // console.log("Sesion:"+ JSON.stringify(midatasesion));
               }
 
             );
@@ -121,6 +122,11 @@ export class LoginComponent implements OnInit {
 
    );
 
+  }
+
+  hide_image() {
+    // console.log("Estoy en hide_image()");
+    if(this.error.activo) this.error.activo = false;
   }
 
 }

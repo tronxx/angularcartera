@@ -1,3 +1,4 @@
+<app-spinner></app-spinner>
 <div id="datosventas">
     <label for="fechaini">Fecha Inicial</label>
     <input type="date" name="fechaini" [(ngModel)]="fechaini_z">
@@ -21,10 +22,7 @@
 
     <p *ngIf="datosinvalidos_z"> {{msgerror_z}} </p>
 </div>
-<div [hidden]="!enespera_z" >
-    <img src="/assets/images/espera.gif" alt="">
-</div>
-<div id="relvtas" [hidden]="enespera_z">
+<div id="relvtas" >
     <table border="1">
         <tr>
             <th>Codigo</th>

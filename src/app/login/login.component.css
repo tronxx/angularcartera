@@ -1,0 +1,19 @@
+
+@keyframes girar {
+    from {transform: skew(0deg);}
+    to {transform: skew(15deg);}
+}
+
+@-webkit-keyframes rotate {
+    from {-webkit-transform: rotate(0deg);}
+  to {-webkit-transform: rotate(360deg);}
+}
+
+.rueda1 {
+    -webkit-animation: 1s girar infinite;
+    animation: 1s girar infinite;
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+    position:relative;
+}
+

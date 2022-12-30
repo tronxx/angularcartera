@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormControl } from '@angular/forms'
 import { ClientesService } from '../services/clientes.service'
@@ -7,6 +7,7 @@ import { ConfiguracionService } from '../services/configuracion.service';
 import { Cliente } from '../models/clientes';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { ReportecomisComponent } from '../reportecomis/reportecomis.component';
+import { SpinnerComponent } from '../common/spinner/spinner.component';
 
 @Component({
   selector: 'app-relvtas',
@@ -38,6 +39,7 @@ export class RelvtasComponent implements OnInit {
 
 
   constructor(public dialog: MatDialog, private servicioclientes: ClientesService,
+    private router: Router,
     private configuracion: ConfiguracionService) { }
 
   ngOnInit(): void {
@@ -117,6 +119,7 @@ export class RelvtasComponent implements OnInit {
   
   
   }
+
 
   onNoClick() {
 

@@ -16,7 +16,6 @@ import { Compania } from '../models/config';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SpinnerComponent } from '../common/spinner/spinner.component';
-import { SpinnerService } from '../common/spinner.service';
 
 @Component({
   selector: 'app-consupol',
@@ -92,8 +91,7 @@ export class ConsupolComponent implements OnInit {
     public datepipe: DatePipe,
     private serviciopolizas: PolizasService,
     private router: Router,
-    private route: ActivatedRoute,
-    private spiinersrvc: SpinnerService,
+    private route: ActivatedRoute
 
   ) { }
 

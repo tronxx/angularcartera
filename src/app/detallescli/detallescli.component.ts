@@ -17,6 +17,7 @@ import { Observcli } from '../models/observcli';
 import { Plazos } from '../models/plazos';
 import { Solicitud } from '../models/solicitud'
 import { DlgedoctaComponent  } from '../common/dlgedocta/dlgedocta.component';
+import { SpinnerComponent } from '../common/spinner/spinner.component';
 
 
 @Component({
