@@ -10,7 +10,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { DialogBodyComponent } from '../../dialog-body/dialog-body.component';
 import { DlgbuscliComponent } from '../../common/dlgbuscli/dlgbuscli.component';
 import { MatIconModule } from '@angular/material/icon'; 
-import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
+import { SpinnerComponent } from '../../common/spinner/spinner.component';
 
 import { Cliente } from '../../models/clientes';
 import { Aval } from '../../models/aval';
@@ -222,7 +223,7 @@ export class DlgDatosvtaComponent implements OnInit {
     }
     this.servicioclientes.obtennulets(JSON.stringify(paramsnulet_z)).subscribe(
       respu => {
-        this.nulets = respu;
+        this.nulets = respu;        
       }
     );
   }

@@ -141,6 +141,7 @@ export class ConfiguracionService {
     let anusbrinca = 0;
     let diaoriginal = dia;
     
+    meses_z = letra;
     if(qom_z == "Q") {
       meses_z = Math.floor(letra / 2);
       esimpar_z = (letra % 2);
@@ -148,12 +149,11 @@ export class ConfiguracionService {
         meses_z += Math.floor((dia + 15) / 30)
         dia = ( (dia  + 15) % 30);
       }
-    } else {
-      meses_z = letra;
     }
+    
     mes = mes + meses_z; 
     if(mes > 12 ) {
-      anusbrinca = ( Math.floor( (mes) /12 ));
+      anusbrinca = ( Math.floor( (mes -1) /12 ));
       anu +=  anusbrinca;
       mes = mes - (anusbrinca * 12);
       if(mes < 1) mes = 12;

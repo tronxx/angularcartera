@@ -1,0 +1,58 @@
+<app-spinner></app-spinner>
+<div>
+    <label for="tienda">Tienda</label>
+    <select name="tienda" id="tienda" [(ngModel)]="tienda" >
+        <option *NgFor="let mitienda of codigospolizas" >
+            {{mitienda.clave}} {{mitienda.nombre}}
+        </option>
+    </select>
+    
+    <label for="fecha">Fecha</label>
+    <input type="date" name="fecha" id="fecha" [(ngModel)]="fecha" >
+    <label for="cobratario">Cobratario</label>
+    <select name="cobratario" id="cobratario">
+        <option value=""></option>
+
+    </select>
+    <input type="text" name="promot" id="pomot"[(ngModel)]="promot" >
+    <button mat-raised-button 
+    color="primary" *ngIf="!polizaactiva_z" 
+    (click)="aceptarpoliza()">Aceptar</button>
+
+</div>
+<div>
+    <table>
+        <tr>
+            <th>Codigo</th>
+            <th>Nombre</th>
+            <th>Población</th>
+            <th>Entregó</th>
+            <th>Vence Plazo</th>
+            <th>Otorgó</th>
+            <th>Tipo Plazo</th>
+            <th>Letras</th>
+            <th>Precio x Letra</th>
+            <th>Importe</th>
+            <th>Ultimo Abono</th>
+            <th>Penúltimo Abono</th>
+            <th>Reporte</th>
+            <th>Relación</th>
+        </tr>
+        <tr *NgFor="let renrelco of renglonesRelacion">
+            <td>{{renrelco.numcli}} </td>
+            <td>{{renrelco.nombre}} </td>
+            <td>{{renrelco.poblacion}} </td>
+            <td>{{renrelco.promot}} </td>
+            <td>{{renrelco.promoplazo}} </td>
+            <td>{{renrelco.tipoplazo}} </td>
+            <td>{{renrelco.letras}} </td>
+            <td>{{renrelco.diasven}} </td>
+            <td>{{renrelco.precioletra}} </td>
+            <td>{{renrelco.importe}} </td>
+            <td>{{renrelco.ultimoabono}} </td>
+            <td>{{renrelco.penultimoabono}} </td>
+            <td>{{renrelco.reporte}} </td>
+            <td>{{renrelco.relacion}} </td>
+        </tr>
+    </table>
+</div>

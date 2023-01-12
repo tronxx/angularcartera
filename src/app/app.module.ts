@@ -57,6 +57,7 @@ import { DlgimpripolComponent } from './dlgimpripol/dlgimpripol.component';
 import { PolenganComponent } from './polengan/polengan.component';
 import { SpinnerModule } from './common/spinner/spinner.module';
 import { SpinnerInterceptor } from './common/interceptors/spinner.interceptor';
+import { CaprelcobComponent } from './caprelcob/caprelcob.component';
 
 
 @NgModule({
@@ -96,7 +97,8 @@ import { SpinnerInterceptor } from './common/interceptors/spinner.interceptor';
     DlgDatosvtaComponent,
     AgregarenpolComponent,
     DlgimpripolComponent,
-    PolenganComponent
+    PolenganComponent,
+    CaprelcobComponent,
   ],
   imports: [
     BrowserModule,

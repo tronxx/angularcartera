@@ -185,19 +185,21 @@
         </label>
         <br>
         <label for="nulets">Numero Letras
-            <select name="nulets" [disabled]="factura_al_momento" type="number" id="nulets" value="{{nvocli.nulet}}" 
+            <select name="nulets" id="nulets" value="{{nvocli.nulet}}" 
              [(ngModel)]= "nvocli.nulet" >
+
             <option *ngFor="let miletra of nulets" value="{{miletra.nulets}}"
               [selected]="nvocli.nulet == miletra.nulets">
               {{miletra.nulets}}
-              </option>
+            </option>
             </select>
         </label>
         <label for="canle">Precio x Letra
-            <input type="number" [disabled]="canledisabled" name="canle" id="canle" size="10" [(ngModel)]="nvocli.canle">
+            <input type="number" [disabled]="canledisabled" name="canle" id="canle" size="6" [(ngModel)]="nvocli.canle">
         </label>
+        <br>
         <label for="bonif">Bonificacion
-            <input type="number" [disabled]="bonifdisabled" name="bonif" id="bonif" size="10" [(ngModel)]="nvocli.bonificacion">
+            <input type="number" [disabled]="bonifdisabled" name="bonif" id="bonif" size="6" [(ngModel)]="nvocli.bonificacion">
         </label>
         <br>
         <label for="mescum">Cumpleaños

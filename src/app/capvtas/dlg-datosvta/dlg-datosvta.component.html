@@ -1,3 +1,4 @@
+<app-spinner></app-spinner>
 <div mat-dialog-content>
     <form #formularioCliente="ngForm" (ngSubmit)="formularioEnviado()">
         <label for="codigo">Codigo
@@ -88,6 +89,26 @@
                 <label class="ancho80" for="dir2aval"  size="10">Direccion 2</label>
                 <input type="text" name="dir2aval" id="dir2aval" size="30" [(ngModel)]="nvoaval.dirav2"
                                 oninput="this.value = this.value.toUpperCase()" >
+            </mat-card>
+            <mat-card>
+                <label for="jefgpo">Promotor
+                    <select name="jefgpo" id="jefgpo" value="{{nvocli.promotor}}" 
+                     [(ngModel)]= "nvocli.promotor" >
+                    <option *ngFor="let mipromo of promotor" value="{{mipromo.cvepromo}}"
+                      [selected]="nvocli.promotor == mipromo.cvepromo">
+                      {{mipromo.cvepromo}} {{mipromo.nombre}}
+                      </option>
+                    </select>
+                </label>
+                <br>
+                <label for="comjef">Comision Promotor
+                    <input type="number" name="comjef" id="comjef" size="10" [(ngModel)]="nvocli.comisionprom">
+                </label> 
+                <br>
+                <label for="fpagcom">Fecha Pago Comision
+                    <input type="text" name="fpagcom" id="fpagcom" size="10" [(ngModel)]="nvocli.pgocom" >
+                </label>
+        
             </mat-card>
     
         </div>    

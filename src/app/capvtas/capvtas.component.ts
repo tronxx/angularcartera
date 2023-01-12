@@ -117,6 +117,7 @@ export class CapvtasComponent implements OnInit {
   factorlet = 0;
   descto = 0;
   factordscto = 0;
+  factoroferta = 0;
   linea_z = "";
   oferta = false;
   proferta = 0;
@@ -280,9 +281,10 @@ export class CapvtasComponent implements OnInit {
     let plazotc = 0;
     let importe = 0;
     let iva = 0;
-    let factoroferta = 0;
+    this.factoroferta = 0;
     let hayoferta = false;
     this.hayerror = false;
+    let messages_z =[];
 
     let ii_z =0;
     let milinea = "";
@@ -294,17 +296,29 @@ export class CapvtasComponent implements OnInit {
         }
       });
     }
+    this.descto = 0;
     this.oferta = false;
-    if((this.ticte == "TC" && plazotc == 0)  || this.ticte == "CC") this.oferta = true;
-    if(this.ticte == "TC" && plazotc == 0) {
-      factoroferta = 2;
+    if((this.ticte == "TC" && plazotc == 0)  || this.ticte == "CC" )  {
+      this.oferta = true;
     }
+    if(this.ticte == "TC" && plazotc == 0) {
+      this.factoroferta = 3;
+      this.oferta = true;
+    }
+
+    if(milinea != 'MOTO' && this.nulet == 4) {
+      this.factordscto = 12;
+      this.descto = Math.floor(this.tottotal * this.factordscto / 100);
+      this.totgral = this.tottotal - this.descto;
+    }
+    messages_z.push("01- Ya seleccione factorDescto:" + this.factordscto.toString());
+    
 
     this.articuloscotizados.forEach(miren => {
       ii_z = miren.id;
       if(miren.esoferta && this.oferta) {
         hayoferta = true;
-        importe = miren.proferta * (1 + factoroferta /100 ) / (miren.piva / 100 + 1);
+        importe = (miren.proferta * (1 + this.factoroferta /100 ) / (miren.piva / 100 + 1));
       } else {
         importe = miren.precionormal  / (miren.piva / 100 + 1);
       }
@@ -315,15 +329,24 @@ export class CapvtasComponent implements OnInit {
       this.totiva +=  iva;
       milinea = miren.linea;
     });
-    this.tottotal = Math.round((this.totimporte + this.totiva) * 100 ) / 100;
+    this.tottotal = Math.round((this.totimporte + this.totiva) + .49);
     this.totgral = this.tottotal;
-    this.descto = 0;
+    messages_z.push("02 Ya Calcule totales Tottotal:" + 
+      this.tottotal.toString() + " totgral:" + this.totgral.toString());
+
     if(this.escredito) {
       this.preciolet = 0;
       if(this.nulet == 0) { 
         this.nulet = 1;
       }
       this.factorlet  = this.busca_factor_vtacrd(this.nulet);
+      this.descto = Math.floor(this.tottotal * this.factordscto / 100);
+      this.totgral = this.tottotal - this.descto;
+      messages_z.push("03 Es Credito Tottotal:" + 
+      this.tottotal.toString() + " totgral:" + this.totgral.toString() +
+      " Descto:"+ this.descto.toString()
+      );
+
       if(!this.factorlet) this.factorlet = 1 / this.nulet;
       this.preciolet = Math.round(((this.tottotal - this.enganche) * this.factorlet));
       this.totgral = this.enganche +  (this.preciolet * this.nulet);
@@ -340,6 +363,8 @@ export class CapvtasComponent implements OnInit {
         }
       }
     }
+    console.log("Resultados:", messages_z);
+    
     if(!this.hayerror && this.totgral > 1) this.esvalido=true;
   }
 
@@ -670,18 +695,27 @@ regresar() {
 
 async grabar_cliente(datoscliente: string): Promise <any> {
   let miotrorenfac : Nvorenfac[] = [];
+  let mismessages_z =[""];
   let opcion_z = "";
+  
   this.articuloscotizados.forEach(ren => {
     if(this.qom == "C") {
-      if(this.ticte == "CC" && ren.esoferta) {
-          ren.preciou = ren.proferta
+      if(this.ticte == "CC" && ren.esoferta || this.ticte == "TC" && ren.esoferta) {
+          ren.preciou = Math.round(ren.proferta * (1 + this.factoroferta / 100) + .49);
           opcion_z = "O";
+          mismessages_z.push("1.- Es ticte CC y Oferta, proferta=" + ren.proferta.toString());
       } else {
-          ren.preciou = ren.preciou * (1 - this.factordscto/100) * (ren.piva / 100 + 1);
+        mismessages_z.push("2a.- No es Oferta o  CC, preciou=" + ren.preciou.toString() + " FactorDescto:" + this.factordscto.toString());
+        ren.preciou = Math.round (ren.preciou * (1 - (this.factordscto/100))+ .49);
+        mismessages_z.push("2b.- No es Oferta o  CC, preciou=" + ren.preciou.toString() + " FactorDescto:" + this.factordscto.toString());
       }
     } else{
-      ren.preciou = ren.preciou * (ren.piva / 100 + 1);
+      mismessages_z.push("3.- No es C asi que debe ser Q preciou=" + ren.preciou.toString() + " FactorDescto:" + this.factordscto.toString());
+      ren.preciou = Math.round (ren.preciou * (1 - (this.factordscto/100)) + .49);
+      // ren.preciou = ren.preciou * (ren.piva / 100 + 1);
     }
+    console.log("Proceso checar renfac:", mismessages_z);
+    
     miotrorenfac.push(ren)
   });
 

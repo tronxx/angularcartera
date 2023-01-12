@@ -95,6 +95,7 @@ export class DlgdatoscliComponent implements OnInit {
   canledisabled = false;
   bonifdisabled = false;
   letra1disabled = false;
+  nuletsel = 0;
 
   numcli_z = "";
   nvocli = {
@@ -187,7 +188,6 @@ export class DlgdatoscliComponent implements OnInit {
       } else {
         this.nvocli.modo = "modificar_cliente";
       }
-      this.selecciona_letras_cliente();
     }
   
     buscarcliente() {
@@ -202,7 +202,7 @@ export class DlgdatoscliComponent implements OnInit {
           if(respu) {
             this.cliente = respu;
             this.nvocli.qom = this.cliente.qom;
-            this.buscanulets() ;
+            //this.selecciona_letras_cliente();
             this.asignaclienteanuevocli();
             this.buscastatusmodificable();
             //this.busca_aval(this.cliente.idcli);
@@ -285,6 +285,7 @@ export class DlgdatoscliComponent implements OnInit {
       this.servicioclientes.obtennulets(JSON.stringify(paramsnulet_z)).subscribe(
         respu => {
           this.nulets = respu;
+  
         }
       );
     }
@@ -327,6 +328,8 @@ export class DlgdatoscliComponent implements OnInit {
         this.nvocli.codpost = this.cliente.codpost;
         this.nvocli.colonia = this.cliente.colonia;
         this.nvocli.status = this.cliente.status;
+        this.nuletsel = this.cliente.nulet;
+
         if(this.nvocli.ticte == "TC") {
           this.contarjetatc = true;
           this.busca_tipos_tarjetas();
