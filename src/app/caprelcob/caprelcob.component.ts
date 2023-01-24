@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon'; 
 import { ClientesService } from '../services/clientes.service';
 import { ConfiguracionService } from '../services/configuracion.service';
 import { PolizasService } from '../services/polizas.service';
@@ -16,6 +18,7 @@ import { SpinnerComponent } from '../common/spinner/spinner.component';
 import { DatePipe } from '@angular/common';
 import { Promotor } from '../models';
 import { CodigoPoliza } from '../models';
+import { Renrelco } from '../models';
 
 @Component({
   selector: 'app-caprelcob',
@@ -29,6 +32,9 @@ export class CaprelcobComponent implements OnInit {
   promotor?: Promotor;
   codigospolizas: CodigoPoliza[] = [];
   codigopoliza? : CodigoPoliza;
+  renrenlco?: Renrelco;
+  renglonesrel: Renrelco[] = [];
+
   
 
   polizaactiva_z = false;
@@ -59,12 +65,18 @@ export class CaprelcobComponent implements OnInit {
   ngOnInit(): void {
     var mistorage_z  = localStorage.getItem('token') || "{}";
     this.usrreg_z =  JSON.parse(mistorage_z);
+    this.carga_catalogos();
 
   }
 
   aceptarpoliza() {
     
 
+  }
+
+  carga_catalogos() {
+    this.buscar_codigos_poliza();
+    this.buscar_cobratarios();
   }
 
   buscar_codigos_poliza() {
@@ -76,10 +88,11 @@ export class CaprelcobComponent implements OnInit {
     this.serviciopolizas.busca_codigos_poliza(JSON.stringify(params)).subscribe(
       respu => {
         this.codigospolizas = respu;
+        console.log("Codigos Polizas:", respu);
+        
         
       }
     )
-    this.buscar_cobratarios();
   }
 
   buscar_cobratarios() {
@@ -92,6 +105,8 @@ export class CaprelcobComponent implements OnInit {
     this.serviciopolizas.busca_cobratarios(JSON.stringify(params)).subscribe(
       respu => {
         this.promotores = respu;
+        console.log("Promotores:", respu);
+        
       }
     )
   }

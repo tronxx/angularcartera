@@ -82,7 +82,7 @@ export class ConsupolComponent implements OnInit {
   fechahoy_z  = new Date();
   fechaayer_z = new Date (this.fechahoy_z.getTime() - (1 * 24 * 60 * 60 *  1000));
   strfecha_z = this.fecha_a_str  (this.fechaayer_z, "YYYY-mm-dd");
-  fechapol_z = this.strfecha_z;
+  fechapol_z = ""
   
 
   constructor(
@@ -107,6 +107,8 @@ export class ConsupolComponent implements OnInit {
     let mifechapol_z =  String(this.route.snapshot.paramMap.get('fecha'));
     if (mifechapol_z) {
       this.fechapol_z = mifechapol_z;
+      console.log("0: fechapol_z:", this.fechapol_z);
+      
     }
     if(mitda_z) {
       this.tda_z = mitda_z;
@@ -149,6 +151,8 @@ export class ConsupolComponent implements OnInit {
         this.polizaactiva_z = true;
         this.tda_z = this.poliza.tda;
         this.fechapol_z = this.poliza.fecha;
+        console.log("Poliza:", this.poliza, " this.fechapol_z:", this.fechapol_z);
+        
         this.polizaactiva_z = true;
         this.idpoliza = this.poliza.idpoliza;
         this.buscar_renpol();
@@ -299,6 +303,26 @@ checa_fecha_timbre(mensaje: string) {
   } else {
     this.cierra_poliza(JSON.stringify(params));
   }
+}
+
+imprimir_timbre () {
+  if(this.poltimbrado_z && this.uuidpol_z != "-1" ) {
+    let paramcompl_z = { "uuid": this.uuidpol_z };
+    if(this.claveempresa == "EC") {
+      this.serviciopolizas.obten_pdf_cfdi(JSON.stringify(paramcompl_z));
+    } else {
+      this.serviciopolizas.obtentxtcomplmentopol(JSON.stringify(paramcompl_z));  
+    }
+  }
+
+}
+
+imprimir_cfdi_recargo() {
+  if(this.uuidrec_z && this.uuidrec_z != "-1" ) {
+    let paramrec_z = { "uuid": this.uuidrec_z };
+    this.serviciopolizas.obten_pdf_cfdi(JSON.stringify(paramrec_z));  
+  }
+
 }
 
 cierra_poliza( params_z: string) {

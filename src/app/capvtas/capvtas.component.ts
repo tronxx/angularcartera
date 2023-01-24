@@ -6,6 +6,8 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import { DialogBodyComponent } from '../dialog-body/dialog-body.component';
 import { MatIconModule } from '@angular/material/icon'; 
 import { ActivatedRoute, Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
+
 import { ConfiguracionService } from '../services/configuracion.service';
 import { Factura } from '../models';
 import { Renfacfo } from '../models';
@@ -158,6 +160,7 @@ export class CapvtasComponent implements OnInit {
     public dialog: MatDialog, 
     private configuracion: ConfiguracionService,
     private servicioclientes: ClientesService,
+    private datePipe: DatePipe,
     private route : Router
 
   ) { }
@@ -167,13 +170,16 @@ export class CapvtasComponent implements OnInit {
   }
 
   inicializa() {
+    let ayer_z = new Date();
+    ayer_z.setDate (ayer_z.getDate() - 1);
+    let strfecha =  this.datePipe.transform(ayer_z,"yyMMdd");
     this.obtencatalogos();
     this.cliente = <Cliente> {};
     let mistorage_z  = localStorage.getItem('capvtas') || "{}";
     let usrreg_z =  JSON.parse(mistorage_z);
     this.ubica = usrreg_z.ubicacion;
     this.codvnd = usrreg_z.codvnd;
-    this.codcartera_z = usrreg_z.codcartera;
+    this.codcartera_z = usrreg_z.codcartera + strfecha + "99";
     this.antubica = this.ubica;
     this.antcod_z = this.codcartera_z;
   }
@@ -538,20 +544,21 @@ buscanulets() {
 
 grabar_datos_venta() {
   console.log("Estoy en grabar_datos_venta()");
+  let micodcartera_z = this.codcartera_z.substring(0, 2);
   
   if( this.antubica != this.ubica || 
       this.antvnd != this.codvnd || 
-      this.antcod_z != this.codcartera_z
+      this.antcod_z != micodcartera_z
   )  {
     let capvtas = {
       "ubicacion": this.ubica,
       "codvnd": this.codvnd,
-      "codcartera": this.codcartera_z
+      "codcartera": micodcartera_z
     };
     localStorage.setItem("capvtas", JSON.stringify( capvtas));
     this.antubica = this.ubica;
     this.antvnd = this.codvnd;
-    this.antcod_z = this.codcartera_z;
+    this.antcod_z = micodcartera_z;
   }
 
 }
@@ -626,7 +633,7 @@ async pide_datos_cliente() {
      this.enganche = this.totgral;
   }
   let params_z = {
-    codigo: this.codcartera_z + this.configuracion.fecha_a_str(new Date(), "yymmdd") + "99",
+    codigo: this.codcartera_z,
     ticte: this.ticte,
     ubica: this.ubica,
     enganche: this.enganche,
@@ -697,6 +704,7 @@ async grabar_cliente(datoscliente: string): Promise <any> {
   let miotrorenfac : Nvorenfac[] = [];
   let mismessages_z =[""];
   let opcion_z = "";
+  let prlista_z = 0;
   
   this.articuloscotizados.forEach(ren => {
     if(this.qom == "C") {
@@ -706,14 +714,20 @@ async grabar_cliente(datoscliente: string): Promise <any> {
           mismessages_z.push("1.- Es ticte CC y Oferta, proferta=" + ren.proferta.toString());
       } else {
         mismessages_z.push("2a.- No es Oferta o  CC, preciou=" + ren.preciou.toString() + " FactorDescto:" + this.factordscto.toString());
-        ren.preciou = Math.round (ren.preciou * (1 - (this.factordscto/100))+ .49);
+        ren.preciou = Math.round (ren.preciou * (ren.piva / 100 + 1) * (1 - (this.factordscto/100))+ .49);
         mismessages_z.push("2b.- No es Oferta o  CC, preciou=" + ren.preciou.toString() + " FactorDescto:" + this.factordscto.toString());
       }
     } else{
       mismessages_z.push("3.- No es C asi que debe ser Q preciou=" + ren.preciou.toString() + " FactorDescto:" + this.factordscto.toString());
-      ren.preciou = Math.round (ren.preciou * (1 - (this.factordscto/100)) + .49);
-      // ren.preciou = ren.preciou * (ren.piva / 100 + 1);
+      if(this.nulet  < 5) {
+        ren.preciou = Math.round (ren.preciou * (ren.piva / 100 + 1) * (1 - (this.factordscto/100)) + .49);
+        // ren.preciou = ren.preciou * (ren.piva / 100 + 1);
+      } else {
+        ren.preciou = Math.round (ren.preciou * (ren.piva / 100 + 1));
+        // ren.preciou = ren.preciou * (ren.piva / 100 + 1);
+      }
     }
+    prlista_z += ren.preciou;
     console.log("Proceso checar renfac:", mismessages_z);
     
     miotrorenfac.push(ren)
@@ -734,7 +748,7 @@ async grabar_cliente(datoscliente: string): Promise <any> {
   nvocli.clienterespu.nulet = this.nulet;
   nvocli.clienterespu.canle = this.preciolet;
   nvocli.clienterespu.cargos = this.totgral;
-  nvocli.clienterespu.preciolista = (this.tottotal - this.descto) / ( 1 + nvocli.clienterespu.piva / 100);
+  nvocli.clienterespu.preciolista = prlista_z / (nvocli.clienterespu.piva / 100 + 1);
   nvocli.clienterespu.tarjetatc = this.mitarjetatc;
 
   this.servicioclientes.agrega_nuevo_cliente(JSON.stringify(nvocli)).subscribe( res =>{
@@ -786,8 +800,12 @@ async grabar_cliente(datoscliente: string): Promise <any> {
 }
 
 pedir_datos_fac() {
+  let fechavta_z = "20" + this.codcartera_z.substring(2,4) + "-" + 
+    this.codcartera_z.substring(4,6) + "-" + 
+    this.codcartera_z.substring(6,8);
+
   let params_z = {
-    fechavta:  this.configuracion.fecha_a_str(new Date(), "YYYY-mm-dd"),
+    fechavta: fechavta_z,
     factura:  <Factura> { },
     ubiage: this.ubica,
     statuscli: this.nvoclistatus,

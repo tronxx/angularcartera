@@ -138,43 +138,54 @@ export class ConfiguracionService {
     let anu = vencimiento_z.getFullYear();
     let mes = vencimiento_z.getMonth() + 1;
     let dia = vencimiento_z.getDate();
+    let strfec ="";
     let anusbrinca = 0;
     let diaoriginal = dia;
-    
+    let ii_z = 0;
     meses_z = letra;
+    esimpar_z = (letra % 2);
     if(qom_z == "Q") {
       meses_z = Math.floor(letra / 2);
-      esimpar_z = (letra % 2);
-      if(esimpar_z) {
-        meses_z += Math.floor((dia + 15) / 30)
-        dia = ( (dia  + 15) % 30);
-      }
     }
-    
-    mes = mes + meses_z; 
-    if(mes > 12 ) {
-      anusbrinca = ( Math.floor( (mes -1) /12 ));
-      anu +=  anusbrinca;
-      mes = mes - (anusbrinca * 12);
-      if(mes < 1) mes = 12;
+    for (ii_z = 1; ii_z <= meses_z; ii_z++) {
+        mes +=1;
+        if(mes > 12) { anu++; mes = 1}
     }
-    let strfec = anu.toString() + "/" + mes.toString() + '/' + dia.toString();
-    console.log("letra:", letra, "strfec:", strfec);
-    
-    if(qom_z == "Q" && esimpar_z ) {
-        if(mes == 2 && dia > 28 ) {
-            vencimiento_z = this.corrige_fecha_fin_de_mes(strfec);
-        } else if ((mes == 4 || mes == 6 || mes == 9 || mes == 11 )&& dia > 30 ) {
-          vencimiento_z = this.damefindemes(new Date(anu.toString() + "/" + mes.toString() + "/01"));  
-        } else {
-          vencimiento_z = new Date(strfec);
+    if(esimpar_z) {
+      dia += 15;
+      if ( dia > 30) {
+        switch (mes) {
+          case 1:
+          case 3:
+          case 5:
+          case 7:
+          case 8:
+          case 10:
+          case 12: 
+          if(dia > 31) {
+            mes += 1; if(mes > 12) { anu +=1; mes = 1 }
+            dia = dia - 30;
+          }
+          break;
+          case 2:
+          case 4:
+          case 6:
+          case 9:
+          case 11:
+              mes += 1; dia = dia - 30;
+          break;
         }
-    } else {
-      if(esfindemes) {
-        vencimiento_z = this.damefindemes(new Date(anu.toString() + "/" + mes.toString() + "/01"));
-      } else {
-        vencimiento_z = this.corrige_fecha_fin_de_mes(strfec);
       }
+      strfec = anu.toString() + "/" + mes.toString() + '/' + dia.toString();
+      vencimiento_z = new Date(strfec);
+      vencimiento_z = new Date (this.corrige_fecha_fin_de_mes(strfec));
+      console.log("letra Impar:", letra, "strfec:", strfec, " Vencimiento:", vencimiento_z.toDateString());
+    } else {
+      strfec = anu.toString() + "/" + mes.toString() + '/' + dia.toString();
+      vencimiento_z = new Date (this.corrige_fecha_fin_de_mes(strfec));
+      //vencimiento_z = new Date(strfec);
+      if(esfindemes) vencimiento_z = this.damefindemes(vencimiento_z);
+      console.log("letra Par:", letra, "strfec:", strfec, " Vencimiento:", vencimiento_z.toDateString());
     }
     return (vencimiento_z);
   }
@@ -250,7 +261,7 @@ export class ConfiguracionService {
     let listavencimientos_z= [];
     for (ii_z = inicio; ii_z <= final; ii_z++) {
       if(ii_z) {
-        letra = ii_z.toString().padStart(2, " ");
+        letra = ii_z.toString().padStart(2, "0");
       } else {
         letra = "SE";
       }
