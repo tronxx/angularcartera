@@ -100,6 +100,19 @@ export class ConfiguracionService {
     return(this.cias[this.config.cia]);
   }
 
+  obtenpromocion () {
+    let micia = this.cias[this.config.cia];
+    let promcion = {
+      promodic_inicio: micia.promodic_inicio,
+      promodic_fin: micia.promodic_fin,
+      promodic_dias:micia.promodic_dias,
+      promodic_mesesminimo: micia.mesesminimo
+    }
+    return (promcion);
+  }
+
+
+
   calcula_venc <Date> (fechavta:string, qom_z:string, letra:number) {
 
     let vencimiento_z = new Date(fechavta.replace(/-/g, '\/'));
@@ -116,7 +129,7 @@ export class ConfiguracionService {
         meses_z = Math.floor(this.cia.DiasContingencia / 30);
         dias_z = (this.cia.DiasContingencia % 30);
         vencimiento_z.setMonth(vencimiento_z.getMonth() + meses_z);
-        nvafecha_z = vencimiento_z.getTime() + (dias_z * 24 * 60 * 60 *  1000);
+        nvafecha_z = vencimiento_z.getDate() + dias_z ;
         vencimiento_z = new Date(nvafecha_z);
       }
   
@@ -125,40 +138,54 @@ export class ConfiguracionService {
     let anu = vencimiento_z.getFullYear();
     let mes = vencimiento_z.getMonth() + 1;
     let dia = vencimiento_z.getDate();
+    let strfec ="";
+    let anusbrinca = 0;
     let diaoriginal = dia;
-    
+    let ii_z = 0;
+    meses_z = letra;
+    esimpar_z = (letra % 2);
     if(qom_z == "Q") {
       meses_z = Math.floor(letra / 2);
-      esimpar_z = (letra % 2);
-      if(esimpar_z) {
-        meses_z += Math.floor((dia + 15) / 30)
-        dia = ( (dia  + 15) % 30);
-      }
-    } else {
-      meses_z = letra;
     }
-    if(mes + meses_z > 12 ) {
-      anu += ( Math.floor( (mes + meses_z) /12 ));
+    for (ii_z = 1; ii_z <= meses_z; ii_z++) {
+        mes +=1;
+        if(mes > 12) { anu++; mes = 1}
     }
-    mes = mes + meses_z; 
-    if(mes > 12) { mes = mes % 12; }
-    let strfec = anu.toString() + "/" + mes.toString() + '/' + dia.toString();
-    //console.log("letra:", letra, "strfec:", strfec);
-    
-    if(qom_z == "Q" && esimpar_z ) {
-        if(mes == 2 && dia > 28 ) {
-            vencimiento_z = this.corrige_fecha_fin_de_mes(strfec);
-        } else if ((mes == 4 || mes == 6 || mes == 9 || mes == 11 )&& dia > 30 ) {
-          vencimiento_z = this.damefindemes(new Date(anu.toString() + "/" + mes.toString() + "/01"));  
-        } else {
-          vencimiento_z = new Date(strfec);
+    if(esimpar_z) {
+      dia += 15;
+      if ( dia > 30) {
+        switch (mes) {
+          case 1:
+          case 3:
+          case 5:
+          case 7:
+          case 8:
+          case 10:
+          case 12: 
+          if(dia > 31) {
+            mes += 1; if(mes > 12) { anu +=1; mes = 1 }
+            dia = dia - 30;
+          }
+          break;
+          case 2:
+          case 4:
+          case 6:
+          case 9:
+          case 11:
+              mes += 1; dia = dia - 30;
+          break;
         }
-    } else {
-      if(esfindemes) {
-        vencimiento_z = this.damefindemes(new Date(anu.toString() + "/" + mes.toString() + "/01"));
-      } else {
-        vencimiento_z = this.corrige_fecha_fin_de_mes(strfec);
       }
+      strfec = anu.toString() + "/" + mes.toString() + '/' + dia.toString();
+      vencimiento_z = new Date(strfec);
+      vencimiento_z = new Date (this.corrige_fecha_fin_de_mes(strfec));
+      console.log("letra Impar:", letra, "strfec:", strfec, " Vencimiento:", vencimiento_z.toDateString());
+    } else {
+      strfec = anu.toString() + "/" + mes.toString() + '/' + dia.toString();
+      vencimiento_z = new Date (this.corrige_fecha_fin_de_mes(strfec));
+      //vencimiento_z = new Date(strfec);
+      if(esfindemes) vencimiento_z = this.damefindemes(vencimiento_z);
+      console.log("letra Par:", letra, "strfec:", strfec, " Vencimiento:", vencimiento_z.toDateString());
     }
     return (vencimiento_z);
   }
@@ -219,20 +246,26 @@ export class ConfiguracionService {
     
   }
   
-  generavencimientos (fechavta:string, qom:string, inicio:number, final:number) {
+  generavencimientos (fechavta:string, qom:string, inicio:number, final:number, diasgracia_z: number) {
     let ii_z = 0;
     let letra = "";
     let vence = "";
+    let diasletra_z = 15;
     let fecven = new Date();
+    if(qom == "Q") diasletra_z = 15;
+    if(qom == "M") diasletra_z = 30;
+    let fecbase_z = new Date(fechavta.replace(/-/g, '\/'));
+    fecbase_z.setDate (fecbase_z.getDate() + diasgracia_z);
+    fechavta = this.fecha_a_str(fecbase_z, "YYYY-mm-dd");
 
     let listavencimientos_z= [];
     for (ii_z = inicio; ii_z <= final; ii_z++) {
       if(ii_z) {
-        letra = ii_z.toString().padStart(2, " ");
+        letra = ii_z.toString().padStart(2, "0");
       } else {
         letra = "SE";
       }
-      fecven = this.calcula_venc(fechavta, qom, ii_z);
+      fecven = this.calcula_venc(fechavta, qom, ii_z );
       vence = this.fecha_a_str(fecven, "dd-mmm-YYYY");
       listavencimientos_z.push({letra, vence});
 
@@ -257,6 +290,9 @@ export class ConfiguracionService {
     }
     if(formato == "YYYYmmdd") {
       strfecha_z = anu_z + mes_z +  dia_z;
+    }
+    if(formato == "yymmdd") {
+      strfecha_z = anu_z.substring(2,4) + mes_z +  dia_z;
     }
 
     if(formato == "dd-mm-YYYY") {

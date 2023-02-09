@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Compania } from '../models/config';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SpinnerComponent } from '../common/spinner/spinner.component';
 
 @Component({
   selector: 'app-consupol',
@@ -61,6 +62,7 @@ export class ConsupolComponent implements OnInit {
   tipopagosel_z = "";
   tiporecobon_z = "";
 
+
   usrreg_z = {
     "idusuario":0,
     "login":"",
@@ -80,7 +82,7 @@ export class ConsupolComponent implements OnInit {
   fechahoy_z  = new Date();
   fechaayer_z = new Date (this.fechahoy_z.getTime() - (1 * 24 * 60 * 60 *  1000));
   strfecha_z = this.fecha_a_str  (this.fechaayer_z, "YYYY-mm-dd");
-  fechapol_z = this.strfecha_z;
+  fechapol_z = ""
   
 
   constructor(
@@ -89,7 +91,7 @@ export class ConsupolComponent implements OnInit {
     public datepipe: DatePipe,
     private serviciopolizas: PolizasService,
     private router: Router,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
 
   ) { }
 
@@ -105,6 +107,8 @@ export class ConsupolComponent implements OnInit {
     let mifechapol_z =  String(this.route.snapshot.paramMap.get('fecha'));
     if (mifechapol_z) {
       this.fechapol_z = mifechapol_z;
+      console.log("0: fechapol_z:", this.fechapol_z);
+      
     }
     if(mitda_z) {
       this.tda_z = mitda_z;
@@ -137,6 +141,7 @@ export class ConsupolComponent implements OnInit {
       "crearpoliza":"N",
       "tda":this.tda_z
   }
+  
   this.serviciopolizas.buscapoliza(JSON.stringify(params)).subscribe(
     respu => {
       this.errorespoliza=[];
@@ -146,6 +151,8 @@ export class ConsupolComponent implements OnInit {
         this.polizaactiva_z = true;
         this.tda_z = this.poliza.tda;
         this.fechapol_z = this.poliza.fecha;
+        console.log("Poliza:", this.poliza, " this.fechapol_z:", this.fechapol_z);
+        
         this.polizaactiva_z = true;
         this.idpoliza = this.poliza.idpoliza;
         this.buscar_renpol();
@@ -182,9 +189,11 @@ buscar_renpol() {
     "modo":"obtener_detalles_poliza",
     "idpoliza": this.idpoliza
   };
+  
   //console.log("idusuario:" + this.usrreg_z.idusuario);
   this.serviciopolizas.buscar_renpol(JSON.stringify(params)).subscribe(
     respu => {
+      
       this.renglonesPoliza = respu;
       if(this.poliza) {
          this.totalbonifcs_z = this.renglonesPoliza.reduce(( acc,
@@ -236,7 +245,7 @@ imprimirpoliza() {
   this.serviciopolizas.obtener_datos_poliza(JSON.stringify(params)).subscribe(
     respu => {
       let mirespu_z = respu;
-      console.log("Debug: 216 mirespu_z.status", mirespu_z.status);
+      //console.log("Debug: 216 mirespu_z.status", mirespu_z.status);
       if(mirespu_z.status != "C") {
         this.checa_si_cerrar_poliza("Poliza Abierta, Se va a Cerrar al Imprimir, seguro de continuar ?");
       } else {
@@ -294,6 +303,26 @@ checa_fecha_timbre(mensaje: string) {
   } else {
     this.cierra_poliza(JSON.stringify(params));
   }
+}
+
+imprimir_timbre () {
+  if(this.poltimbrado_z && this.uuidpol_z != "-1" ) {
+    let paramcompl_z = { "uuid": this.uuidpol_z };
+    if(this.claveempresa == "EC") {
+      this.serviciopolizas.obten_pdf_cfdi(JSON.stringify(paramcompl_z));
+    } else {
+      this.serviciopolizas.obtentxtcomplmentopol(JSON.stringify(paramcompl_z));  
+    }
+  }
+
+}
+
+imprimir_cfdi_recargo() {
+  if(this.uuidrec_z && this.uuidrec_z != "-1" ) {
+    let paramrec_z = { "uuid": this.uuidrec_z };
+    this.serviciopolizas.obten_pdf_cfdi(JSON.stringify(paramrec_z));  
+  }
+
 }
 
 cierra_poliza( params_z: string) {

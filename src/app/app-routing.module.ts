@@ -14,6 +14,8 @@ import { RelvtasComponent  } from './relvtas/relvtas.component';
 import { DatossolicitComponent } from './altacli/datossolicit/datossolicit.component';
 import { AcumpolComponent } from './acumpol/acumpol.component';
 import { CapvtasComponent } from './capvtas/capvtas.component';
+import { PolenganComponent } from './polengan/polengan.component'
+import {CaprelcobComponent } from './caprelcob/caprelcob.component';
 
 const routes: Routes = [
   { path: 'conscli', component: ConscliComponent, canActivate : [AuthGuard]  },
@@ -29,7 +31,9 @@ const routes: Routes = [
   { path: 'solicitud/:numcli', component: DatossolicitComponent, canActivate : [AuthGuard] },
   { path: 'nuevocli', component: AltacliComponent,  canActivate : [AuthGuard]},
   { path: 'listaaltas', component: RelvtasComponent, canActivate : [AuthGuard] },
+  { path: 'polengan', component: PolenganComponent, canActivate : [AuthGuard] },
   { path: 'nvavta', component: CapvtasComponent, canActivate : [AuthGuard] },
+  { path: 'caprelcob', component: CaprelcobComponent, canActivate : [AuthGuard] },
   { path: 'main', component: MainComponent },
   {path: '', redirectTo: 'main', pathMatch: 'full'}
 ];

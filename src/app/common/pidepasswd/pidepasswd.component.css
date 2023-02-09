@@ -1,0 +1,18 @@
+
+.ancho80 {
+    display: inline-block;
+    width: 80px;
+  }
+  
+  .ancho40 {
+    display: inline-block;
+    width: 80px;
+  }
+
+.editgray {
+  background-color:cyan;
+}
+
+.labelgray {
+  background-color:lightgray;
+}

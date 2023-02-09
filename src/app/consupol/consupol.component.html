@@ -1,3 +1,4 @@
+<app-spinner></app-spinner>
 <div id="datospoliza">
     <label for="tienda">
         Codigo
@@ -20,7 +21,15 @@
         <mat-icon aria-hidden="false" aria-label="Example home icon">print</mat-icon>
         Imprimir Despacho
     </button>
-
+    <button *ngIf="poltimbrado_z == 'S'" mat-raised-button color="primary" (click)="imprimir_timbre()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon">print</mat-icon>
+        Complemento Poliza
+    </button>
+    <button *ngIf="rectimbrado_z == 'S'" mat-raised-button color="primary" (click)="imprimir_cfdi_recargo()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon">print</mat-icon>
+        Pdf Recargo
+      </button>
+  
     <table id="tbl_renpol" border="1" class="hoover">
         <thead>
             <tr>
@@ -65,6 +74,8 @@
 </div>
 <div>
     Status Poliza: {{statuspol_z}} <br>
-    TimbrePoliza : {{poltimbrado_z}} Uuid:{{uuidpol_z}} <br>
+    TimbrePoliza : {{poltimbrado_z}} Uuid:{{uuidpol_z}} 
+    <br>
     TimbreRecargo: {{rectimbrado_z}} Uuid:{{uuidrec_z}}
+
 </div>

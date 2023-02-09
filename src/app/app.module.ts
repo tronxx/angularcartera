@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormControl, FormsModule } from '@angular/forms'
-import { HttpClientModule } from "@angular/common/http";
-
+import { HttpClientModule, HttpInterceptor, HTTP_INTERCEPTORS } from "@angular/common/http";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,7 +24,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule  } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
-import { MatProgressBarModule } from '@angular/material/progress-bar'
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSpinner } from '@angular/material/progress-spinner';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
 import { DlgedoctaComponent } from './common/dlgedocta/dlgedocta.component';
 import { DlgbuscliComponent } from './common/dlgbuscli/dlgbuscli.component';
@@ -52,6 +52,15 @@ import { AcumpolComponent } from './acumpol/acumpol.component';
 import { DlgreltraspComponent } from './common/dlgreltrasp/dlgreltrasp.component';
 import { CapvtasComponent } from './capvtas/capvtas.component';
 import { DlgDatosvtaComponent } from './capvtas/dlg-datosvta/dlg-datosvta.component';
+import { AgregarenpolComponent } from './polizas/agregarenpol/agregarenpol.component';
+import { DlgimpripolComponent } from './dlgimpripol/dlgimpripol.component';
+import { PolenganComponent } from './polengan/polengan.component';
+import { SpinnerModule } from './common/spinner/spinner.module';
+import { SpinnerInterceptor } from './common/interceptors/spinner.interceptor';
+import { CaprelcobComponent } from './caprelcob/caprelcob.component';
+import { DlgpidprofertaComponent } from './common/dlgpidproferta/dlgpidproferta.component';
+import { PidepasswdComponent } from './common/pidepasswd/pidepasswd.component';
+
 
 @NgModule({
   declarations: [
@@ -87,7 +96,13 @@ import { DlgDatosvtaComponent } from './capvtas/dlg-datosvta/dlg-datosvta.compon
     AcumpolComponent,
     DlgreltraspComponent,
     CapvtasComponent,
-    DlgDatosvtaComponent
+    DlgDatosvtaComponent,
+    AgregarenpolComponent,
+    DlgimpripolComponent,
+    PolenganComponent,
+    CaprelcobComponent,
+    DlgpidprofertaComponent,
+    PidepasswdComponent,
   ],
   imports: [
     BrowserModule,
@@ -104,10 +119,13 @@ import { DlgDatosvtaComponent } from './capvtas/dlg-datosvta/dlg-datosvta.compon
     MatSelectModule,
     MatProgressBarModule,
     MatSlideToggleModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    SpinnerModule,
   ],
-  providers: [ UsuariosService, 
+  providers: [ 
+    UsuariosService, 
      ConfiguracionService,
+     {provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi:true},
      DatePipe],
   bootstrap: [AppComponent],
   entryComponents: [DialogBodyComponent,

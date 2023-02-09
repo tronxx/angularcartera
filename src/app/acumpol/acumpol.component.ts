@@ -5,13 +5,20 @@ import { PolizasService } from '../services/polizas.service';
 import { Cliente } from '../models/clientes';
 import { Poliza } from '../models/polizas';
 import { Compania } from '../models/config';
+import { DlgimpripolComponent } from '../dlgimpripol/dlgimpripol.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button'; 
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { DialogBodyComponent } from '../dialog-body/dialog-body.component';
+import { ReplaySubject } from 'rxjs';
+import { SpinnerComponent } from '../common/spinner/spinner.component';
 
 @Component({
   selector: 'app-acumpol',
   templateUrl: './acumpol.component.html',
   styleUrls: ['./acumpol.component.css']
 })
+
 export class AcumpolComponent implements OnInit {
   fechafinal  = new Date();
   anu_z = this.fechafinal.getFullYear().toString();
@@ -23,6 +30,7 @@ export class AcumpolComponent implements OnInit {
   tda_z = "";
   datospolenabled_z = false;
   nomtda_z = "";
+  enespera = false;
   tdaspol_z? = {};
 
   cobratario = {
@@ -48,8 +56,10 @@ export class AcumpolComponent implements OnInit {
   polizas? : Poliza[] = [];
 
   constructor(
+    public dialog: MatDialog,     
     private servicioclientes: ClientesService,
     private serviciopolizas: PolizasService,
+    private router: Router,
     private configuracion: ConfiguracionService
 
   ) { }
@@ -84,8 +94,10 @@ export class AcumpolComponent implements OnInit {
       "codigofinal":this.tda_z
     };
     //console.log("idusuario:" + this.usrreg_z.idusuario);
+    this.enespera = true;
     this.serviciopolizas.busca_acumulado_polizas(JSON.stringify(params)).subscribe(
       respu => {
+        this.enespera = false;
         this.polizas = respu;
       }
     )
@@ -97,11 +109,13 @@ export class AcumpolComponent implements OnInit {
       "modo":"buscar_codigos_polizas",
       "idusuario": this.usrreg_z.idusuario
     };
+    this.enespera = true;
     //console.log("idusuario:" + this.usrreg_z.idusuario);
     this.cobratario.cvepromo = this.usrreg_z.iniciales;
 
     this.serviciopolizas.busca_codigos_poliza(JSON.stringify(params)).subscribe(
       respu => {
+        this.enespera = false;
         this.tda_z = respu[0].clave;
         this.nomtda_z = respu[0].nombre;
         //console.log("Codigos:" + JSON.stringify(respu));
@@ -109,5 +123,70 @@ export class AcumpolComponent implements OnInit {
       }
     )
 }
+
+imprimir_poliza() {
+  // Si una póliza existe y no está cerrada lo mando a consulta de esa
+  // póliza para que se pueda cerrar
+  // Si la póliza no existe o ya está cerrada, simplemente lo mando a imprimir
+  let params_z = {
+    "codtda": this.tda_z,
+    "title": "Proporcione la Fecha de la Poliza"
+  }
+  const dialogref = this.dialog.open(DlgimpripolComponent, {
+    width:'350px',
+    data: JSON.stringify( params_z)
+  });
+  dialogref.afterClosed().subscribe(res => {
+    if(res) {
+      //console.log(res);
+      let params_z = {
+        "modo":"obtener_datos_poliza",
+        "fechapoliza":res.fecha,
+        "tdapol":this.tda_z,
+        "modopdf": res.tipoimpresion
+      }
+      this.serviciopolizas.obtener_datos_poliza(JSON.stringify(params_z)).subscribe(
+        respu => {
+          let mirespu_z = respu;
+          //console.log("Debug: 216 mirespu", mirespu_z);
+          //this.alerta(JSON.stringify(respu));
+          if(mirespu_z.error == "Poliza Inexistente") {
+            this.serviciopolizas.obten_impresion_poliza_caja(JSON.stringify(params_z));
+            return;
+          }
+          if(mirespu_z.status == "C") {
+            this.serviciopolizas.obten_impresion_poliza_caja(JSON.stringify(params_z));
+            return;
+          }
+          let minvourl_z = [
+            '/consupol/' + this.tda_z +'/'+ params_z.fechapoliza
+          ];
+          //this.alerta("Voy a hacer route navigate: " + minvourl_z + " Respu:" + JSON.stringify(mirespu_z));
+          this.router.navigate(minvourl_z)
+        }
+  
+      );
+    }
+  });
+}
+
+alerta(mensaje: string)  {
+  let yesno_z = true;
+  const dialogref = this.dialog.open(DialogBodyComponent, {
+    width:'350px',
+    data: mensaje
+  });
+  dialogref.afterClosed().subscribe(res => {
+    //console.log("Debug", res);
+    if(res) {
+      yesno_z = true;
+    } else {
+      yesno_z = false;
+    }
+  });
+  return (yesno_z);
+
+}
+
 
 }

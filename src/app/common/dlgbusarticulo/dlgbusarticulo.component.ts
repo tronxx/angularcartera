@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { ClientesService } from '../../services/clientes.service';
 import { Articulo } from '../../models/articulo';
 import { MatIconModule } from '@angular/material/icon/icon-module';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
   selector: 'app-dlgbusarticulo',
@@ -39,6 +40,9 @@ export class DlgbusarticuloComponent implements OnInit {
       respu => {
         if(respu.length > 0) {
           this.articulos = respu;
+          if(this.articulos.length < 2) {
+            this.select_articulo(this.articulos[0]);
+          }
         } else {
           this.messages_z = "No hay Articulos que coincidan";
           console.log("Debug: No hay Articulos que coincidan:", this.codigo_z);

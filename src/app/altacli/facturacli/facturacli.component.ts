@@ -12,6 +12,10 @@ import { Renfacfo } from '../../models';
 import { Cliente } from '../../models/clientes';
 import { DlgrenfacComponent } from '../dlgrenfac/dlgrenfac.component';
 import { DlgdatosfacturaComponent  } from '../dlgdatosfactura/dlgdatosfactura.component';
+import { Ofertas } from '../../models';
+import { Factorvtacred } from '../../models';
+import { Tabladesctocont } from '../../models';
+import { SpinnerComponent } from '../../common/spinner/spinner.component';
 
 @Component({
   selector: 'app-facturacli',
@@ -32,6 +36,7 @@ export class FacturacliComponent implements OnInit {
   prodfin_z = 0;
   fechavta = ""
   ubiage = "";
+  tarjetatc_z ="";
   tempo_z = "Tempo:";
   escerrada = false;
   fechacierre_z = new Date();
@@ -39,8 +44,14 @@ export class FacturacliComponent implements OnInit {
   strfeccierre_z = "";
   linkcliente = "";
   msgerror_z = "";
+  statuscli_z = "";
   clientecred = false;
   rotarfac = false;
+  factortvtacrd? : Factorvtacred;
+  factoresvtacrd: Factorvtacred[] = [];
+  tabladesctocont? : Tabladesctocont;
+  tabladesctoscont : Tabladesctocont[] = [];
+  ofertas: Ofertas[] = [];
 
 
   constructor(
@@ -58,6 +69,7 @@ export class FacturacliComponent implements OnInit {
     const micli = this.buscar_cliente(this.codcli_z);
     this.linkcliente = "/altacli/" + this.codcli_z;
     this.carga_rotar_factura();
+    this.carga_ofertas();
     
   }
 
@@ -82,6 +94,7 @@ export class FacturacliComponent implements OnInit {
       fechavta: this.fechavta,
       factura:  <Factura> { },
       ubiage: this.ubiage,
+      statuscli: this.statuscli_z,
       modo: "NUEVO"
     }
     params_z.factura.idcli = this.idcli;
@@ -127,6 +140,7 @@ export class FacturacliComponent implements OnInit {
         this.preciolista_z = this.cliente.preciolista;
         this.ubiage = this.cliente.ubica;
         this.fechavta = this.cliente.fechavta;
+        this.statuscli_z = this.cliente.status;
         this.clientecred = (this.cliente.qom != "C");
         this.busca_factura();
         if(this.idfac == -1 ) {
@@ -163,7 +177,7 @@ export class FacturacliComponent implements OnInit {
           if(this.factura) {
             this.idfac = this.factura.idfac;
             this.busca_renfacfo(this.factura.idfac);
-            this.prodfin_z = ( this.preciolista_z * ( 16 / 100 + 1 )) -  this.servic_z;
+            this.prodfin_z = ( this.preciolista_z * ( 16 / 100 + 1 )) +  this.servic_z;
             this.prodfin_z = Math.round (this.cargoscli_z - this.prodfin_z);
             if(this.prodfin_z < 0) this.prodfin_z = 0;
             this.factura.prodfin = this.prodfin_z;
@@ -290,7 +304,13 @@ eliminar_renfac(mirenfac: Renfacfo) {
 agregar_renfac() {
   let params = {
     idcli: this.idcli,
-    modo: "NUEVO"
+    modo: "NUEVO",
+    ticte: this.cliente?.ticte,
+    qom: this.cliente?.qom,
+    nulets: this.cliente?.nulet,
+    ubica: this.cliente?.ubica,
+    tarjeta: this.tarjetatc_z,
+    complementodatos: "N"
   }
   const dialogmov = this.dialog.open(DlgrenfacComponent, {
     width:'700px',
@@ -438,6 +458,31 @@ regresar() {
     }
   }
   this.miroute.navigateByUrl('altacli/' + this.codcli_z);
+}
+
+carga_ofertas(){
+  this.servicioclientes.buscar_aofertas_json().subscribe(
+    respu => {
+      this.ofertas = respu;
+    }
+  );
+  
+}
+
+busca_mi_tc(idcli_z : number) {
+  var params_z = {
+    modo : "buscar_cli_tarjeta_tc",
+    codigo: this.codcli_z,
+    idcli : idcli_z
+  }
+  console.log("Debug: Estoy en busca tarjeta tc cliente ", idcli_z);
+  this.servicioclientes.buscar_cli_tarjetas_tc(JSON.stringify(params_z)).subscribe(
+    respu => {
+      if(respu) {
+        this.tarjetatc_z = respu.clave;
+      } 
+    }
+  );
 }
 
 }

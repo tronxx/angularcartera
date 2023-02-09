@@ -14,7 +14,11 @@
       "PrecioListaMinimoCarta":2300.00,
       "MesesMinimoCarta": 9,
       "CartaSaldadosMesesAntes": 2,
-      "DiasBonificacion":5
+      "DiasBonificacion":5,
+      "promodic_inicio": "2022-12-01",
+      "promodic_fin": "2022-12-31",
+      "promodic_dias":"15",
+      "mesesminimo":"5"
     }
     ,
     {
@@ -31,7 +35,11 @@
         "PrecioListaMinimoCarta":2300.00,
         "MesesMinimoCarta": 8,
         "CartaSaldadosMesesAntes": 1,
-        "DiasBonificacion":5
-      }
+        "DiasBonificacion":5,
+        "promodic_inicio": "2022-12-01",
+        "promodic_fin": "2022-12-31",
+        "promodic_dias":"15",
+        "mesesminimo":"5"
+        }
 
 ]

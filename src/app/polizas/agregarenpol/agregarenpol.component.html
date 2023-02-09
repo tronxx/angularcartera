@@ -1,0 +1,135 @@
+<h1 mat-dialog-title> Porporcione los datos del Pago</h1>
+<mat-dialog-content>
+        <div *ngIf="cliente" id="complementocliente" [hidden]="!clienteactivo_z" >
+            <div class="card">
+                <div class="card">
+                    <div class="card-body">
+                        <table border="1">
+                            <tr>
+                                <td>                       
+                                    Codigo: <b>{{cliente.numcli}}</b>  
+                                    Nombre: <b><label [class.labelgray]="esstatus1"  >{{cliente.nombre}}</label>  </b><br>
+                                    Direccion: <b>{{cliente.direc}} {{cliente.poblac}} </b> <br>
+                                    Enganche: <b>{{cliente.enganche | currency }}</b> 
+                                    lta 1/1 : <b>{{cliente.letra1  | currency}}</b>  
+                                    N.Letras: <b>{{cliente.nulet}} </b>
+                                    de <b>{{cliente.canle | currency}}</b> 
+                                    Bonificacion: <b>{{cliente.bonificacion  | currency }} </b><br>
+                                    Cargos: <b>{{cliente.cargos  | currency}}</b>  
+                                    Abonos: <b>{{cliente.abonos  | currency }}</b> 
+                                    Saldo: <b>{{ cliente.cargos - cliente.abonos  | currency }}</b>
+                                    <label  class="labelgray" *ngIf="conpromo_z" >Promcion: {{cliente.diasgracia}} </label>
+                                    <br>
+                                    Compra: <b>{{cliente.compra}} </b>
+                                    <br>
+                
+                                </td>
+                                <td>
+                                    Vencimientos:<br>
+                                    <div class="boxscroll">
+        
+                                        <ul>
+                                            <li for="" *ngFor="let mivencimiento of listavencimientos_z" >
+                                                Letra: {{mivencimiento.letra}}/{{cliente.nulet}}
+                                                Vence: {{mivencimiento.vence}}
+                                            </li>
+            
+                                        </ul>
+        
+                                    </div>
+                                </td>
+                        </tr>
+                    </table>
+        
+                    </div>
+                </div>
+                <div>
+                    <mat-card>
+                        
+                        <label for="tipopago">
+                            Pago
+                            <select name="tipopago" id="tipopago" (change)="calculaConcepto()" [(ngModel)]="tipopagosel_z" >
+                                <option *ngFor="let tipopago of tipospagos" 
+                                    value="{{tipopago.clave}}"
+                                    [selected]="tipopagosel_z == datospago.tipopago"
+                                  >
+                                    {{tipopago.descri}}
+                                </option>
+                            </select>
+                        </label>
+                        <label for="ltaini" >
+                            Letra Inicial
+                            <input size = "10" id="ltaini" [disabled]="true" (blur)="calculaConcepto()" name = "ltaini" type="text" [(ngModel)]= "datospago.ltaini">
+                        </label>
+                        <label for="ltafin" [hidden]="ultltaoculto_z">
+                            Letra Final
+                            <select name="listapagos" id="listapagos" value="{{sigletra_z}}" 
+                                (change)="calculaConcepto()" [(ngModel)]= "datospago.ltafin" >
+                                <option *ngFor="let miltafin of listaletras" value="{{miltafin}}"
+                                (blur)="calcula_bonif_extra()"
+                                [selected]="miltafin == datospago.ltafin">
+                                {{miltafin}}
+                            </option>
+        
+                            </select>
+                        </label>
+                        <br>
+                        <label for="concepto">
+                            Concepto
+                            <input id="concepto" name = "concepto" [disabled]="true" type="text" [(ngModel)]= "datospago.concepto">
+                            <br>
+                            Complemento del Concepto
+                            <input id="concepto2" name = "concepto2" type="text" [(ngModel)]= "datospago.conceptocompl" (blur)="define_bonif_abierta()">
+        
+                        </label>
+                        <br>
+                        <label for="tipomov">
+                            Es con 
+                            <select name="tipomov" id="tipomov" [disabled]="tipomovcerrado"  [(ngModel)]="tipomovsel_z" (blur)="sel_tipopago()" value="tipomovsel_z">
+                                <option *ngFor="let tipomov of tiposmov" value="{{tipomov.tipo}}" 
+                                    [selected]="tipomovsel_z == tipomov.tipo">
+                                    {{tipomov.descri}}
+                                </option>
+                            </select>
+                        </label>
+                        <label for="recobon">
+                            <input size = "10" type="number" name="recobon" id="recobon" [disabled]="bonif_cerrada" (blur)="calculaNeto()" [(ngModel)] = "datospago.recobon" >
+                        </label>
+                        <br>
+                        <label for="importe">
+                            Importe
+                            <input size = "10" type="number" [disabled]="importecerrado" name="importe" id="importe" (blur)="calculaNeto()" [(ngModel)] = "datospago.importe" >
+                        </label>
+                        
+                        <label for="neto">
+                            Neto:
+                            <input size = "10" type="text" name="neto" id="neto" [disabled]="true"
+                            value="{{datospago.neto | currency}} ">
+                        </label>
+                        <br>
+                        <label for="recibido">
+                            Recibido:
+                            <input size = "10" type="text" name="recibido" id="recibido" (keyup)="onChangeObj($event)"
+                            [(ngModel)]="recibido" >
+                            
+                        </label>
+                        <label for="cambio">
+                            Cambio:
+                            <input size = "10" type="text" name="cambio" id="cambio" [disabled]="true"
+                            value="{{cambio | currency}} ">
+                        </label>
+                        <br>
+                        <p> {{msg_z}}</p>
+                        <div id="errores"  [hidden]="!errorespago()">
+                            <label for="errores" class="lbl danger" > {{errores_z}} </label>
+                        </div>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+        
+</mat-dialog-content>
+<div mat-dialog-actions>
+    <button  mat-raised-button color="primary" (click)="siaceptarpago()" [disabled]="!aceptarpago">Aceptar</button>
+    <button  mat-raised-button color="warn" (click)="closeno()">Cancelar</button>
+</div>

@@ -25,6 +25,8 @@ import { Solicitud } from '../../models/solicitud';
 export class DlgDatosSolicComponent implements OnInit {
 
   solicitud : Solicitud = <Solicitud> {};  
+  telconyuge_z = "";
+  telconyugeaval_z = "";
   edoscivil = [
     {clave:"C", descri:"Casado"},
     {clave:"S", descri:"Soltero"}

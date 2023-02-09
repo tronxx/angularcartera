@@ -17,6 +17,7 @@ import { Observcli } from '../models/observcli';
 import { Plazos } from '../models/plazos';
 import { Solicitud } from '../models/solicitud'
 import { DlgedoctaComponent  } from '../common/dlgedocta/dlgedocta.component';
+import { SpinnerComponent } from '../common/spinner/spinner.component';
 
 
 @Component({
@@ -45,6 +46,8 @@ export class DetallescliComponent implements OnInit {
   yaobscli_z = false;
   plazoscli_z = false;
   solicitudcli_z = false;
+  esstatus1 = true;
+  conpromocion = false;
   listavencimientos_z = [ {
       "letra" : "",
       "vence" : ""
@@ -89,9 +92,14 @@ export class DetallescliComponent implements OnInit {
       respu => {
         if(respu) {
           this.cliente = respu;
+          this.conpromocion = false;
+          if(this.cliente.diasgracia > 0 ) {
+            this.conpromocion = true;
+          }
           this.busca_aval(this.cliente.idcli);
           this.busca_movclis(this.cliente.idcli);
           this.mostrar_vencimientos();
+          this.esstatus1 = (this.cliente.status == "*")
           this.yaobscli_z = false;
           this.plazoscli_z = false;
           this.solicitudcli_z = false;
@@ -240,7 +248,8 @@ export class DetallescliComponent implements OnInit {
     let misven_z = "";
     if (this.cliente) {
       misven_z = this.servicioclientes.busca_vencimientos(
-        this.cliente.fechavta, this.cliente.qom, inicial, this.cliente.nulet
+        this.cliente.fechavta, this.cliente.qom, inicial, 
+        this.cliente.nulet, this.cliente.diasgracia
       );
       this.listavencimientos_z = JSON.parse(misven_z);
       // console.log("Debug: Mis vencimientos", misven_z);

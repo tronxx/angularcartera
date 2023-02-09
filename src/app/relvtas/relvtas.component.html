@@ -1,3 +1,4 @@
+<app-spinner></app-spinner>
 Ventas
 <form (ngSubmit)='onSubmit()' #myForm="ngForm">
     <label >Fecha Inicial:
@@ -21,12 +22,13 @@ Ventas
     <button mat-raised-button color="primary"  type="submit" class="btn btn-primary" > Aceptar</button>
     {{mimodelo.clavecia}} 
 </form>
-<a routerLink="/nuevocli">
-<button mat-raised-button color="primary" >
-    <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
-    Nuevo Cliente
-</button>
+<a routerLink="/altacli/nuevocli">
+    <button mat-raised-button color="primary"  >
+        <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
+        Nuevo Cliente
+    </button>
 </a>
+
 <button mat-raised-button color="primary" (click)="relvtas()">
     <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
     Imprimir Reporte
@@ -59,8 +61,8 @@ Ventas
     <tbody>
         <tr *ngFor="let cliente of clientes">
             <td> <a routerLink="/altacli/{{cliente.numcli}}"><button mat-raised-button color="primary" > Detalles</button></a> </td>
-            <td>{{cliente.numcli}} </td>
-            <td>{{cliente.nombre}} </td>
+            <td>{{cliente.numcli}}</td>
+            <td>{{cliente.nombre}} {{cliente.status}}</td>
             <td>{{cliente.direc}} </td>
             <td>{{cliente.ubica}} </td>
             <td>{{cliente.qom}} </td>

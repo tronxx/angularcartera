@@ -29,6 +29,8 @@ import { DlgdatosmovcliComponent } from './dlgdatosmovcli/dlgdatosmovcli.compone
 import { DlgDatosVndComponent } from './dlg-datos-vnd/dlg-datos-vnd.component';
 import { DlgfacturaComponent } from './dlgfactura/dlgfactura.component';
 import { DlgimpriletrasComponent } from '../common/dlgimpriletras/dlgimpriletras.component';
+import { ConfiguracionService } from '../services/configuracion.service'
+import { SpinnerComponent } from '../common/spinner/spinner.component';
 
 @Component({
   selector: 'app-altacli',
@@ -55,9 +57,18 @@ export class AltacliComponent implements OnInit {
   conaval = true;
   contarjetatc = false;
   yaagentes_z = false;
+  factura_al_momento = false;
   modoqom_z = [ { clave:"C", descri:"CONTADO"}];
   linkfactura = "";
   linksolicitud = "";
+  conpromocion_z = false;
+  diasgra_z = 0;
+  promocion_z = {
+    promodic_inicio: "2022-12-01",
+    promodic_fin: "2022-12-31",
+    promodic_dias:"15",
+    promodic_mesesminimo:5
+  }
 
   tictes_z = [
     { clave:"PC", descri:"PRIMER CREDITO"},
@@ -155,13 +166,16 @@ export class AltacliComponent implements OnInit {
   }
 
   clienteabierto = false;
+  fechacierre_z = "";
   letraspend = false;
   clientecred = false;
+  esstatus1 = false;
 
   constructor(public dialog: MatDialog, 
     private route: ActivatedRoute,
     private location: Location,
     private servicioclientes: ClientesService,
+    private config: ConfiguracionService,
     private router: Router
     ) { }
 
@@ -183,6 +197,15 @@ export class AltacliComponent implements OnInit {
       this.nvocli.modo = "agregar_cliente";
       this.buscarcliente();
     } else {
+      let misdatosrelvta = {
+        cvecia:this.config.getcvecia(),
+        codigoini:"",
+        codigofin:""
+      } 
+      let cverelvta_z = "relvtas_" + misdatosrelvta.cvecia;
+      let registro_z = localStorage.getItem(cverelvta_z) || "{}";
+      let misdatosiniciales_z = JSON.parse(registro_z);
+      this.numcli_z = misdatosiniciales_z.codigoini + this.config.fecha_a_str(new Date(), "yymmdd") + "99";
       this.nvocli.modo = "modificar_cliente";
     }
     
@@ -195,7 +218,12 @@ export class AltacliComponent implements OnInit {
       codigo: this.numcli_z,
       idcli : -1
     }
-  
+    let estado_z = this.checa_nuevo_codigo(this.numcli_z);
+    if(estado_z.resultado == "ERROR") {
+      this.alerta(estado_z.error);
+      return;
+    }
+
     this.servicioclientes.buscaclientealta(JSON.stringify(params_z)).subscribe(
       respu => {
         if(respu) {
@@ -205,6 +233,8 @@ export class AltacliComponent implements OnInit {
           this.solicitudcli_z = false;
           this.facturacli_z = false;
           this.buscastatuscerrado();
+          this.buscastatusmodificable();
+          this.buscadiasgracia();
 
           //this.busca_aval(this.cliente.idcli);
           //this.busca_movclis(this.cliente.idcli);
@@ -229,6 +259,90 @@ export class AltacliComponent implements OnInit {
 
   }
 
+  checa_nuevo_codigo(numcli_z: String ) {
+    let result ={
+      resultado: "OK",
+      error: ""
+    }
+    let fechahoy = new Date();
+    let conse_z = numcli_z.substring(8,10);
+    this.nvocli.promotor = conse_z;
+    let codcartera_z = numcli_z.substring(0,2);
+    let diasdif = 0;
+    let fechavta = "20" + numcli_z.substring(2,4) + "-" + 
+    numcli_z.substring(4,6) + "-" + 
+    numcli_z.substring(6,8);
+
+    let fecvta =  new Date(fechavta.replace(/-/g, '\/'));
+    let strfecvta = this.config.fecha_a_str(fecvta, "YYYY-mm-dd");
+    let dias = Math.floor( ( fechahoy.getTime() - fecvta.getTime()  ) / (86400000));
+    console.log("Fecha Vta:", strfecvta, " Fecha:", fechavta, "Dias:", dias);
+    if(strfecvta != fechavta ) {
+      result.resultado = "ERROR";
+      result.error = " Fecha Inválida:" + fechavta ;
+    } else {
+      dias = Math.abs(dias);
+      if(dias > 20 ) {
+        result.resultado = "ERROR";
+        result.error += " Fecha Fuera de Rango:" + fechavta + " " + dias.toString() + " Dias";
+      }
+  
+    }
+    if ( codcartera_z != Number(codcartera_z).toString().padStart(2, "0")) {
+      result.resultado = "ERROR";
+      result.error += " Codigo de Cartera es incorrecto:" + codcartera_z;
+    }
+    if ( conse_z != Number(conse_z).toString().padStart(2, "0")) {
+      result.resultado = "ERROR";
+      result.error += " Consecutivo es Incorrecto:" + conse_z;
+    }
+    return (result);
+  }
+
+  buscastatusmodificable() {
+    var params_z = {
+      modo : "obtener_status_vta_facturacion_inmediata",
+      numcli: this.numcli_z
+    }
+    console.log("buscastatusmodificable", params_z);
+    
+    this.factura_al_momento = false;
+    this.servicioclientes.buscar_status_cliente_modificable(JSON.stringify(params_z)).subscribe(
+      respu => {
+        if(respu) {
+          console.log("Respuesta buscar status cliente modificable", respu);
+          
+          this.factura_al_momento = (respu.facturalmomento == "SI");
+         }
+      }
+    );
+
+  }
+
+  buscadiasgracia() {
+    var params_z = {
+      modo : "obtener_dias_promocion",
+      codigo: this.numcli_z
+    }
+    console.log("buscasdiasgracia", params_z);
+    
+    this.conpromocion_z = false;
+    this.diasgra_z = 0;
+    this.servicioclientes.altas_buscar_dias_promocion(JSON.stringify(params_z)).subscribe(
+      respu => {
+        if(respu) {
+          if(respu.diasgracia > 0) {
+            this.conpromocion_z = true;
+            this.diasgra_z = respu.diasgracia;
+          }
+         }
+      }
+    );
+
+  }
+
+
+
   buscastatuscerrado() {
     var params_z = {
       modo : "obtener_status_cierre_cliente_altas",
@@ -239,6 +353,7 @@ export class AltacliComponent implements OnInit {
       respu => {
         if(respu) {
           this.clienteabierto = (respu.status == "VENTA_ABIERTA");
+          this.fechacierre_z = respu.fecha;
          }
       }
     );
@@ -278,6 +393,7 @@ export class AltacliComponent implements OnInit {
         this.ubivta = respu;
       }
     );
+    this.promocion_z = this.config.obtenpromocion();
   }
   
 
@@ -285,6 +401,8 @@ export class AltacliComponent implements OnInit {
     if(this.cliente) {
       this.nvocli.idcli = this.cliente.idcli;
       this.nvocli.numcli = this.cliente.numcli;
+      this.nvocli.status = this.cliente.status;
+      this.esstatus1 = (this.cliente.status == "*")
       this.nvocli.nombre = this.cliente.nombre;
       this.nvocli.direc = this.cliente.direc;
       this.nvocli.appat = this.cliente.appat;
@@ -416,6 +534,10 @@ export class AltacliComponent implements OnInit {
       if (res) {
         res.modo = "agregar_cliente";
         res.clienterespu.modo="agregar_cliente";
+        this.nvocli.numcli = res.clienterespu.numcli;
+        this.nvocli.fechavta = res.clienterespu.fechavta;
+        this.nvocli.qom = res.clienterespu.qom;
+        this.nvocli.nulet = res.clienterespu.nulet;
         this.servicioclientes.agrega_nuevo_cliente(JSON.stringify(res)).subscribe(
           respu => {
             if(respu) {
@@ -423,6 +545,7 @@ export class AltacliComponent implements OnInit {
                 this.alerta(respu.error);
               } else {
                 this.buscarcliente();
+                this.grabar_promocion_cliente();
               }
             } else {
               this.alerta("Ocurrió un error en alta");
@@ -432,6 +555,40 @@ export class AltacliComponent implements OnInit {
       }
       console.log("Debug: Regrese de Asignar datos", res);
     });
+  }
+
+  
+  grabar_promocion_cliente() {
+    let mesesvta = this.nvocli.nulet;
+    if(this.nvocli.qom == "Q") mesesvta = mesesvta * 2;
+    let fvta_z = "20" + this.numcli_z.substring(2,4) + "-" + 
+      this.numcli_z.substring(4,6) + "-" + 
+      this.numcli_z.substring(6,8);
+    
+    //console.log("Grabando promocion cliente Fechavta:", fvta_z, " Meses", mesesvta);
+    
+    if(fvta_z < this.promocion_z.promodic_inicio ||
+      fvta_z  > this.promocion_z.promodic_fin)
+    return;
+    if(this.nvocli.qom == 'C') return;
+    if(mesesvta < this.promocion_z.promodic_mesesminimo) return;
+    //this.alerta("Se va a grabar la promocion");
+
+      var params_z = {
+          modo : "grabar_dias_promocion",
+          diasgracia: this.promocion_z.promodic_dias,
+          codigo: this.numcli_z
+      }
+      console.log("Grabar promocion", params_z);
+        
+      this.conpromocion_z = false;
+      this.diasgra_z = 0;
+      this.servicioclientes.altas_agregar_dias_promocion(JSON.stringify(params_z)).subscribe(
+        respu => {
+          console.log("Se agrego los dias de promicion");
+        }
+      );
+    
   }
 
   modificarcliente () {
@@ -764,7 +921,7 @@ busca_factura(idcli_z : number) {
         if(respu) {
           this.factura = respu[0];
           if(this.factura) {
-            let precon = ( this.nvocli.preciolista * ( this.nvocli.piva / 100 + 1 )) -  this.nvocli.servicio;
+            let precon = ( this.nvocli.preciolista * ( this.nvocli.piva / 100 + 1 )) +  this.nvocli.servicio;
             precon = this.nvocli.cargos - precon 
             if(precon < 0) precon = 0;
             this.factura.prodfin = Math.round(precon);

@@ -15,13 +15,17 @@
 
         </label>
         <label for="qom">Periodicidad Pago
-            <select name="qom" id="qom" value="{{nvocli.qom}}" (blur)="selecciona_letras_cliente()" [(ngModel)]= "nvocli.qom" >
+            <select [disabled]="factura_al_momento" name="qom" id="qom" value="{{nvocli.qom}}" (blur)="selecciona_letras_cliente()" [(ngModel)]= "nvocli.qom" >
                 <option *ngFor="let miqom of tipoqom" value="{{miqom.clave}}"
                   [selected]="nvocli.qom == miqom.clave">
                   {{miqom.descri}}
                 </option>
             </select>
         </label>
+        <label for="tasaiva">Tasa Iva
+            <input type="number" name="tasaiva" id="tasaiva" size="10" [(ngModel)]="nvocli.piva" >
+        </label>
+
 
             <mat-card>
                 <mat-card-title>Nombre del Cliente</mat-card-title>
@@ -114,11 +118,8 @@
         <label for="pordesc">% Descto
             <input type="number" name="pordesc" id="pordesc" size="10" [(ngModel)]="nvocli.pdsc" >
         </label>
-        <label for="tasaiva">Tasa Iva
-            <input type="number" name="tasaiva" id="tasaiva" size="10" [(ngModel)]="nvocli.piva" >
-        </label>
         <br>
-        <label for="ubicacion">Ubicacion 
+        <label for="ubicacion">Ubicacion
             <select name="ubicacion" id="ubicacion" value="{{nvocli.ubica}}" 
              [(ngModel)]= "nvocli.ubica" (blur)="selecciona_tarjetas_tc()"  >
             <option *ngFor="let miubica of ubivta" value="{{miubica.ubica}}"
@@ -175,28 +176,30 @@
         </label>
         <br>
         <label for="enganche">Enganche
-            <input type="number" name="enganche" id="enganche" size="10" 
+            <input name="enganche" [disabled]="factura_al_momento" type="number" id="enganche" size="10" 
             (blur)="calcu_precio_lista()" [(ngModel)]="nvocli.enganche">
         </label>
         <label for="precon">Precio.Lista
-            <input type="number" name="precon" id="precon" size="10" 
+            <input type="number" [disabled]="factura_al_momento" name="precon" id="precon" size="10" 
              [(ngModel)]="nvocli.preciolista">
         </label>
         <br>
         <label for="nulets">Numero Letras
             <select name="nulets" id="nulets" value="{{nvocli.nulet}}" 
              [(ngModel)]= "nvocli.nulet" >
+
             <option *ngFor="let miletra of nulets" value="{{miletra.nulets}}"
               [selected]="nvocli.nulet == miletra.nulets">
               {{miletra.nulets}}
-              </option>
+            </option>
             </select>
         </label>
         <label for="canle">Precio x Letra
-            <input type="number" [disabled]="canledisabled" name="canle" id="canle" size="10" [(ngModel)]="nvocli.canle">
+            <input type="number" [disabled]="canledisabled" name="canle" id="canle" size="6" [(ngModel)]="nvocli.canle">
         </label>
+        <br>
         <label for="bonif">Bonificacion
-            <input type="number" [disabled]="bonifdisabled" name="bonif" id="bonif" size="10" [(ngModel)]="nvocli.bonificacion">
+            <input type="number" [disabled]="bonifdisabled" name="bonif" id="bonif" size="6" [(ngModel)]="nvocli.bonificacion">
         </label>
         <br>
         <label for="mescum">Cumpleaños

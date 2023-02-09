@@ -27,3 +27,6 @@ export { Factorvtacred } from './factorvtacred';
 export { Tabladesctocont } from './tabladesctocont';
 export { Reltrasp } from './reltrasp';
 export { Ofertas } from './ofertas';
+export { Relcob } from './relcob';
+export { CodigoPoliza } from './codigospoliza';
+export { Renrelco } from './renrelco';

@@ -51,6 +51,7 @@ export class DlgdatoscliComponent implements OnInit {
   tarjetastc : Tarjetatc[] = [];
   aval? : Aval;
 
+
   conaval = false;
   contarjetatc = false;
 
@@ -94,6 +95,7 @@ export class DlgdatoscliComponent implements OnInit {
   canledisabled = false;
   bonifdisabled = false;
   letra1disabled = false;
+  nuletsel = 0;
 
   numcli_z = "";
   nvocli = {
@@ -157,6 +159,8 @@ export class DlgdatoscliComponent implements OnInit {
     nompil2: ""
   }
 
+  factura_al_momento = false;
+
   constructor(public dialog: MatDialog, 
     public dialogRef: MatDialogRef<DlgdatoscliComponent>,
     @Inject(MAT_DIALOG_DATA) public message : string,
@@ -184,7 +188,6 @@ export class DlgdatoscliComponent implements OnInit {
       } else {
         this.nvocli.modo = "modificar_cliente";
       }
-      this.selecciona_letras_cliente();
     }
   
     buscarcliente() {
@@ -199,8 +202,9 @@ export class DlgdatoscliComponent implements OnInit {
           if(respu) {
             this.cliente = respu;
             this.nvocli.qom = this.cliente.qom;
-            this.buscanulets() ;
+            //this.selecciona_letras_cliente();
             this.asignaclienteanuevocli();
+            this.buscastatusmodificable();
             //this.busca_aval(this.cliente.idcli);
             //this.busca_movclis(this.cliente.idcli);
             //this.mostrar_vencimientos();
@@ -212,7 +216,29 @@ export class DlgdatoscliComponent implements OnInit {
       );
   
     }
+
+    buscastatusmodificable() {
+      var params_z = {
+        modo : "obtener_status_vta_facturacion_inmediata",
+        numcli: this.numcli_z
+      }
+      console.log("buscastatusmodificable", params_z);
+      
+      this.factura_al_momento = false;
+      this.servicioclientes.buscar_status_cliente_modificable(JSON.stringify(params_z)).subscribe(
+        respu => {
+          if(respu) {
+            console.log("Respuesta buscar status cliente modificable", respu);
+            
+            this.factura_al_momento = (respu.facturalmomento == "SI");
+           }
+        }
+      );
   
+    }
+  
+      
+
     obtencatalogos() {
       let params_z = {
         modo : "buscar_cartas_promo"
@@ -259,6 +285,7 @@ export class DlgdatoscliComponent implements OnInit {
       this.servicioclientes.obtennulets(JSON.stringify(paramsnulet_z)).subscribe(
         respu => {
           this.nulets = respu;
+  
         }
       );
     }
@@ -301,6 +328,8 @@ export class DlgdatoscliComponent implements OnInit {
         this.nvocli.codpost = this.cliente.codpost;
         this.nvocli.colonia = this.cliente.colonia;
         this.nvocli.status = this.cliente.status;
+        this.nuletsel = this.cliente.nulet;
+
         if(this.nvocli.ticte == "TC") {
           this.contarjetatc = true;
           this.busca_tipos_tarjetas();

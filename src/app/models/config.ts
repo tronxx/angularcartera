@@ -13,4 +13,9 @@ export interface Compania  {
     MesesMinimoCarta: number;
     CartaSaldadosMesesAntes: number;
     DiasBonificacion:number;
+    promodic_inicio: string;
+    promodic_fin: string;
+    promodic_dias:string;
+    mesesminimo:number;
+
 }

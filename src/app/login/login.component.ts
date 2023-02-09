@@ -3,6 +3,7 @@ import { User } from '../models/user.model';
 import { UsuariosService } from '../services/usuarios.service';
 import { Router } from '@angular/router';
 import { Md5 } from 'ts-md5';
+import { SpinnerComponent } from '../common/spinner/spinner.component';
 
 @Component({
   selector: 'app-login',
@@ -51,7 +52,7 @@ export class LoginComponent implements OnInit {
     public router: Router ) { }
 
   ngOnInit(): void {
-    console.log("Fecha de Hoy:" + this.strfecha_z);
+    // console.log("Fecha de Hoy:" + this.strfecha_z);
     this.cerrarsesion();
 
   }
@@ -77,7 +78,15 @@ export class LoginComponent implements OnInit {
      //);
      this.serviciousuarios.obtenusuario(this.Usuario.login).subscribe(
       mirespuesta => {
+        // console.log('Ya regrese y estoy en subscribe');
+        if (mirespuesta == null || mirespuesta.length == 0) {
+          this.error.activo = true;
+          return;
+        }
         this.pwdrecortado_z = mirespuesta[0].passwd;
+        if(this.pwdrecortado_z == undefined) {
+          this.pwdrecortado_z = "-1";
+        }
         this.pwdrecortado_z = this.pwdrecortado_z.substring(0, this.pwdrecortado_z.length - 3);
         if( this.pwdrecortado_z === this.pwdmd5_z) {
           this.usuarios = mirespuesta;
@@ -89,12 +98,13 @@ export class LoginComponent implements OnInit {
             this.registro_z.nivel = this.Usuario.nivel;
             this.registro_z.iniciales = this.Usuario.iniciales;
             this.registro_z.acceso  = "true";
+            
             this.registro_z.token = Md5.hashStr(this.Usuario.login + ":" + this.strfecha_z).toString();
                     
             localStorage.setItem("token", JSON.stringify( this.registro_z));
             this.serviciousuarios.graba_sesion(this.registro_z.token).subscribe(
               midatasesion => {
-                console.log("Sesion:"+ JSON.stringify(midatasesion));
+                // console.log("Sesion:"+ JSON.stringify(midatasesion));
               }
 
             );
@@ -102,14 +112,21 @@ export class LoginComponent implements OnInit {
             this.router.navigateByUrl('/main');
 
         } else {
-          console.log("Usuaro Incorrecto");
           this.error.activo = true;
-          
         }
-
+      },
+      err => {
+        this.error.activo = true;
       }
+
+
    );
 
+  }
+
+  hide_image() {
+    // console.log("Estoy en hide_image()");
+    if(this.error.activo) this.error.activo = false;
   }
 
 }

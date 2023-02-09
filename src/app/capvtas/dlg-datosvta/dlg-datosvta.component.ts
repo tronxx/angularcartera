@@ -10,7 +10,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { DialogBodyComponent } from '../../dialog-body/dialog-body.component';
 import { DlgbuscliComponent } from '../../common/dlgbuscli/dlgbuscli.component';
 import { MatIconModule } from '@angular/material/icon'; 
-import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
+import { SpinnerComponent } from '../../common/spinner/spinner.component';
 
 import { Cliente } from '../../models/clientes';
 import { Aval } from '../../models/aval';
@@ -120,6 +121,25 @@ export class DlgDatosvtaComponent implements OnInit {
     tarjetatc:""
   }
 
+  seriefac_z = "";
+  numfac_z = -1;
+
+  conaval = true;
+  
+  nvoaval = {
+    idcli : -1,
+    direc2: "",
+    nomav: "",
+    dirav1: "",
+    dirav2: "",
+    compra: "",
+    linea: "",
+    appat: "",
+    apmat: "",
+    nompil1: "",
+    nompil2: ""
+  }
+
 
 
   constructor(
@@ -138,6 +158,23 @@ export class DlgDatosvtaComponent implements OnInit {
     } else {
       this.codigodisabled = false;
     }
+    this.ubivta = params_z.ubica;
+    this.nvocli.ticte = params_z.ticte;
+    this.nvocli.enganche = params_z.enganche;
+    this.conaval = true;
+    this.numcli_z = params_z.codigo;
+    this.nvocli.status = "*";
+    console.log("Params Status ", params_z.status);
+    
+    if(params_z.status != undefined) {
+      this.nvocli.status = params_z.status;
+    }
+    if(params_z.ticte == "CC" || params_z.ticte == "TC") {
+      this.conaval = false;
+      this.nvocli.qom = "C";
+    }
+
+    //this.busca_serie_y_folio();
 
     this.obtencatalogos();
   }
@@ -186,7 +223,7 @@ export class DlgDatosvtaComponent implements OnInit {
     }
     this.servicioclientes.obtennulets(JSON.stringify(paramsnulet_z)).subscribe(
       respu => {
-        this.nulets = respu;
+        this.nulets = respu;        
       }
     );
   }
@@ -271,9 +308,12 @@ export class DlgDatosvtaComponent implements OnInit {
 }
 
 closeyes() {
+  this.nvocli.numcli = this.numcli_z;
+  this.nvocli.factura = this.numfac_z;
   let respuesta = {
     modo:"",
     clienterespu: this.nvocli,
+    avalrespu: this.nvoaval
   }
   this.dialogRef.close(respuesta);
 }
@@ -281,5 +321,40 @@ closeyes() {
 closeno() {
   this.dialogRef.close(false);
 }
+
+busca_serie_y_folio() {
+  var params_z = {
+    modo : "buscar_facturacion_una_serie",
+    ubiage : this.ubivta,
+    statuscli : this.nvocli.status
+  }
+  console.log("Debug: Estoy en busca_seri_y_folio ", this.ubivta);
+  this.servicioclientes.busca_serie_factura(JSON.stringify(params_z)).subscribe(
+    respu => {
+      this.seriefac_z = respu.seriefac;
+      this.numfac_z = respu.ultimofolio;
+    }
+  );
+}
+
+buscarcliente() {
+  var params_z = {
+    modo : "buscar_un_cliente",
+    codigo: this.numcli_z,
+    idcli : -1
+  }
+
+  this.servicioclientes.buscaclientealta(JSON.stringify(params_z)).subscribe(
+    respu => {
+      if(respu) {
+        this.cliente = respu;
+        this.alerta("Este codigo ya Existe:" + this.cliente.nombre);
+      }
+    }
+  );
+
+}
+
+
 
 }

@@ -1,3 +1,4 @@
+<app-spinner></app-spinner>
 <div>
     <label for="codigo">
         Codigo
@@ -16,16 +17,16 @@
 <table border="1">
     <tr>
         <td>
-            <label class="ancho80" for="codigo">Coódigo</label>
-            <input readonly  name="codigo" size="12" type="text" value=" {{cliente.numcli}}"> <br>
             <button mat-raised-button color="primary" (click)="impresion_edocta()">
                 <mat-icon aria-hidden="false" aria-label="Example home icon">print</mat-icon>
                 Estado Cuenta
             </button>
-                    
             <br>
+            <label class="ancho80" for="codigo">Coódigo</label>
+            <input readonly  name="codigo" size="12" type="text" value=" {{cliente.numcli}}"> <br>
             <label class="ancho80" for="nombre">Nombre</label>
-            <input readonly  name="nombre" size="40" type="text" value=" {{cliente.nombre}}"> <br>
+            <input readonly  name="nombre" size="40" type="text" 
+            [class.editgray]="esstatus1" value=" {{cliente.nombre}}"> <br>
             <label class="ancho80" for="direccion">Direccion</label>
             <input readonly name="direccion" type="text" size="40" value= "{{cliente.direc}}"><br>
             <label class="ancho80" for="poblacion">Poblacion</label>
@@ -58,13 +59,14 @@
             <input readonly name="qom" type="text" size="3" value= "{{ cliente.qom }}">
             <label for="canle">Precio x Letra</label>
             <input readonly name="canle" type="text" size="10" value= "{{ cliente.canle | currency }}"> 
+            <br>
             <label for="bonif">Bonificacion</label>
             <input readonly name="bonif" type="text" size="10" value= "{{ cliente.bonificacion | currency }}"><br>
+            <label *ngIf="conpromocion"  class="labelgray" >Dias Promocion {{ cliente.diasgracia }} </label> <br>
         </td>
         <td>
             Vencimientos:<br>
             <div class="boxscroll">
-
                 <ul>
                     <li for="" *ngFor="let mivencimiento of listavencimientos_z" >
                         Letra: {{mivencimiento.letra}}/{{cliente.nulet}}

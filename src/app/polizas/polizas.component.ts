@@ -17,6 +17,9 @@ import { DlgbuscliComponent } from '../common/dlgbuscli/dlgbuscli.component';
 import { MatIconModule } from '@angular/material/icon'; 
 import { newArray, stringify } from '@angular/compiler/src/util';
 import { Compania } from '../models/config';
+import { AgregarenpolComponent} from './agregarenpol/agregarenpol.component';
+import { SpinnerComponent } from '../common/spinner/spinner.component';
+
 
 @Component({
   selector: 'app-polizas',
@@ -41,11 +44,12 @@ export class PolizasComponent implements OnInit {
   polizaactiva_z = false;
   aceptarpago = false;
   ultltaoculto_z = true;
+  esstatus1 = true;
   errores_z = [""];
   sinerrores = true;
   errorespoliza = [""]
   listaletras = [""];
-  enespera = false;
+  
   ultimo_z = "";
   
   cobratario = {
@@ -77,6 +81,7 @@ export class PolizasComponent implements OnInit {
   PrecioListaMinimoCarta = 0;
   sdoparacarta_z = 0;
   compracli_z = "";
+  conpromo_z = false;
 
 
   tipospagos =[ 
@@ -216,7 +221,7 @@ export class PolizasComponent implements OnInit {
 
   buscar_poliza() {
 
-    this.enespera = true;
+    
       //this.buscar_codigos_poliza();
       var params = {
         "modo":"acceder_poliza",
@@ -226,7 +231,6 @@ export class PolizasComponent implements OnInit {
       }
       if(this.tda_z == "") {
         this.alerta("El Código de la Póliza no puede estar vacío");
-        this.enespera = false;
         return;
 
       }
@@ -245,7 +249,6 @@ export class PolizasComponent implements OnInit {
             this.idpoliza = this.poliza.idpoliza;
             this.buscar_renpol();
           }
-          this.enespera = false;
         }
       );
   }
@@ -283,6 +286,7 @@ export class PolizasComponent implements OnInit {
         this.cobratario = respu[0];
         this.cobratarioactivo_z = true;
         // console.log("Debug:" + this.cobratarioactivo_z);
+
       }
     )
 
@@ -305,6 +309,8 @@ export class PolizasComponent implements OnInit {
       respu => {
         if(respu) {
           this.cliente = respu;
+          this.esstatus1 = (this.cliente.status == "*");
+
           this.clienteactivo_z = true;
           this.calcular_datos_cliente();
         } else {
@@ -315,6 +321,30 @@ export class PolizasComponent implements OnInit {
 
   }
 
+  cobrar() {
+    let params_z = {
+        codigo: this.codcli_z
+    }
+    const dialogref = this.dialog.open(AgregarenpolComponent, {
+      width:'800px',
+      data: JSON.stringify(params_z)
+    });
+    dialogref.afterClosed().subscribe(res => {
+      //console.log("Debug", res);
+    });
+    dialogref.afterClosed().subscribe(res => {
+      if(!res) { this.cancelarpago(); }
+      else {
+        this.datospago = JSON.parse(res);
+        this.si_aceptarpago();
+        this.clienteactivo_z = false;
+      }
+
+
+    });
+
+  }
+  
   alerta(mensaje: string) {
     const dialogref = this.dialog.open(DialogBodyComponent, {
       width:'350px',
@@ -328,7 +358,6 @@ export class PolizasComponent implements OnInit {
   
 
   calcular_datos_cliente() {
-
      if(this.cliente) {
        this.abonos_z  = this.cliente.abonos;
        this.cargos_z = this.cliente.cargos;
@@ -348,20 +377,20 @@ export class PolizasComponent implements OnInit {
        this.sdoparacarta_z = this.prlet_z * this.CartaSaldadosMesesAntes;
        if(this.qom_z == "Q") this.sdoparacarta_z / 2;
        this.tasarecargo_z = 10;
-       this.strfechavta = this.cliente.numcli.substr(2,6);
+       this.strfechavta = this.cliente.numcli.substring(2,6);
        if( this.strfechavta >= "220101" ||
           (this.strfechavta >= "210901" && this.qom_z == "Q" && 
            ( this.cliente.nulet == 4 || this.cliente.nulet == 10  ))
         ) {
            this.tasarecargo_z = 20;
        }
+       this.conpromo_z = false;
+       if(this.cliente.diasgracia > 0) this.conpromo_z = true;
 
        this.busca_aval(this.cliente.idcli);
-       this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.qom_z, 1, this.nulets_z));
+       this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.qom_z, 1, this.nulets_z, this.cliente.diasgracia));
        //console.log('FechaStr:', this.strfechavta, 'Vencimientos:', this.listavencimientos_z);
        
-
-
        if(this.abonos_z >= (this.engan_z + this.serv_z) ) {
           this.ltpag_z = Math.floor ((this.abonos_z - this.engan_z - this.serv_z  ) / this.prlet_z);
           this.imp1_z = (this.ltpag_z * this.prlet_z) + this.engan_z + this.serv_z;
@@ -376,289 +405,70 @@ export class PolizasComponent implements OnInit {
             this.datospago.recobon = this.recobon_z;
             this.ultltaoculto_z = false;
             this.datospago.importe = this.impxcob_z;
-            this.activar_tipopago(["A", "C"]);
-            this.generanumpagos(this.sigletra_z, this.nulets_z);
-            this.calculaConcepto();
           } else {
-            this.ultltaoculto_z = true;
             this.sigletra_z = this.ltpag_z + 1;
             this.impxcob_z = (this.sigletra_z * this.prlet_z ) + this.engan_z + this.serv_z - this.abonos_z;
             this.msg_z = "Debe ser Saldo de la Letra " + this.sigletra_z.toString() + "/" + this.nulets_z.toString() 
               + " Por: " +   formatCurrency ( Number(this.impxcob_z) , 'en-US', '$');
-            this.tipopagosel_z = "S";
-            this.activar_tipopago(["A", "S"]);
-            this.datospago.recobon = this.recobon_z;
-            this.datospago.concepto = "SALDO " + 
-              formatNumber( Number(this.sigletra_z) , 'en-US', '1.0-0'); + "/" + this.nulets_z.toString();
-            this.datospago.importe = this.impxcob_z;
-            this.generanumpagos(this.sigletra_z, this.sigletra_z);
-
           }
           this.datospago.ltaini = formatNumber( Number(this.sigletra_z) , 'en-US', '1.0-0');
           this.datospago.ltafin = this.sigletra_z.toString().padStart(2, " ");
-          this.datospago.tipomov = "B";
-          this.datospago.recobon = 0;
-          if(this.bonifi_z > 0 )  this.bonif_cerrada = false; else this.bonif_cerrada = true;
         } else {
-          this.tipopagosel_z = "C";
-          this.datospago.ltaini = "SE";
-          this.datospago.ltafin = "SE";
-          this.datospago.tipomov = "B";
-          this.ultltaoculto_z = true;
-          this.datospago.recobon = 0;
-          this.tipopagosel_z = "C";
           this.datospago.importe = (this.abonos_z - this.let1_z);
           this.msg_z = "Debe ser Saldo de Enganche  " + " Por: $" +  
             formatNumber( Number(this.impxcob_z) , 'en-US', '1.2-0');
-          this.datospago.concepto = "SALDO ENGANCHE";
-          this.tiporecobon_z = "NETO"
-          this.tipomovsel_z = "N";
-          this.activar_tipopago(["A", "S"]);
-          this.generanumpagos(0, 0);
-
 
         }
-        this.vence_z = this.configuracion.calcula_venc(this.cliente.fechavta, this.cliente.qom, this.sigletra_z);
+        let nvafvta_z  = new Date(this.cliente.fechavta.replace(/-/g, '\/'));
+        nvafvta_z.setDate ( nvafvta_z.getDate() + this.cliente.diasgracia);
+
+        this.vence_z = this.configuracion.calcula_venc(this.configuracion.fecha_a_str(nvafvta_z, "YYYY-mm-dd"), this.cliente.qom, this.sigletra_z);
         this.msg_z += " Vence:" + this.configuracion.fecha_a_str(this.vence_z, "dd-mmm-YYYY");
         this.datospago.dias = Math.floor( ( this.fechahoy_z.getTime() - this.vence_z.getTime()  ) / (86400000));
         //console.log("Debug: dias", this.datospago.dias, " Hoy:", this.fechahoy_z.getTime(), " Vence:", this.vence_z.getTime() );
         if(this.datospago.dias > this.diasbon ) {
           this.recargo_z = Math.round( this.prlet_z * this.tasarecargo_z / 100);
           this.datospago.recobon = this.recargo_z;
-          this.tiporecobon_z = "RECARGO"
-          this.tipomovsel_z = "R";
           this.msg_z += " Con Recargo";
-          this.activartipomov(["R", "N"]);
     } else {
           if(this.datospago.ltaini != "SE") {
             this.datospago.recobon = this.recobon_z;
-            this.tipomovsel_z = "B";
-            this.tiporecobon_z = "BONIFICACION";
             this.msg_z += " Con Bonificacion";
-            this.activartipomov(["B", "N"]);
           } else {
-            this.tipomovsel_z = "B";
-            this.datospago.recobon = 0;
-            this.activartipomov(["B"]);
           }
         }
         //this.tipomovsel_z = this.tiporecobon_z;
         //formatDate(this.vence_z, "dd-mm-YYYY", 'es-MX');
      }
-     this.calculaConcepto();
-
   }
 
   activartipomov( tipos:string[]) {
-    this.tiposmov=[];
-    tipos.forEach(tipo => {
-      if(tipo == "B") {
-        this.tiposmov.push({ "tipo":"B", "descri":"BONIFICACION", "activo":"true"  });
-      }
-      if(tipo == "N") {
-        this.tiposmov.push({ "tipo":"N", "descri":"NETO", "activo":"true"  });
-      }
-      if(tipo == "R") {
-        this.tiposmov.push({ "tipo":"R", "descri":"RECARGO", "activo":"true"  });
-      }
-
-      
-    });
-
   }
 
   generanumpagos(inicio:number, final:number) {
-    let ii_z = 0;
-    let minumlet_z = "";
-    this.listaletras=[];
-    for (ii_z = inicio; ii_z <= final; ii_z++) {
-      if(ii_z) {
-        minumlet_z = ii_z.toString().padStart(2, " ");
-      } else {
-        minumlet_z = "SE";
-      }
-      this.listaletras.push(minumlet_z);
-
-    }
-
   }
   
   activar_tipopago(tipospagodisp:string[]) {
-    this.tipospagos = [];
-    tipospagodisp.forEach(tipo => {
-      if(tipo == "C") {
-        this.tipospagos.push({ "clave":"C", "descri":"COMPLETO"  });
-      }
-      if(tipo == "A") {
-        this.tipospagos.push({ "clave":"A", "descri":"A CUENTA"  });
-      }
-      if(tipo == "S") {
-        this.tipospagos.push({ "clave":"S", "descri":"SALDO"  });
-      }
-          
-    });
-
   }
 
   calculaConcepto() {
-    let imp_z = 0;
-    let nuletxpag_z = 0;
-    let factor_z = 0;
-
-    this.datospago.tipopago = this.tipopagosel_z;
-    if(this.datospago.ltaini == "SE") {
-      this.datospago.concepto = "SALDO ENGANCHE";
-      if(this.datospago.dias > this.diasbon ) {
-        this.datospago.recobon = Math.round (this.prlet_z * (this.tasarecargo_z / 100) * (this.let1_z ));
-        factor_z = 1;
-      } else {
-        this.datospago.recobon = 0;
-      }
-    } else {
-      this.datospago.concepto = "";
-      this.bonif_cerrada = false;
-      this.tipomovcerrado = false;
-      this.importecerrado = false;
-      if (this.datospago.tipopago == "A") {
-        this.datospago.concepto += "ACTA ";
-        this.ultltaoculto_z = true;
-        this.datospago.ltafin = this.datospago.ltaini;
-        factor_z = 0;
-        this.datospago.recobon = 0;
-        if(this.bonifi_z < 1) {
-          this.bonif_cerrada = true;
-        }
-        this.activartipomov(["B", "N", "R"])
-      }
-      if (this.datospago.tipopago == "C") {
-        this.datospago.concepto += "LETRA ";
-        this.ultltaoculto_z = false;
-        this.bonif_cerrada = true;
-        this.tipomovcerrado = true;
-        this.importecerrado = true;
-      }
-      if (this.datospago.tipopago == "S") {
-        this.datospago.concepto += "SALDO ";
-        this.ultltaoculto_z = true;
-        this.datospago.ltafin = this.datospago.ltaini;
-        this.bonif_cerrada = false;
-      }
-
-      nuletxpag_z = Number(this.datospago.ltafin) -  Number(this.datospago.ltaini ) + 1;
-      this.datospago.concepto += this.datospago.ltaini.padStart(2, ' ');
-      if( Number(this.datospago.ltafin) != Number(this.datospago.ltaini) ) {
-        this.datospago.concepto += " - " + this.datospago.ltafin.padStart(2, ' ');
-        let prletconrec_z = this.calcula_bonif_o_rec(Number(this.datospago.ltaini));
-        let ulletconrec_z = this.calcula_bonif_o_rec(Number(this.datospago.ltafin));
-        if(prletconrec_z != ulletconrec_z) {
-           this.alerta("No puede mezclar letras atrasadas y al día");
-           this.cancelarpago();
-        }
-
-      }
-
-      this.datospago.concepto += "/" + this.nulets_z;
-      if (this.datospago.tipopago == "C" || this.datospago.tipopago == "S" ) {
-        if (this.datospago.tipopago == "C") {
-          this.datospago.importe = this.prlet_z * nuletxpag_z;
-        }
-
-        if(this.datospago.dias > 5 ) {
-          this.datospago.recobon = Math.round (this.recargo_z * nuletxpag_z  );
-          this.datospago.neto = this.datospago.importe + this.datospago.recobon;
-          factor_z = 1;
-  
-        } else {
-          this.datospago.recobon = this.recobon_z * nuletxpag_z;
-          this.datospago.neto = this.datospago.importe - this.datospago.recobon;
-          factor_z = -1;
-        }
-      } else {
-        this.datospago.importe = this.prlet_z * nuletxpag_z;
-      }
-
-    }
-    this.datospago.neto = this.datospago.importe + this.datospago.recobon * factor_z;
-    this.calcula_bonif_extra();
-    this.validarpago();
-
   }
 
   calcula_bonif_extra () {
-    let mesesanticip_z = 0;
-    let mub_z = 0;
-    let bonifextra_z = 0;
-    let message_z = "";
-    let miltaini_z = Number( this.datospago.ltaini);
-    let miltafin_z = Number(this.datospago.ltafin);
-    if(this.datospago.dias > this.diasbon) return;
-
-    if (miltafin_z  != this.nulets_z) return;
-    mesesanticip_z = miltafin_z  - miltaini_z - 1;
-    if(this.qom_z == "Q") mesesanticip_z = Math.floor( mesesanticip_z / 2);
-    mesesanticip_z -= 1;
-    if( mesesanticip_z < 2) return;
-    mub_z = this.calcula_mub();
-    bonifextra_z = ( ( this.prlista_z * ( 1 + this.pivacli_z / 100)  ) - this.engan_z  ) * mesesanticip_z * mub_z / 100;
-    bonifextra_z = Math.round( bonifextra_z - 0.50);
-    if(bonifextra_z) {
-      message_z = "Cliente con Bonificacion Extra " + formatNumber (bonifextra_z, 'en-US', '1.0-0');
-      message_z = message_z + " Bonificacion Normal: " + formatNumber((miltafin_z - miltaini_z + 1) * this.bonifi_z , 'en-US', '1.0-0');
-      message_z = message_z + " Meses Adelanto " + mesesanticip_z.toString();
-      this.alerta(message_z);
-      this.datospago.recobon += bonifextra_z;
-    }
     
   }
 
   calcula_mub() {
-    let meses_z = this.nulets_z;
-    let aua_z = 0;
-    let aub_z = 0;
-    let porutf_z = 0;
-    if(this.qom_z == "Q") meses_z = meses_z / 2;
-    aua_z = ( this.prlet_z - this.bonifi_z ) * this.nulets_z;
-    aub_z = this.prlista_z * ( 1 + this.pivacli_z / 100 ) - this.engan_z;
-    if (aub_z) porutf_z = ((aua_z / aub_z) - 1 ) * 100;
-    if (meses_z) porutf_z = porutf_z / meses_z;
-    return (porutf_z)
   
   }
   
   calculaNeto () {
-    this.validarpago();
-    if(this.tipomovsel_z == "B") {
-      this.datospago.neto = this.datospago.importe - this.datospago.recobon;
-      //console.log("Debug Bonif:", this.datospago.importe, " ", this.datospago.recobon, " Neto", this.datospago.neto);
-    } else {
-      this.datospago.neto = this.datospago.importe + this.datospago.recobon;
-      //console.log("Debug Recargos:", this.datospago.importe, " ", this.datospago.recobon, " Neto", this.datospago.neto);
-    }
-    //console.log("Debug nETO:", this.datospago.neto);
   }
 
   validarpago() {
-    this.errores_z=[];
-    if(Number(this.datospago.ltafin) <  Number(this.datospago.ltaini ) ) {
-      this.errores_z.push("La letra Final no puede ser mayor a la inicial");
-    }
-    if(this.datospago.tipopago == "A" && this.datospago.importe >= this.prlet_z) {
-      this.errores_z.push("Si es A cuenta el Importe debe ser menor al valor de la letra");
-    }
-    this.aceptarpago = !this.errorespago();
-    return(!this.errorespago());
-    if(this.tda_z == "") {
-      this.errores_z.push("El Codigo de la Poliza no puede estar vacío");
-    }
   }
 
   errorespago () {
-    if(this.errores_z.length) {
-      return (true);
-    }
-    else {
-      return(false);
-    }
   }
 
   cancelarpago() {
@@ -667,91 +477,28 @@ export class PolizasComponent implements OnInit {
     this.datospago.conceptocompl = "";
   }
 
-  calcula_venc <Date> (fechavta:string, qom_z:string, letra:number) {
-
-    let vencimiento_z = new Date(fechavta.replace(/-/g, '\/'));
-    let strfecvta =  this.configuracion.fecha_a_str  (vencimiento_z, "YYYYmmdd");
-    let dias_z = 15;
-    let nvafecha_z = 0;
-    let meses_z = 0;
-
-    if( this.AplicarContingencia  && strfecvta < this.FechaContingencia) {
-      meses_z = Math.floor(this.diascontingencia / 30);
-      dias_z = (this.diascontingencia % 30);
-      vencimiento_z.setMonth(vencimiento_z.getMonth() + meses_z);
-      nvafecha_z = vencimiento_z.getTime() + (dias_z * 24 * 60 * 60 *  1000);
-      vencimiento_z = new Date(nvafecha_z);
-    }
-    if(qom_z == "Q") {
-      meses_z = Math.floor(letra / 2);
-      dias_z = (letra % 2) * 15;
-    } else {
-      dias_z = 0;
-      meses_z = letra;
-    }
-    // console.log("Debug Meses:", meses_z, " Dias:", dias_z);
-    if(letra == 0) {
-      nvafecha_z = vencimiento_z.getTime() + (7 * 24 * 60 * 60 *  1000);
-    } else {
-      // console.log("Debug 1:" + fechavta, vencimiento_z);
-      //vencimiento_z.setMonth(10);
-      vencimiento_z.setMonth(vencimiento_z.getMonth() + meses_z);
-      // console.log("Debug 2:",vencimiento_z);
-      //vencimiento_z = vencimiento_z.setMonth(vencimiento_z.getMonth() + meses_z);
-      nvafecha_z =  vencimiento_z.getTime() + (dias_z * 24 * 60 * 60 * 1000);
-    }
-    vencimiento_z = new Date(nvafecha_z);
-    // console.log("Debug 3:",vencimiento_z);
-    return (vencimiento_z);
-
-  }
-
+  
   clickaceptarpago() {
-    let estemov_z = this.codcli_z + ":" + this.datospago.concepto + " " + this.datospago.conceptocompl +  ":" + this.datospago.importe.toString;
-    if(this.validarpago()) {
-        this.confirma_aceptar_pago();
-    } else {
-      this.alerta("Hay Errores en el pago");
-    }
   }
 
   confirma_aceptar_pago() {
-    let estemov_z = this.codcli_z + ":" + this.datospago.concepto + " " + this.datospago.conceptocompl +  ":" + this.datospago.importe.toString();
-    const dialogref = this.dialog.open(DialogBodyComponent, {
-      width:'350px',
-      data: 'Seguro de aceptar este Pago?'
-    });
-    dialogref.afterClosed().subscribe(res => {
-      //console.log("Debug", res);
-      if(res) {
-        if (this.ultimo_z == estemov_z) {
-          this.alerta("Está seguro de cobrar el mismo movimiento dos veces ?");
-        } else {
-          this.si_aceptarpago();
-          this.ultimo_z = estemov_z;
-        }
-      }
-    });
-  
   }
 
   si_aceptarpago() {
-    this.enespera = true;
     this.datospago.idpoliza = this.idpoliza;
     this.datospago.idusuario = this.usrreg_z.idusuario;
     this.datospago.cobratario = this.cobratario.cvepromo;
-    this.datospago.tipopago = this.tipopagosel_z;
-    this.datospago.tipomov = this.tipomovsel_z;
     this.datospago.claveempresa = this.claveempresa;
-    this.datospago.vence = this.configuracion.fecha_a_str(this.vence_z, "YYYY-mm-dd");
-    // console.log("Debug DatosPago: ", this.datospago);
-    this.serviciopolizas.agregar_pago(JSON.stringify(this.datospago )).subscribe(
+    //console.log("Debug DatosPago: ", this.datospago);
+    this.serviciopolizas.agregar_pago(JSON.stringify(this.datospago)).subscribe(
+    //this.serviciopolizas.agregar_pago(JSON.stringify(dummy)).subscribe(
       respu => {
         if(respu) {
           if(respu.error) {
             this.alerta("No se pudo agregar ");
-            this.enespera = false;
           }
+          this.buscar_renpol();
+          this.checacarta();
           if(respu.exito) {
             this.idrenpol = respu.idrenpol;
             this.uuid_z = respu.uuid;
@@ -772,11 +519,8 @@ export class PolizasComponent implements OnInit {
             // );
             console.log("Se agrego el movimiento:", respu);
           }
-          this.buscar_renpol();
-          this.checacarta();
           this.clienteactivo_z = false;
         }
-        this.enespera = false;
       }
     );
 
@@ -862,42 +606,10 @@ export class PolizasComponent implements OnInit {
   }
 
   define_bonif_abierta() {
-    let miltafin_z = Number(this.datospago.ltafin);
-    this.bonif_cerrada = true;
-    if(this.tipopagosel_z == "A") {
-      this.bonif_cerrada = false;
-    } else {
-      if(this.datospago.conceptocompl == "CARTA" && (this.nulets_z == miltafin_z)) {
-        this.bonif_cerrada = false;
-      }
-    }
   }
 
 
   sel_tipopago() {
-    // this.alerta("1.- this.tipomovsel_z:" + this.tipomovsel_z + " Recobon:" + this.recobon_z.toString());
-    let numerodeletras_z = Number(this.datospago.ltafin) - Number (this.datospago.ltaini) + 1;
-    if(this.tipomovsel_z == "N") {
-      this.datospago.recobon = 0;
-      this.bonif_cerrada = true;
-    } else if (this.tipomovsel_z == "R") {
-      this.recargo_z = Math.round( this.prlet_z * this.tasarecargo_z / 100);
-      this.datospago.recobon = this.recargo_z * numerodeletras_z;
-      this.bonif_cerrada = false;
-    } else {
-      let conrec_z = this.calcula_bonif_o_rec(Number(this.datospago.ltaini));
-      if(conrec_z == "R") {
-        this.datospago.recobon = this.recargo_z * numerodeletras_z;
-        this.bonif_cerrada = false;
-        this.tipomovsel_z = "R";
-      } else {
-        this.datospago.recobon = this.recobon_z * numerodeletras_z;
-        if(this.bonifi_z > 0 )  this.bonif_cerrada = false; else this.bonif_cerrada = true; 
-      }
-      
-    }
-    this.calculaNeto();
-    // this.alerta("this.tipomovsel_z:" + this.tipomovsel_z);
   }
 
   busca_aval(idcli_z : number) {
@@ -920,21 +632,6 @@ export class PolizasComponent implements OnInit {
   }
 
   calcula_bonif_o_rec(miletra_z:number) {
-    let esrecobon_z = "B";
-    let dias_z = 0;
-    let mivenc_z = new Date();
-    if(this.cliente) {
-      mivenc_z = this.configuracion.calcula_venc(this.cliente.fechavta, this.cliente.qom, miletra_z);
-      dias_z = Math.floor( ( this.fechahoy_z.getTime() - mivenc_z.getTime()  ) / (86400000));
-      //console.log("Debug: dias", this.datospago.dias, " Hoy:", this.fechahoy_z.getTime(), " Vence:", this.vence_z.getTime() );
-      if(dias_z > this.diasbon ) {
-        esrecobon_z = "R";
-      } else {
-        esrecobon_z = "B";
-      }
- 
-    }
-    return esrecobon_z;
   }
 
 

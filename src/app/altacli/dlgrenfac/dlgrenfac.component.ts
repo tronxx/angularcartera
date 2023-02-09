@@ -6,6 +6,7 @@ import { formatNumber,  CommonModule,  CurrencyPipe, formatCurrency, formatDate,
 import { isEmpty } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button'; 
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
 import {MatCardModule} from '@angular/material/card'; 
 import { MatTabsModule } from '@angular/material/tabs';
 import { DialogBodyComponent } from '../../dialog-body/dialog-body.component';
@@ -21,7 +22,11 @@ import { Renfacfo } from '../../models';
 import { Articulo } from '../../models';
 import { Serie } from '../../models';
 import { DlgbusarticuloComponent } from '../../common/dlgbusarticulo/dlgbusarticulo.component';
-import {map, startWith} from 'rxjs/operators';
+import { Ofertas } from '../../models';
+import { Factorvtacred } from '../../models';
+import { Tabladesctocont } from '../../models';
+import { Tarjetatc } from '../../models/tipostarjetastc';
+import { SpinnerComponent } from '../../common/spinner/spinner.component';
 
 @Component({
   selector: 'app-dlgrenfac',
@@ -40,7 +45,13 @@ export class DlgrenfacComponent implements OnInit {
   seriemotorvalida = true;
   renfacvalido = true;
   yabusqueinven = false;
-  datoshabilitados = false;
+  datoshabilitados = true;
+  ticte = "";
+  qom = "";
+  nlets = 0;
+  tarjeta = "";
+  ubica_z = "";
+  linea_z = "";
   
   nuevorenfac = {
     renfac: this.renfac,
@@ -50,13 +61,23 @@ export class DlgrenfacComponent implements OnInit {
     seriemotor: "",
     pedimento: "",
     aduana: "",
+    oferta: "",
     marca: ""
   };
 
   pedirserie = false;
   editdescri = false;
   seriemanual = false;
+  conoferta = "S";
   almacen = "";
+  noescomplementodatos_z = false;
+  factortvtacrd? : Factorvtacred;
+  factoresvtacrd: Factorvtacred[] = [];
+  tabladesctocont? : Tabladesctocont;
+  tabladesctoscont : Tabladesctocont[] = [];
+  tarjetastc : Tarjetatc[] = [];
+  tarjetatc?: Tarjetatc;
+  ofertas: Ofertas[] = [];
 
   constructor(
     public dialog: MatDialog, public dialogRef: MatDialogRef<DlgrenfacComponent>,
@@ -69,6 +90,28 @@ export class DlgrenfacComponent implements OnInit {
   ngOnInit(): void {
     this.renfac.canti = 1;
     let datosparam = JSON.parse(this.message);
+    this.noescomplementodatos_z = true;
+    console.log("No es complemento datos:", datosparam.noescomplementodatos);
+    
+    if(datosparam.escomplementodatos == "SI" ) {
+      this.noescomplementodatos_z = false;
+    }
+    this.carga_ofertas();
+    this.nuevorenfac.renfac.codigo = datosparam.codigo;
+    this.nuevorenfac.renfac.folio = datosparam.folio;
+    this.nuevorenfac.renfac.serie = datosparam.serie;
+    this.nuevorenfac.esmoto = datosparam.esmoto;
+    this.nuevorenfac.seriemotor = datosparam.seriemotor;
+    this.nuevorenfac.pedimento = datosparam.pedimento;
+    this.nuevorenfac.aduana = datosparam.aduana;
+    this.nuevorenfac.marca = datosparam.marca;
+    this.ticte = datosparam.ticte;
+    this.qom = datosparam.qom;
+    this.nlets = datosparam.nulets;
+    this.tarjeta = datosparam.tarjeta;
+    this.ubica_z = datosparam.ubica_z;
+
+    if(datosparam.codigo) this.busca_articulo();
   }
 
   closeyes() {
@@ -97,6 +140,7 @@ export class DlgrenfacComponent implements OnInit {
         this.articulo.tipo = "GLO";
         this.editdescri = true;
         this.pedirserie = false;
+        this.linea_z = "";
       } else {
         this.servicioclientes.busca_codigo_inven(JSON.stringify(params_z)).subscribe(
           respu => {
@@ -113,10 +157,29 @@ export class DlgrenfacComponent implements OnInit {
   }
 
   definir_propiedades_articulo() {
+    let proferta = 0;
     if(this.articulo) {
       this.renfac.codigo = this.articulo.codigo;
       this.renfac.concepto = this.articulo.descri;
       this.renfac.preciou = this.articulo.preciou;
+      this.linea_z = this.articulo.linea;
+      this.nuevorenfac.oferta = "N";
+      if (this.ticte == "CC" ) {
+        proferta = this.busca_oferta (this.articulo.codigo);
+        if(proferta > 0) {
+          this.nuevorenfac.oferta = "S";
+          this.nuevorenfac.renfac.preciou = proferta;
+        } else {
+          let tasadecto = this.buscar_tasa_descto_cont(this.linea_z, this.ticte, this.tarjeta);
+          this.nuevorenfac.renfac.preciou *= (1 - (tasadecto / 100) );
+        }
+      }
+      if(this.ticte == "TC") {
+        let tasadecto = this.buscar_tasa_descto_cont(this.linea_z, this.ticte, this.tarjeta);
+        this.nuevorenfac.renfac.preciou *= (1 - (tasadecto / 100) );
+      }
+      this.nuevorenfac.renfac.preciou = Math.round(this.nuevorenfac.renfac.preciou);
+
       this.nuevorenfac.linea = this.articulo.linea;
       this.datoshabilitados = true;
       this.nuevorenfac.esmoto = "N";
@@ -142,9 +205,48 @@ export class DlgrenfacComponent implements OnInit {
 
   }
 
+  buscar_tasa_descto_cont(milinea: string, ticte: string, cvetarjetatc: string)
+  {
+    let tasa = -1;
+    let plazo = 0;
+    if(milinea != "MOTO") milinea = "GRAL";
+    if(ticte == "TC") {
+      this.tarjetastc.forEach( rentabla => {
+        if(cvetarjetatc == rentabla.clave) {
+          plazo = rentabla.plazo;
+        }
+      });
+    }
+    let mistablasdescto = this.tabladesctoscont;
+    mistablasdescto.forEach(rentabla => {
+      if(ticte == rentabla.tipo && milinea == rentabla.linea && plazo == rentabla.plazo) {
+          tasa = rentabla.descto;
+        }
+    });
+
+    return (tasa);
+
+  }  
+
+  busca_factor_vtacrd(nulets: number) : number {
+    let factor = 0;
+    this.factoresvtacrd.forEach(element => {
+      if(element.plazo == nulets) {
+        factor = element.factor;
+      }
+    });
+    return (factor);
+
+  }
+
+  busca_tipos_tarjetas() {
+ 
+  }
+  
+
   verstatus() {
     this.seriemanual = !this.seriemanual;
-    console.log("Estatus seriemanual:", this.seriemanual);
+    //console.log("Estatus seriemanual:", this.seriemanual);
     
   }
 
@@ -213,6 +315,52 @@ export class DlgrenfacComponent implements OnInit {
     }
 
   }
+
+  carga_ofertas(){
+    this.servicioclientes.buscar_aofertas_json().subscribe(
+      respu => {
+        this.ofertas = respu;
+      }
+    );
+    this.servicioclientes.obtenfactorvtacrd().subscribe(
+      respu => {
+        this.factoresvtacrd = respu;
+      }
+    );
+    this.servicioclientes.obtentabladesctocont().subscribe(
+      respu => {
+        this.tabladesctoscont = respu;
+      }
+    );
+    let params_z = {
+      modo : "buscar_tarjetas_tc",
+      ubiage : this.ubica_z,
+      ticte: this.ticte
+    }
+    this.servicioclientes.buscar_tarjetas_tc(JSON.stringify(params_z)).subscribe(
+      respu => {
+        this.tarjetastc = respu;
+      }
+    );
+      
+  }
+
+  busca_oferta(codigo: string):number {
+    let poferta = 0;
+    if (this.qom == "C") {
+      let fechahoy = this.configuracion.fecha_a_str(new Date(), "YYYY-mm-dd");
+      this.ofertas.forEach( oferta => {
+        if(codigo == oferta.codigo) {
+          if(fechahoy >= oferta.inioferta && fechahoy <= oferta.finoferta) {
+            poferta = oferta.preciooferta;
+          }
+        }
+      });
+    }
+    return (poferta);
+
+  }
+  
 
   formularioEnviado() {}
 

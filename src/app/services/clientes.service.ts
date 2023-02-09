@@ -74,6 +74,47 @@ export class ClientesService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  obtenrelvtas_enganches ( parametros: string): Observable<Cliente[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    
+    return this.http.post<Cliente[]>(miurl, parametros, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Clientes')),
+      catchError(this.handleError<Cliente[]>('Ocurrio un error en Post obten clientes'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  timbrar_enganches ( parametros: string): Observable<any> {
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    
+    return this.http.post<any>(miurl, parametros, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched timbrar_enganche')),
+      catchError(this.handleError<Cliente[]>('Ocurrio un error en Post timbrar enganche'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  
+  descarga_pdf_cfdi(params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Debug: Estoy en descargar_pdf_cfdi ", params);
+    var miurl = this.url + "altas/serviciosaltas.php?modo=descarga_pdf_cfdi" + 
+      "&uuid="+misparams.uuid;
+      console.log("Debug url: ", miurl);
+      window.open(miurl, "_blank");
+  }
+
+
+
   buscaclientealta ( parametros: string): Observable<Cliente> {
     
     let respu_z = "";
@@ -430,8 +471,8 @@ export class ClientesService {
       window.open(miurl, "_blank");
   }
 
-  busca_vencimientos (fechavta:string, qom:string, inicial:number, final:number) {
-    return (this.configuracion.generavencimientos(fechavta, qom, inicial, final));
+  busca_vencimientos (fechavta:string, qom:string, inicial:number, final:number, diasgracia:number) {
+    return (this.configuracion.generavencimientos(fechavta, qom, inicial, final, diasgracia));
   }
 
   busca_cliagentes_altas( parametros: string): Observable<Cliagentes[]> {
@@ -765,7 +806,8 @@ export class ClientesService {
     let misparams = JSON.parse(parametros);
     let misparamnvo = {
       modo: "buscar_facturacion_una_serie",
-      ubiage: misparams.ubiage
+      ubiage: misparams.ubiage,
+      statuscli: misparams.statuscli
     }
 
     console.log("Debug: Estoy en busca busca_serie_factura ", parametros);
@@ -837,6 +879,26 @@ export class ClientesService {
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
+
+  crear_factura_capvtas( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: Estoy en crea_factura_capvtas parametros:", parametros);
+    let misparams = JSON.parse(parametros);
+
+    console.log("Debug: Estoy en crea_factura_capvtas ", misparams);
+  
+    return this.http.post<any>(miurl, JSON.stringify( misparams), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Facturas')),
+      catchError(this.handleError<any>('Ocurrio un error en Post obten busca_factura_altas'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
 
   agregar_renfac_altas( parametros: string): Observable<any> {
     
@@ -947,6 +1009,58 @@ export class ClientesService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  cartera_buscar_dias_promocion( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "clientes/servicios.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: Estoy en cartera_buscar_dias_promocion parametros:", parametros);
+    let misparams = JSON.parse(parametros);
+    return this.http.post<any>(miurl, JSON.stringify( misparams), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched cartera_buscar_dias_promocion')),
+      catchError(this.handleError<any>('Ocurrio un error en Post obten cartera_buscar_dias_promocion '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+
+
+  altas_buscar_dias_promocion( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: altas_buscar_dias_promocion parametros:", parametros);
+    let misparams = JSON.parse(parametros);
+    return this.http.post<any>(miurl, JSON.stringify( misparams), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched altas_buscar_dias_promocion')),
+      catchError(this.handleError<any>('Ocurrio un error en Post altas_buscar_dias_promocion '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  altas_agregar_dias_promocion( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: Estoy en altas_agregar_dias_promocion:", parametros);
+    let misparams = JSON.parse(parametros);
+
+    return this.http.post<any>(miurl, JSON.stringify( misparams), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched cerrar_cliente_altas')),
+      catchError(this.handleError<any>('Ocurrio un error en Post obten agregar_renfac_altas '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+
   buscar_status_cliente_cerrado( parametros: string): Observable<any> {
     
     let respu_z = "";
@@ -967,6 +1081,51 @@ export class ClientesService {
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
+
+  buscar_status_cliente_modificable( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "obtener_status_vta_facturacion_inmediata",
+      codigo: misparams.numcli
+    }
+    console.log("Debug: Estoy en buscar_status_cliente_modificables parametros:", misparamnvo);
+
+    return this.http.post<any>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched buscar_status_cliente_modificable')),
+      catchError(this.handleError<any>('Ocurrio un error en Post buscar_status_cliente_modificable '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  grabar_status_cliente_modificable( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    let misparams = JSON.parse(parametros);
+    let misparamnvo = {
+      modo: "grabar_status_vta_facturacion_inmediata",
+      codigo: misparams.numcli,
+      statusfacalmomento: "SI"
+    }
+    console.log("Debug: Estoy en buscar_status_cliente_modificables parametros:", misparamnvo);
+
+    return this.http.post<any>(miurl, JSON.stringify( misparamnvo), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched buscar_status_cliente_modificable')),
+      catchError(this.handleError<any>('Ocurrio un error en Post buscar_status_cliente_modificable '))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+
 
   buscar_cliente_altas_letras_pendientes( parametros: string): Observable<any> {
     

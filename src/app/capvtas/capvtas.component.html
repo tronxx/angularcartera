@@ -1,3 +1,4 @@
+<app-spinner></app-spinner>
 <div>
     <h2>Datos de la Nueva Venta</h2>
     <label >Proporcione los productos y seleccione el tipo de Venta</label><br>
@@ -7,6 +8,10 @@
             </button>
 
     <form #formularioCliente="ngForm">
+        <label class="ancho80" for="codcartera">Codigo Cliente</label>
+        <input type="text" name="codcartera" id="codcartera" size="10" 
+        [(ngModel)]="codcartera_z" (blur)="grabar_datos_venta()" >
+        <br>
         <label class="ancho80" for="ubicacion">Ubicacion </label>
         <select name="ubicacion" id="ubicacion" value="ubica"
              [(ngModel)]= "ubica" (blur)="selecciona_tarjetas_tc()"  >
@@ -15,7 +20,26 @@
               {{miubica.ubica}} {{miubica.nombre}}
               </option>
         </select>
+        <label for="status">Status
+            <select name="status" id="status" value="{{nvoclistatus}}" 
+             [(ngModel)]= "nvoclistatus" (blur)="verficar_cambio_status()" >
+             <option *ngFor="let mistatus of statuscli" value="{{mistatus.clave}}"
+              [selected]="nvoclistatus == mistatus.clave">
+              {{mistatus.descri}}
+             </option>
+            </select>
+        </label>
         <br>
+        <label class="ancho80" for="vendedor">Vendedor</label>
+        <select name="codvnd" id="codvnd" 
+        [(ngModel)]= "codvnd" >
+            <option *ngFor="let mivendedor of vendedores" value="{{mivendedor.codvnd}}"
+            [selected]="mivendedor.codvnd == codvnd">
+            {{mivendedor.codvnd}} {{mivendedor.nombre}}
+            </option>
+        </select>
+        <br>
+
         <label class="ancho80" for="ticte">Tipo Cte</label>
         <select name="ticte" id="ticte" value="{{ticte}}" 
              [(ngModel)]= "ticte" (blur)="selecciona_tarjetas_tc()" >
@@ -37,12 +61,19 @@
         </div>
         <br>
         <div>
-            <button mat-raised-button color="primary" (click)="agregar_renfac()" >
-                <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
-                Agregar Renglon
-            </button>
-            <br>
-    
+            <div>
+                <label for="Articulo">Articulo: 
+                    <input type="text"  name="Articulo" [(ngModel)]= "codigo_z">
+                </label>
+                <button mat-raised-button color="primary" (click)="agregar_renfac()" >
+                    <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
+                       Buscar y Agregar Artículo
+                </button>
+                <button mat-raised-button color="primary" (click)="precios_abiertos()" >
+                    <mat-icon aria-hidden="false" aria-label="Example new icon">security</mat-icon>
+                       Abrir Precios
+                </button>
+            </div>
             <table border="1" class="hover">
                 <thead>
                     <tr>
@@ -57,21 +88,51 @@
                 <tbody>
                     <tr *ngFor="let mirenfac of articuloscotizados; first as isFirst">
                         <td>{{mirenfac.codigo}}</td>
-                        <td>{{mirenfac.concepto}} </td>
+                        <td>{{mirenfac.concepto}} 
+                            <div *ngIf="mirenfac.folio">
+                                 Folio: {{mirenfac.folio}} 
+                                 <p *ngIf="mirenfac.serie">
+                                    Serie: {{mirenfac.serie}}
+                                 </p>
+                                
+                                <p *ngIf="mirenfac.esmoto == esmoto">
+                                    Serie Motor: {{mirenfac.seriemotor}}
+                                    Pedimento: {{mirenfac.pedimento}}
+                                    Aduana: {{mirenfac.aduana}}
+                                    Marca: {{mirenfac.marca}}
+                                </p>
+    
+    
+                            </div>
+                        </td>
                         <td> {{mirenfac.canti}} </td>
                         <td>
-                            <label for="" *ngIf="oferta && mirenfac.esoferta">Oferta <mat-icon> local_offer</mat-icon></label> 
                             {{mirenfac.importe | currency }}
                         </td>
-                        <td> {{mirenfac.importe + mirenfac.iva | currency}} </td>
-                        <button [disabled]="escerrada" mat-raised-button color="warn" (click)="eliminar_renfac(mirenfac)" >
-                            <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
-                            Eliminar
-                        </button>
-                        <button  *ngIf="!isFirst" mat-raised-button color="primary" (click)="subir_renfac(mirenfac)" >
-                            <mat-icon aria-hidden="false" aria-label="Example new icon">keyboard_arrow_up</mat-icon>
-                            Subir
-                        </button>
+                        <td> 
+                            <label for="" *ngIf="oferta && mirenfac.esoferta">Oferta <mat-icon> local_offer</mat-icon></label> 
+                            {{mirenfac.importe + mirenfac.iva | currency}} 
+                        </td>
+                        <td>
+                            <button  mat-raised-button color="primary" (click)="acompletar_datos_renfac(mirenfac)" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
+                                Acompletar Datos
+                            </button>
+                            <button  *ngIf="pideoferta_z" mat-raised-button color="primary" (click)="pide_precio_oferta(mirenfac)" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
+                                Cambiar Precio Oferta
+                            </button>
+
+                            <button *ngIf="!escerrada" mat-raised-button color="warn" (click)="eliminar_renfac(mirenfac)" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
+                                Eliminar
+                            </button>
+                            <button  *ngIf="!isFirst" mat-raised-button color="primary" (click)="subir_renfac(mirenfac)" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">keyboard_arrow_up</mat-icon>
+                                Subir
+                            </button>
+    
+                        </td>
     
                     </tr>
                 </tbody>
@@ -101,9 +162,9 @@
                 <label for="nulets">Numero Letras
                     <select name="nulets" id="nulets" value="{{nulet}}" 
                      [(ngModel)]= "nulet" (blur)="calcular_totales()">
-                    <option *ngFor="let miletra of nulets" value="{{miletra.nulets}}"
-                      [selected]="nulet == miletra.nulets">
-                      {{miletra.nulets}}
+                    <option *ngFor="let miletra of factoresvtacrd" value="{{miletra.plazo}}"
+                      [selected]="nulet == miletra.plazo">
+                      {{miletra.plazo}}
                       </option>
                     </select>
                 </label>
@@ -116,16 +177,22 @@
             </div>
             <label class="ancho160" for="totgral">Total Venta</label>
             <input type="text" id="totgral" readonly name="totgral" value="{{totgral | currency}} ">
+            <label for="">Tasa Descto {{this.factordscto}} </label>
             <br>
             <div *ngIf="hayerror">
                 <p class="error">{{msgerror_z}} <mat-icon class="red-icon">warning</mat-icon> </p>
             </div>
         </div>
         <div *ngIf="esvalido">
-            <button mat-raised-button color="primary" (click)="aceptar()"  >
+            <button mat-raised-button color="primary" (click)="pedir_datos_fac()"  >
+                <mat-icon aria-hidden="false" aria-label="Example new icon">receipt</mat-icon>
+                 Acompletar datos Factura
+                </button>
+            <button [disabled]="!yapedidatos" mat-raised-button color="primary" (click)="aceptar()"  >
                 <mat-icon aria-hidden="false" aria-label="Example new icon">check_circle_outline</mat-icon>
                  Proceder a Levantar la Venta
                 </button>
+                <p>Para Proceder a Levantar la Venta debe Acompletar los datos de Factura</p>
             </div>
     
     </form>
