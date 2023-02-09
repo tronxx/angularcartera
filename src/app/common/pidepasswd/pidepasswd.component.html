@@ -1,0 +1,11 @@
+<div mat-dialog-content>
+    <h1>Proporcione el password y presione Enter</h1> <br>
+    <label class="ancho80" for="password">Contraseña</label>
+    <input type="text" id="password" (change)="verfica_password()" 
+    [(ngModel)]="password_z">
+    
+</div>
+<div mat-dialog-actions  style="display: flex; justify-content: flex-end;">
+    <button mat-raised-button style="margin-right: 5px;"  color="warn" (click)="closeno()">Cancelar</button>
+    <button mat-raised-button  color="primary"  [disabled]="!pwdcorrecto_z" (click)="closeyes()">Aceptar</button>
+</div>

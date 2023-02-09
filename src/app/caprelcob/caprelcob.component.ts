@@ -70,8 +70,12 @@ export class CaprelcobComponent implements OnInit {
   }
 
   aceptarpoliza() {
-    
+    this.buscar_relcob();
 
+  }
+
+  buscar_relcob() {
+    
   }
 
   carga_catalogos() {
@@ -89,8 +93,6 @@ export class CaprelcobComponent implements OnInit {
       respu => {
         this.codigospolizas = respu;
         console.log("Codigos Polizas:", respu);
-        
-        
       }
     )
   }
@@ -105,8 +107,6 @@ export class CaprelcobComponent implements OnInit {
     this.serviciopolizas.busca_cobratarios(JSON.stringify(params)).subscribe(
       respu => {
         this.promotores = respu;
-        console.log("Promotores:", respu);
-        
       }
     )
   }

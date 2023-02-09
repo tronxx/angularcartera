@@ -69,6 +69,10 @@
                     <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
                        Buscar y Agregar Artículo
                 </button>
+                <button mat-raised-button color="primary" (click)="precios_abiertos()" >
+                    <mat-icon aria-hidden="false" aria-label="Example new icon">security</mat-icon>
+                       Abrir Precios
+                </button>
             </div>
             <table border="1" class="hover">
                 <thead>
@@ -114,7 +118,12 @@
                                 <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
                                 Acompletar Datos
                             </button>
-                            <button [disabled]="escerrada" mat-raised-button color="warn" (click)="eliminar_renfac(mirenfac)" >
+                            <button  *ngIf="pideoferta_z" mat-raised-button color="primary" (click)="pide_precio_oferta(mirenfac)" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
+                                Cambiar Precio Oferta
+                            </button>
+
+                            <button *ngIf="!escerrada" mat-raised-button color="warn" (click)="eliminar_renfac(mirenfac)" >
                                 <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
                                 Eliminar
                             </button>
@@ -153,9 +162,9 @@
                 <label for="nulets">Numero Letras
                     <select name="nulets" id="nulets" value="{{nulet}}" 
                      [(ngModel)]= "nulet" (blur)="calcular_totales()">
-                    <option *ngFor="let miletra of nulets" value="{{miletra.nulets}}"
-                      [selected]="nulet == miletra.nulets">
-                      {{miletra.nulets}}
+                    <option *ngFor="let miletra of factoresvtacrd" value="{{miletra.plazo}}"
+                      [selected]="nulet == miletra.plazo">
+                      {{miletra.plazo}}
                       </option>
                     </select>
                 </label>

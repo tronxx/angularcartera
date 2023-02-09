@@ -58,6 +58,8 @@ import { PolenganComponent } from './polengan/polengan.component';
 import { SpinnerModule } from './common/spinner/spinner.module';
 import { SpinnerInterceptor } from './common/interceptors/spinner.interceptor';
 import { CaprelcobComponent } from './caprelcob/caprelcob.component';
+import { DlgpidprofertaComponent } from './common/dlgpidproferta/dlgpidproferta.component';
+import { PidepasswdComponent } from './common/pidepasswd/pidepasswd.component';
 
 
 @NgModule({
@@ -99,6 +101,8 @@ import { CaprelcobComponent } from './caprelcob/caprelcob.component';
     DlgimpripolComponent,
     PolenganComponent,
     CaprelcobComponent,
+    DlgpidprofertaComponent,
+    PidepasswdComponent,
   ],
   imports: [
     BrowserModule,

@@ -29,6 +29,8 @@ import { DlgbusarticuloComponent } from '../common/dlgbusarticulo/dlgbusarticulo
 import { DatossolicitComponent } from '../altacli/datossolicit/datossolicit.component';
 import { DlgdatosfacturaComponent  } from '../altacli/dlgdatosfactura/dlgdatosfactura.component';
 import { SpinnerComponent } from '../common/spinner/spinner.component';
+import { DlgpidprofertaComponent } from '../common/dlgpidproferta/dlgpidproferta.component';
+import { PidepasswdComponent } from '../common/pidepasswd/pidepasswd.component';
 
 interface Nvorenfac {
   id: number;
@@ -81,6 +83,9 @@ export class CapvtasComponent implements OnInit {
   
 
   codcartera_z = "";
+  pidprecio_z = false;
+  pideoferta_z = false;
+  
   antcod_z = "";
   codcli_z = "";
   codigo_z = "";
@@ -125,6 +130,7 @@ export class CapvtasComponent implements OnInit {
   proferta = 0;
   codvnd = "";
   antvnd = "-1";
+  piva = 16;
   hayerror = false;
   yapedidatos = false;
   articuloscotizados : Nvorenfac[] = [];
@@ -184,25 +190,8 @@ export class CapvtasComponent implements OnInit {
     this.antcod_z = this.codcartera_z;
   }
   
-  editar_factura() {
-
-  }
-
-  cerrar_factura() {
-
-  }
-
-  imprimir_factura() {
-
-  } 
-
-  validar_fecha_cierre() {
-
-  }
 
   agregar_renfac() {
-    console.log("El codigo es", this.codigo_z);
-    
     const dialogmov = this.dialog.open(DlgbusarticuloComponent, {
       width:'700px',
       data: this.codigo_z
@@ -256,6 +245,82 @@ export class CapvtasComponent implements OnInit {
       }
     });
   
+     
+  }
+  xagregar_renfac() {
+    console.log("El codigo es", this.codigo_z);
+    let params_z = {
+      "escomplementodatos": "NO",
+      "pedircodigo": "SI",
+      "codigo": this.codigo_z,
+      "ticte": this.ticte,
+      "qom": this.qom,
+    }
+    const dlgdatosrenfac= this.dialog.open(DlgrenfacComponent, {
+      width: '700px',
+      data: JSON.stringify(params_z)
+     });
+        
+    let proferta = 0;
+    dlgdatosrenfac.afterClosed().subscribe(res => {
+      if (res) {
+        console.log("Linea: ", this.linea_z, " Res.linea:", res.linea);
+        if((res.linea == "MOTO" && this.linea_z !="") || this.linea_z == "MOTO") {
+          this.alerta("La Linea Moto no se puede mezclar");
+        } else {
+          this.linea_z = res.linea;
+          this.codigo_z = res.renfac.codigo;
+          console.log("101:articulo", this.codigo_z);
+          
+          proferta = this.busca_oferta(this.codigo_z);
+          //this.busca_oferta(res.renfac.codigo)
+          
+          let idren = this.articuloscotizados.length;
+          this.articulocotizado = <Nvorenfac> {};
+          this.articulocotizado.codigo = res.renfac.codigo;
+          this.articulocotizado.id = idren;
+          this.articulocotizado.canti = 1;
+          this.articulocotizado.precionormal = res.renfac.preciou;
+          this.articulocotizado.piva = res.piva;
+          this.articulocotizado.preciou = res.renfac.preciou / ( res.piva / 100 + 1);
+          this.articulocotizado.concepto = res.renfac.concepto;
+          this.articulocotizado.linea = res.linea;
+          this.articulocotizado.proferta = proferta;
+          this.articulocotizado.factorvtacred = 0;
+          this.articulocotizado.tasadescto = 0;
+          this.articulocotizado.folio = res.renfac.folio;
+          this.articulocotizado.serie = res.renfac.serie;
+          this.articulocotizado.seriemotor = res.seriemotor;
+          this.articulocotizado.aduana = res.aduana;
+          this.articulocotizado.marca = res.marca;
+          this.articulocotizado.pedimento = res.pedimento;
+          this.articulocotizado.proferta = this.busca_oferta(res.codigo);
+  
+          if(this.articulocotizado.proferta) {
+            this.articulocotizado.esoferta = true;
+          } else {
+            this.articulocotizado.esoferta = false;
+          }
+          if(this.ticte == "CC" && this.articulocotizado.esoferta ) {
+              this.oferta = true;
+              this.articulocotizado.importe = this.articulocotizado.proferta / (this.piva / 100 + 1);
+          } else {
+              this.oferta = false;
+              this.articulocotizado.importe = this.articulocotizado.precionormal / (this.piva / 100 + 1);
+          }
+          this.articulocotizado.iva = this.articulocotizado.importe * this.piva / 100;
+  
+          this.articuloscotizados.push(this.articulocotizado);
+          console.log("Nuevorenfac:", this.articulocotizado);
+
+          //console.log("Articulos Cotizados:", this.articuloscotizados);
+          
+          this.calcular_totales();
+  
+        }
+      }
+    });
+  
   
   }
 
@@ -277,6 +342,7 @@ export class CapvtasComponent implements OnInit {
         }
       }
     });
+    //this.alerta("Precio Oferta " + codigo + " " + poferta.toString());
     return (poferta);
 
   }
@@ -302,6 +368,7 @@ export class CapvtasComponent implements OnInit {
         }
       });
     }
+    this.factordscto = 0;
     this.descto = 0;
     this.oferta = false;
     if((this.ticte == "TC" && plazotc == 0)  || this.ticte == "CC" )  {
@@ -451,7 +518,6 @@ export class CapvtasComponent implements OnInit {
             this.factura.prodfin = this.prodfin_z;
             this.escerrada = ( this.factura.status == "C");
             this.strfeccierre_z = this.factura.fecha;
-            this.validar_fecha_cierre();
           }
         }
       }
@@ -498,7 +564,7 @@ obtencatalogos() {
       this.ubivta = respu;
     }
   );
-  this.buscanulets();
+  
   this.servicioclientes.buscar_aofertas_json().subscribe(
     respu => {
       this.ofertas = respu;
@@ -824,6 +890,52 @@ pedir_datos_fac() {
     }
 
   });
+
+}
+
+pide_precio_oferta(renfac: Nvorenfac) {
+  console.log("acompletar datos renfac", renfac);
+  
+   let id  = renfac.id;
+   let params_z = {
+    "proferta": renfac.proferta
+   }
+   const dlgdatosrenfac= this.dialog.open(DlgpidprofertaComponent, {
+    width: '700px',
+    data: JSON.stringify(params_z)
+   });
+   dlgdatosrenfac.afterClosed().subscribe(res => {
+      console.log("Regresando del Dialog pidepreciooferta", res);
+       this.articuloscotizados[id].proferta = res.proferta;
+       if(res.proferta) this.articuloscotizados[id].esoferta = true;
+       console.log("ya actualicé", this.articuloscotizados[id]);
+       this.calcular_totales();
+       console.log("100: Articulos Cotizados:", this.articuloscotizados);
+       
+      }
+   );
+
+}
+
+precios_abiertos() {
+  this.pideoferta_z = false;
+  let cod_z = this.codcartera_z.substring(0,2);
+   let params_z = {
+    "ubicacion": cod_z
+   }
+   const dlgdatosrenfac= this.dialog.open(PidepasswdComponent, {
+    width: '400px',
+    data: JSON.stringify(params_z)
+   });
+   dlgdatosrenfac.afterClosed().subscribe(res => {
+      //console.log("Regresando de Pide Password", res);
+       
+       if(res) {
+         this.pideoferta_z = true;
+       }
+       
+      }
+   );
 
 }
 
