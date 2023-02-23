@@ -18,8 +18,10 @@ import { formatNumber,  CommonModule,  CurrencyPipe, formatCurrency, formatDate,
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogBodyComponent } from './dialog-body/dialog-body.component';
 import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card'; 
+import { MatCheckbox, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule  } from '@angular/material/select';
@@ -60,6 +62,8 @@ import { SpinnerInterceptor } from './common/interceptors/spinner.interceptor';
 import { CaprelcobComponent } from './caprelcob/caprelcob.component';
 import { DlgpidprofertaComponent } from './common/dlgpidproferta/dlgpidproferta.component';
 import { PidepasswdComponent } from './common/pidepasswd/pidepasswd.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatOptionModule } from '@angular/material/core';
 
 
 @NgModule({
@@ -117,8 +121,12 @@ import { PidepasswdComponent } from './common/pidepasswd/pidepasswd.component';
     MatRadioModule,
     MatCardModule,
     MatSelectModule,
+    MatCheckboxModule,
     MatProgressBarModule,
     MatSlideToggleModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatOptionModule,
     BrowserAnimationsModule,
     SpinnerModule,
   ],

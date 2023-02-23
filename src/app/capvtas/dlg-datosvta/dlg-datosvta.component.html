@@ -15,100 +15,97 @@
     
             <mat-card>
                     <mat-card-title>Nombre del Cliente</mat-card-title>
-                    <label class="ancho80" for="appat" size="10">Apellido Paterno</label>
-                        <input type="text" name="appat" id="appat" size="30" [(ngModel)]="nvocli.appat" 
+                    <mat-form-field>
+                        <input matInput placeholder="Apellido Paterno" type="text" name="appat" id="appat" [(ngModel)]="nvocli.appat" 
                         oninput="this.value = this.value.toUpperCase()">
-        
-                    <br>
-                    <label class="ancho80" for="apmat" size="10" >Apellido Materno</label>
-                        <input type="text" name="apmat" id="apmat" size="30" [(ngModel)]="nvocli.apmat" 
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="Apellido Materno" type="text" name="apmat" id="apmat" [(ngModel)]="nvocli.apmat" 
                         oninput="this.value = this.value.toUpperCase()">
-                    <br> 
-                    <label class="ancho80" for="nombre1" size="10">Nombre1</label>
-                        <input type="text" name="nombre1" id="nombre1" size="30" [(ngModel)]="nvocli.nompil1"
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="Nombre 1" type="text" name="nombre1" id="nombre1" [(ngModel)]="nvocli.nompil1"
                         oninput="this.value = this.value.toUpperCase()" >
-                    <br>
-                    <label class="ancho80" for="nombre2"  size="10">Nombre2</label>
-                        <input type="text" name="nombre2" id="nombre2" size="30" [(ngModel)]="nvocli.nompil2"
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="Nombre 2" type="text" name="nombre2" id="nombre2" [(ngModel)]="nvocli.nompil2"
                         oninput="this.value = this.value.toUpperCase()" >
+                    </mat-form-field>
             </mat-card>
             <mat-card>
                 <mat-card-title>Direccion del Cliente</mat-card-title>
-                <label class="ancho80" for="calle">Calle y Cruzamientos</label>
-                    <input type="text" name="calle" id="calle" size="30" [(ngModel)]="nvocli.calle"
+                <mat-form-field>
+                    <input matInput placeholder="Calle y Cruzamientos" type="text" name="calle" id="calle" [(ngModel)]="nvocli.calle"
                     oninput="this.value = this.value.toUpperCase()" >
-                <br>
-                <label class="ancho80" for="predio">Num.Predio</label>
-                    <input type="text" name="predio" id="predio" size="30" [(ngModel)]="nvocli.numpred"
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Número de Predio" type="text" name="predio" id="predio" [(ngModel)]="nvocli.numpred"
                     oninput="this.value = this.value.toUpperCase()" >
-                <br>
-                <label class="ancho80" for="colonia">Colonia</label>
-                    <input type="text" name="colonia" id="colonia" size="30" [(ngModel)]="nvocli.colonia" 
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Colonia" type="text" name="colonia" id="colonia" [(ngModel)]="nvocli.colonia" 
                     oninput="this.value = this.value.toUpperCase()">
-                <br>
-                <label class="ancho80" for="codpost">Codigo Postal</label>
-                    <input type="text" name="codpost" id="codpost" size="30" [(ngModel)]="nvocli.codpost"
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Código Postal" type="text" name="codpost" id="codpost" [(ngModel)]="nvocli.codpost"
                     oninput="this.value = this.value.toUpperCase()" >
-                <br>
-                <label class="ancho80" for="poblacion">Poblacion</label>
-                    <select name="poblacion" id="poblacion" value="{{nvocli.poblac}}" 
-                     [(ngModel)]= "nvocli.poblac" >
-                     <option *ngFor="let mipoblacs of poblaciones" value="{{mipoblacs.ciudad}}"
-                      [selected]="nvocli.poblac == mipoblacs.ciudad">
-                      {{mipoblacs.ciudad}}
-                     </option>
-                    </select>
-                <br>
-                <label class="ancho80" for="emailcli">Email Cliente</label>
-                <input type="text" name="emailcli" id="emailcli" size="30" [(ngModel)]="nvocli.email" >
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-select  name="regimen" placeholder="Población" [(ngModel)]="nvocli.poblac">
+                        <mat-option *ngFor="let mipoblacs of poblaciones" 
+                        value="{{mipoblacs.ciudad}} "
+                        selected="nvocli.poblac == mipoblacs.ciudad" >
+                        {{mipoblacs.ciudad}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Email Cliente" type="text" name="emailcli" id="emailcli" [(ngModel)]="nvocli.email" >
+                </mat-form-field>
             </mat-card>
-            <br>
             <mat-card *ngIf="conaval" >
                 <mat-card-title>Datos del Aval</mat-card-title>
-                <label class="ancho80" for="appataval" size="10">Apellido Paterno</label>
-                <input type="text" name="appataval" id="appataval" size="30" [(ngModel)]="nvoaval.appat" 
+                <mat-form-field>
+                    <input placeholder="Apellido Paterno" type="text" name="appataval" id="appataval" [(ngModel)]="nvoaval.appat" 
                     oninput="this.value = this.value.toUpperCase()">
-    
-                <br>
-                <label class="ancho80" for="apmataval" size="10" >Apellido Materno</label>
-                <input type="text" name="apmataval" id="apmataval" size="30" [(ngModel)]="nvoaval.apmat" 
+                </mat-form-field>
+                <mat-form-field>
+                    <input placeholder="Apellido Marterno" type="text" name="apmataval" id="apmataval" [(ngModel)]="nvoaval.apmat" 
                     oninput="this.value = this.value.toUpperCase()">
-                <br> 
-                <label class="ancho80" for="nombre1aval" size="10">Nombre1</label>
-                <input type="text" name="nombre1aval" id="nombre1aval" size="30" [(ngModel)]="nvoaval.nompil1"
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Nombre 1" type="text" name="nombre1aval" id="nombre1aval" [(ngModel)]="nvoaval.nompil1"
                     oninput="this.value = this.value.toUpperCase()" >
-                <br>
-                <label class="ancho80" for="nombre2aval"  size="10">Nombre2</label>
-                <input type="text" name="nombre2aval" id="nombre2aval" size="30" [(ngModel)]="nvoaval.nompil2"
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Nombre 2" type="text" name="nombre2aval" id="nombre2aval" [(ngModel)]="nvoaval.nompil2"
                     oninput="this.value = this.value.toUpperCase()" >
-                <br>
-                <label class="ancho80" for="dir1aval"  size="10">Direccion</label>
-                <input type="text" name="dir1aval" id="dir1aval" size="30" [(ngModel)]="nvoaval.dirav1"
-                        oninput="this.value = this.value.toUpperCase()" >
-                <br>
-                <label class="ancho80" for="dir2aval"  size="10">Direccion 2</label>
-                <input type="text" name="dir2aval" id="dir2aval" size="30" [(ngModel)]="nvoaval.dirav2"
-                                oninput="this.value = this.value.toUpperCase()" >
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Dirección 1" type="text" name="dir1aval" id="dir1aval" [(ngModel)]="nvoaval.dirav1"
+                    oninput="this.value = this.value.toUpperCase()" >
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Dirección 2" type="text" name="dir2aval" id="dir2aval" [(ngModel)]="nvoaval.dirav2"
+                    oninput="this.value = this.value.toUpperCase()" >
+                </mat-form-field>
             </mat-card>
             <mat-card>
-                <label for="jefgpo">Promotor
-                    <select name="jefgpo" id="jefgpo" value="{{nvocli.promotor}}" 
+                <mat-form-field>
+                    <mat-select placeholder="Promotor" name="jefgpo" id="jefgpo" value="{{nvocli.promotor}}" 
                      [(ngModel)]= "nvocli.promotor" >
-                    <option *ngFor="let mipromo of promotor" value="{{mipromo.cvepromo}}"
-                      [selected]="nvocli.promotor == mipromo.cvepromo">
+                    <mat-option *ngFor="let mipromo of promotor" value="{{mipromo.cvepromo}}"
+                      selected="nvocli.promotor == mipromo.cvepromo">
                       {{mipromo.cvepromo}} {{mipromo.nombre}}
-                      </option>
-                    </select>
-                </label>
-                <br>
-                <label for="comjef">Comision Promotor
-                    <input type="number" name="comjef" id="comjef" size="10" [(ngModel)]="nvocli.comisionprom">
-                </label> 
-                <br>
-                <label for="fpagcom">Fecha Pago Comision
-                    <input type="text" name="fpagcom" id="fpagcom" size="10" [(ngModel)]="nvocli.pgocom" >
-                </label>
-        
+                    </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Comisión Promotor" type="number" name="comjef" id="comjef" [(ngModel)]="nvocli.comisionprom">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Fecha Pago Comisión" type="text" name="fpagcom" id="fpagcom" [(ngModel)]="nvocli.pgocom" >
+                </mat-form-field>
             </mat-card>
     
         </div>    

@@ -886,6 +886,8 @@ pedir_datos_fac() {
   dialogmov.afterClosed().subscribe(res => {
     if(res) {
       this.datosfactura_z = JSON.stringify(res);
+      console.log("-x021- Datos Factura:", this.datosfactura_z);
+      
       this.yapedidatos = true;
     }
 

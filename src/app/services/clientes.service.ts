@@ -28,6 +28,7 @@ import { Metodopagocfdi } from '../models';
 import { Reltrasp } from '../models';
 import { Factorvtacred } from '../models';
 import { Tabladesctocont  } from '../models';
+import { RegimenFiscal } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -668,7 +669,7 @@ export class ClientesService {
     const body=parametros;
     let misparams = JSON.parse(parametros);
     let misparamnvo = {
-      modo: "buscar_cli_facturas",
+      modo: "buscar_cli_facturas.",
       idcli: misparams.idcli
     }
 
@@ -831,7 +832,23 @@ export class ClientesService {
     return this.http.get<Metodopagocfdi[]>(miurl,  {'headers':headers}).
     pipe(
       tap(_ => this.log('fetched Metodo de pago cfdi')),
-      catchError(this.handleError<Metodopagocfdi[]>('Ocurrio un error en Post obten busca_codigo_inven'))
+      catchError(this.handleError<Metodopagocfdi[]>('Ocurrio un error en Post obten metodo pago cfdi'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  busca_regimen_fiscal ( ): Observable<RegimenFiscal[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    miurl += '?modo=obtener_cat_regimenfiscal.'
+    const headers = { 'content-type': 'text/plain'};
+    console.log("Debug: Estoy en regimen_fiscal");
+  
+    return this.http.get<RegimenFiscal[]>(miurl,  {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Metodo de pago cfdi')),
+      catchError(this.handleError<RegimenFiscal[]>('Ocurrio un error en Post obten regimen fiscl'))
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }

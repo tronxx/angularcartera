@@ -22,7 +22,7 @@ import { Seriefac } from '../../models/seriesfac';
 import { Usocfdi } from '../../models/usocfdi';
 import { Metodopagocfdi } from '../../models/metodopagocfdi';
 import { ValueConverter } from '@angular/compiler/src/render3/view/template';
-
+import {RegimenFiscal } from '../../models'
 
 @Component({
   selector: 'app-dlgdatosfactura',
@@ -36,9 +36,11 @@ export class DlgdatosfacturaComponent implements OnInit {
   fechavta = "";
   statuscli = "";
   ubiage = "";
+  esrfcgenerico = true;
   
   metodospago : Metodopagocfdi [] = [];
   usoscfdi : Usocfdi[] = [];
+  regimenes: RegimenFiscal [] = [];
 
   constructor(
     public dialog: MatDialog, public dialogRef: MatDialogRef<DlgdatosfacturaComponent>,
@@ -54,6 +56,7 @@ export class DlgdatosfacturaComponent implements OnInit {
     this.fechavta =params_z.fechavta;
     this.factura = params_z.factura;
     this.statuscli = params_z.statuscli;
+    this.rfcgenerico();
     this.busca_catalogos();
     console.log("Debug: dlgdatosfactura modo", params_z.factura);
     if(params_z.modo == "NUEVO") {
@@ -79,10 +82,20 @@ export class DlgdatosfacturaComponent implements OnInit {
           this.factura.email = this.seriefac.emailctegeneral;
           this.factura.cveusocfdi = 'G03';
           this.factura.cvemetodopago = '01';
+          this.factura.regimen = '616';
         }
       }
     );
  
+  }
+
+  rfcgenerico() {
+    this.esrfcgenerico = false;
+    if(this.factura?.rfc == "XAXX010101000") {
+      this.esrfcgenerico =  true;
+      this.factura.regimen = '616';
+    }
+    
   }
 
   busca_catalogos() {
@@ -94,6 +107,11 @@ export class DlgdatosfacturaComponent implements OnInit {
     this.servicioclientes.busca_cfdi_metodo_pago ().subscribe(
       respu => {
         this.metodospago = respu;
+      }
+    );
+    this.servicioclientes.busca_regimen_fiscal ().subscribe(
+      respu => {
+        this.regimenes = respu;
       }
     );
    }
