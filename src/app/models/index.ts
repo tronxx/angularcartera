@@ -1,6 +1,7 @@
 export { Articulo } from './articulo';
 export { Aval } from './aval';
 export { Cartapro } from './cartapro';
+export { Cliente } from './clientes';
 export { Cliagentes } from './cliagentes';
 export { Compania } from './config';
 export { Factura } from './facturas';
@@ -31,3 +32,4 @@ export { Relcob } from './relcob';
 export { CodigoPoliza } from './codigospoliza';
 export { Renrelco } from './renrelco';
 export { RegimenFiscal } from './regimenfiscal';
+

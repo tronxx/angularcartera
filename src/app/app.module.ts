@@ -64,6 +64,7 @@ import { DlgpidprofertaComponent } from './common/dlgpidproferta/dlgpidproferta.
 import { PidepasswdComponent } from './common/pidepasswd/pidepasswd.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from '@angular/material/core';
+import { ListarelcobComponent } from './caprelcob/listarelcob/listarelcob.component';
 
 
 @NgModule({
@@ -107,6 +108,7 @@ import { MatOptionModule } from '@angular/material/core';
     CaprelcobComponent,
     DlgpidprofertaComponent,
     PidepasswdComponent,
+    ListarelcobComponent,
   ],
   imports: [
     BrowserModule,

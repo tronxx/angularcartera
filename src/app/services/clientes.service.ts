@@ -409,7 +409,7 @@ export class ClientesService {
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
-
+  
   buscaplazos( parametros: string): Observable<Plazos[]> {
     
     let respu_z = "";

@@ -58,7 +58,6 @@ export class DlgdatosfacturaComponent implements OnInit {
     this.statuscli = params_z.statuscli;
     this.rfcgenerico();
     this.busca_catalogos();
-    console.log("Debug: dlgdatosfactura modo", params_z.factura);
     if(params_z.modo == "NUEVO") {
       this.busca_serie_y_folio();
     }
@@ -90,10 +89,11 @@ export class DlgdatosfacturaComponent implements OnInit {
   }
 
   rfcgenerico() {
-    this.esrfcgenerico = false;
     if(this.factura?.rfc == "XAXX010101000") {
       this.esrfcgenerico =  true;
       this.factura.regimen = '616';
+    } else {
+      this.esrfcgenerico = false;
     }
     
   }

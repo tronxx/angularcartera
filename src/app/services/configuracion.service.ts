@@ -179,13 +179,13 @@ export class ConfiguracionService {
       strfec = anu.toString() + "/" + mes.toString() + '/' + dia.toString();
       vencimiento_z = new Date(strfec);
       vencimiento_z = new Date (this.corrige_fecha_fin_de_mes(strfec));
-      console.log("letra Impar:", letra, "strfec:", strfec, " Vencimiento:", vencimiento_z.toDateString());
+      // console.log("letra Impar:", letra, "strfec:", strfec, " Vencimiento:", vencimiento_z.toDateString());
     } else {
       strfec = anu.toString() + "/" + mes.toString() + '/' + dia.toString();
       vencimiento_z = new Date (this.corrige_fecha_fin_de_mes(strfec));
       //vencimiento_z = new Date(strfec);
       if(esfindemes) vencimiento_z = this.damefindemes(vencimiento_z);
-      console.log("letra Par:", letra, "strfec:", strfec, " Vencimiento:", vencimiento_z.toDateString());
+      // console.log("letra Par:", letra, "strfec:", strfec, " Vencimiento:", vencimiento_z.toDateString());
     }
     return (vencimiento_z);
   }

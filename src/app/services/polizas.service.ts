@@ -46,6 +46,15 @@ export class PolizasService {
 
   }
 
+  BuscaRecargosDeLetra ( params: string): Promise<any> {
+    
+    var miurl = this.url + "polizas/servicios.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=JSON.stringify(params);
+    
+    return this.http.post<any>(miurl, params, {'headers':headers}).toPromise();
+  }
+
 
   busca_cobratarios ( params: string): Observable<any> {
     

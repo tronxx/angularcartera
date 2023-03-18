@@ -1,0 +1,38 @@
+<div>
+    <label for="tienda">Tienda</label>
+    <select name="tienda" id="tienda" [(ngModel)]="tienda" >
+        <option *ngFor="let mitienda of codigospolizas" >
+            {{mitienda.clave}} {{mitienda.nombre}}
+        </option>
+    </select>
+    
+    <label for="fecha">Fecha Inicial</label>
+    <input type="date" name="fechaini" id="fechaini" [(ngModel)]="fechaini" >
+    <label for="fecha">Fecha Final</label>
+    <input type="date" name="fechafin" id="fechafin" [(ngModel)]="fechafin" >
+    <button mat-raised-button 
+    color="primary"
+    (click)="buscarrelcobs()">Aceptar</button>
+    
+
+</div>
+<div>
+    <table border="1">
+        <tr>
+            <th>Fecha</th>
+            <th>Promotor</th>
+            <th>Nombre</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+        <tr *ngFor="let relcob  of relcobs">
+            <td>{{relcob.fecha}} </td>
+            <td>{{relcob.idpromot}} </td>
+            <td>{{relcob.folio}} </td>
+            <td>
+                <button>Detalles</button>
+            </td>
+        </tr>
+    </table>
+</div>
+

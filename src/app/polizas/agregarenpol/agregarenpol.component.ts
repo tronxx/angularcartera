@@ -72,6 +72,7 @@ export class AgregarenpolComponent implements OnInit {
   importecerrado = true;
 
   diascontingencia = 90;
+  recargoscobrados_z = 0;
   diasbon = 5;
   claveempresa = "";
   AplicarContingencia = true;
@@ -158,6 +159,7 @@ export class AgregarenpolComponent implements OnInit {
   vence_z  = new Date();
   fechaactual_z = new Date();
   strfechavta = "";
+  esconrec_z = false;
 
   constructor(
     private servicioclientes: ClientesService,
@@ -385,7 +387,7 @@ activar_tipopago(tipospagodisp:string[]) {
 
 }
 
-calculaConcepto() {
+  async calculaConcepto() {
   let imp_z = 0;
   let nuletxpag_z = 0;
   let factor_z = 0;
@@ -424,6 +426,7 @@ calculaConcepto() {
     }
     if (this.datospago.tipopago == "S") {
       this.datospago.concepto += "SALDO ";
+      this.tipomovcerrado = true;
       this.ultltaoculto_z = true;
       this.datospago.ltafin = this.datospago.ltaini;
       this.bonif_cerrada = false;
@@ -441,6 +444,8 @@ calculaConcepto() {
       }
 
     }
+    this.recargoscobrados_z = 0;
+    this.esconrec_z = false;
 
     this.datospago.concepto += "/" + this.nulets_z;
     if (this.datospago.tipopago == "C" || this.datospago.tipopago == "S" ) {
@@ -449,8 +454,12 @@ calculaConcepto() {
       }
 
       if(this.datospago.dias > 5 ) {
-        this.datospago.recobon = Math.round (this.recargo_z * nuletxpag_z  );
+        this.esconrec_z = true;
+        this.recargoscobrados_z = await this.busca_recargos_letra(this.datospago.idcli, this.datospago.ltaini);
+  
+        this.datospago.recobon = Math.round (this.recargo_z * nuletxpag_z  ) - this.recargoscobrados_z;
         this.datospago.neto = this.datospago.importe + this.datospago.recobon;
+        this.bonif_cerrada = true;
         factor_z = 1;
 
       } else {
@@ -545,6 +554,19 @@ busca_aval(idcli_z : number) {
   );
 
 }
+
+async busca_recargos_letra(idcli_z : number, numletra_z: string): Promise<number> {
+  var params_z = {
+    modo : "obtener_recargo_letra",
+    idcli : idcli_z,
+    letra: Number( numletra_z)
+  }
+  let misrecargoscobrados_z = 0;
+  const misrec = await this.serviciopolizas.BuscaRecargosDeLetra(JSON.stringify(params_z));
+  misrecargoscobrados_z = misrec.recargos;
+  return (misrecargoscobrados_z);
+}
+
 
 alerta(mensaje: string) {
   const dialogref = this.dialog.open(DialogBodyComponent, {

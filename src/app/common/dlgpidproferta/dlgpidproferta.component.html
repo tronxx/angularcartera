@@ -1,6 +1,8 @@
 <div mat-dialog-content><h1>Teclee el Precio de Oferta</h1>  <br>
     <label for="proferta" class ="ancho120"  >Precio Oferta</label>
     <input type="number" id="proferta" [(ngModel)]="proferta">
+    <label for="esoferta"> Es Oferta</label>
+    <input type="checkbox" id="esoferta" [(ngModel)]="esoferta">
 </div>
 <div mat-dialog-actions  style="display: flex; justify-content: flex-end;">
     <button mat-raised-button style="margin-right: 5px;"  color="warn" (click)="closeno()">Cancelar</button>

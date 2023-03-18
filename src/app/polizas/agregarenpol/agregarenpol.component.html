@@ -94,6 +94,7 @@
                         </label>
                         <label for="recobon">
                             <input size = "10" type="number" name="recobon" id="recobon" [disabled]="bonif_cerrada" (blur)="calculaNeto()" [(ngModel)] = "datospago.recobon" >
+                            <label *ngIf="esconrec_z" for=""> Recargo Cobrado: {{ recargoscobrados_z | currency }}</label>
                         </label>
                         <br>
                         <label for="importe">

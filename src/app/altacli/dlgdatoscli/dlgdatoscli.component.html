@@ -115,10 +115,6 @@
             </select>
         </label>
         <br>
-        <label for="pordesc">% Descto
-            <input type="number" name="pordesc" id="pordesc" size="10" [(ngModel)]="nvocli.pdsc" >
-        </label>
-        <br>
         <label for="ubicacion">Ubicacion
             <select name="ubicacion" id="ubicacion" value="{{nvocli.ubica}}" 
              [(ngModel)]= "nvocli.ubica" (blur)="selecciona_tarjetas_tc()"  >
@@ -149,7 +145,7 @@
             </select>
         </div>
         <br>
-        <label for="jefgpo">Jefe de Grupo
+        <label for="jefgpo">Entragado Por
             <select name="jefgpo" id="jefgpo" value="{{nvocli.promotor}}" 
              [(ngModel)]= "nvocli.promotor" >
             <option *ngFor="let mipromo of promotor" value="{{mipromo.cvepromo}}"
