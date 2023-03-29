@@ -274,7 +274,7 @@ export class PolizasComponent implements OnInit {
  
   }
 
-  buscar_cobratario() {
+    buscar_cobratario() {
     var params = {
       "modo":"buscar_cobratario",
       "codprom": this.cobratario.cvepromo

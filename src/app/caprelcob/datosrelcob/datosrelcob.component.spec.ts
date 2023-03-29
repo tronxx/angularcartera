@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CaprelcobComponent } from './caprelcob.component';
+import { DatosrelcobComponent } from './datosrelcob.component';
 
-describe('CaprelcobComponent', () => {
-  let component: CaprelcobComponent;
-  let fixture: ComponentFixture<CaprelcobComponent>;
+describe('DatosrelcobComponent', () => {
+  let component: DatosrelcobComponent;
+  let fixture: ComponentFixture<DatosrelcobComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CaprelcobComponent ]
+      declarations: [ DatosrelcobComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CaprelcobComponent);
+    fixture = TestBed.createComponent(DatosrelcobComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -22,7 +22,7 @@ export class MainComponent implements OnInit {
     { link: "/listaaltas", titulo: "Lista de Ventas", active:"active"  },
     { link: "/polengan", titulo: "Pólizas Enganche", active:"active"  },
     { link: "/nvavta", titulo: "Facturacion", active:"active"  },
-    // { link: "/listarelcob", titulo: "Relacion de Cobranza", active:"active"  },
+    { link: "/listarelcob", titulo: "Relacion de Cobranza", active:"active"  },
 
   ];
 

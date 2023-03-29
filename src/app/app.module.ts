@@ -59,12 +59,13 @@ import { DlgimpripolComponent } from './dlgimpripol/dlgimpripol.component';
 import { PolenganComponent } from './polengan/polengan.component';
 import { SpinnerModule } from './common/spinner/spinner.module';
 import { SpinnerInterceptor } from './common/interceptors/spinner.interceptor';
-import { CaprelcobComponent } from './caprelcob/caprelcob.component';
 import { DlgpidprofertaComponent } from './common/dlgpidproferta/dlgpidproferta.component';
 import { PidepasswdComponent } from './common/pidepasswd/pidepasswd.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from '@angular/material/core';
 import { ListarelcobComponent } from './caprelcob/listarelcob/listarelcob.component';
+import { DlgdatosrelcobComponent } from './caprelcob/dlgdatosrelcob/dlgdatosrelcob.component';
+import { DetallesrelcobComponent } from './caprelcob/detallesrelcob/detallesrelcob.component';
 
 
 @NgModule({
@@ -105,10 +106,11 @@ import { ListarelcobComponent } from './caprelcob/listarelcob/listarelcob.compon
     AgregarenpolComponent,
     DlgimpripolComponent,
     PolenganComponent,
-    CaprelcobComponent,
     DlgpidprofertaComponent,
     PidepasswdComponent,
     ListarelcobComponent,
+    DlgdatosrelcobComponent,
+    DetallesrelcobComponent,
   ],
   imports: [
     BrowserModule,
