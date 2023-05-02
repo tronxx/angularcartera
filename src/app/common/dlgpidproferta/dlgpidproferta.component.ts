@@ -12,6 +12,7 @@ import { Reltrasp } from '../../models/reltrasp';
 export class DlgpidprofertaComponent implements OnInit {
 
   proferta = 0;
+  esoferta = false;
 
   constructor(
     public dialogRef: MatDialogRef<DlgpidprofertaComponent>,
@@ -24,11 +25,13 @@ export class DlgpidprofertaComponent implements OnInit {
   ngOnInit(): void {
     let misdatos = JSON.parse(this.message);
     this.proferta = misdatos.proferta;
+    this.esoferta = misdatos.tipo;
   }
 
   closeyes () {
     let resultado = {
-      "proferta": this.proferta
+      "proferta": this.proferta,
+      "esoferta": this.esoferta
     }
     this.dialogRef.close(resultado);
   }

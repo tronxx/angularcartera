@@ -92,7 +92,6 @@ export class CapvtasComponent implements OnInit {
   idcli = 0;
   idfac = 0;
   cargoscli_z = 0;
-  servic_z = 0;
   preciolista_z =  0;
   prodfin_z = 0;
   fechavta = ""
@@ -125,6 +124,7 @@ export class CapvtasComponent implements OnInit {
   descto = 0;
   factordscto = 0;
   factoroferta = 0;
+  servicio = 0;
   linea_z = "";
   oferta = false;
   proferta = 0;
@@ -405,7 +405,8 @@ export class CapvtasComponent implements OnInit {
     this.tottotal = Math.round((this.totimporte + this.totiva) + .49);
     this.totgral = this.tottotal;
     messages_z.push("02 Ya Calcule totales Tottotal:" + 
-      this.tottotal.toString() + " totgral:" + this.totgral.toString());
+      this.tottotal.toString() + " totgral:" + this.totgral.toString() +
+      " Servicio: " + this.servicio.toString() );
 
     if(this.escredito) {
       this.preciolet = 0;
@@ -512,7 +513,7 @@ export class CapvtasComponent implements OnInit {
           if(this.factura) {
             this.idfac = this.factura.idfac;
             this.busca_renfacfo(this.factura.idfac);
-            this.prodfin_z = ( this.preciolista_z * ( 16 / 100 + 1 )) -  this.servic_z;
+            this.prodfin_z = ( this.preciolista_z * ( 16 / 100 + 1 )) -  this.servicio;
             this.prodfin_z = Math.round (this.cargoscli_z - this.prodfin_z);
             if(this.prodfin_z < 0) this.prodfin_z = 0;
             this.factura.prodfin = this.prodfin_z;
@@ -777,14 +778,10 @@ async grabar_cliente(datoscliente: string): Promise <any> {
       if(this.ticte == "CC" && ren.esoferta || this.ticte == "TC" && ren.esoferta) {
           ren.preciou = Math.round(ren.proferta * (1 + this.factoroferta / 100) + .49);
           opcion_z = "O";
-          mismessages_z.push("1.- Es ticte CC y Oferta, proferta=" + ren.proferta.toString());
       } else {
-        mismessages_z.push("2a.- No es Oferta o  CC, preciou=" + ren.preciou.toString() + " FactorDescto:" + this.factordscto.toString());
         ren.preciou = Math.round (ren.preciou * (ren.piva / 100 + 1) * (1 - (this.factordscto/100))+ .49);
-        mismessages_z.push("2b.- No es Oferta o  CC, preciou=" + ren.preciou.toString() + " FactorDescto:" + this.factordscto.toString());
       }
     } else{
-      mismessages_z.push("3.- No es C asi que debe ser Q preciou=" + ren.preciou.toString() + " FactorDescto:" + this.factordscto.toString());
       if(this.nulet  < 5) {
         ren.preciou = Math.round (ren.preciou * (ren.piva / 100 + 1) * (1 - (this.factordscto/100)) + .49);
         // ren.preciou = ren.preciou * (ren.piva / 100 + 1);
@@ -794,8 +791,7 @@ async grabar_cliente(datoscliente: string): Promise <any> {
       }
     }
     prlista_z += ren.preciou;
-    console.log("Proceso checar renfac:", mismessages_z);
-    
+   
     miotrorenfac.push(ren)
   });
 
@@ -806,6 +802,7 @@ async grabar_cliente(datoscliente: string): Promise <any> {
 
   nvocli.modo = "agregar_cliente";
   nvocli.fechavta = "2022-09-09";
+  nvocli.clienterespu.status = this.nvoclistatus;
   nvocli.clienterespu.qom = this.qom;
   nvocli.clienterespu.ticte = this.ticte;
   nvocli.clienterespu.ubica = this.ubica;
@@ -814,6 +811,7 @@ async grabar_cliente(datoscliente: string): Promise <any> {
   nvocli.clienterespu.nulet = this.nulet;
   nvocli.clienterespu.canle = this.preciolet;
   nvocli.clienterespu.cargos = this.totgral;
+  nvocli.clienterespu.servicio = this.servicio;
   nvocli.clienterespu.preciolista = prlista_z / (nvocli.clienterespu.piva / 100 + 1);
   nvocli.clienterespu.tarjetatc = this.mitarjetatc;
 
@@ -886,6 +884,8 @@ pedir_datos_fac() {
   dialogmov.afterClosed().subscribe(res => {
     if(res) {
       this.datosfactura_z = JSON.stringify(res);
+      console.log("-x021- Datos Factura:", this.datosfactura_z);
+      
       this.yapedidatos = true;
     }
 
@@ -898,16 +898,25 @@ pide_precio_oferta(renfac: Nvorenfac) {
   
    let id  = renfac.id;
    let params_z = {
-    "proferta": renfac.proferta
+    "proferta": renfac.proferta,
+    "tipo":true
    }
    const dlgdatosrenfac= this.dialog.open(DlgpidprofertaComponent, {
     width: '700px',
     data: JSON.stringify(params_z)
    });
    dlgdatosrenfac.afterClosed().subscribe(res => {
-      console.log("Regresando del Dialog pidepreciooferta", res);
-       this.articuloscotizados[id].proferta = res.proferta;
-       if(res.proferta) this.articuloscotizados[id].esoferta = true;
+      if(res) {
+        if(res.esoferta) {
+          this.articuloscotizados[id].proferta = res.proferta;
+          this.articuloscotizados[id].esoferta = true;
+  
+         } else {
+          this.articuloscotizados[id].precionormal = res.proferta;
+          if(res.proferta) this.articuloscotizados[id].esoferta = false;
+   
+         }
+      }
        console.log("ya actualicé", this.articuloscotizados[id]);
        this.calcular_totales();
        console.log("100: Articulos Cotizados:", this.articuloscotizados);

@@ -1,4 +1,3 @@
-<app-spinner></app-spinner>
 <div>
     <h2>Datos de Factura</h2>
         <button mat-raised-button color="primary" (click)="regresar()"  >
@@ -84,6 +83,9 @@
                                 <input type="text" readonly size="15"  name="rfcfac" id="rfcfac" value ="{{factura.rfc}}">
                                 <label for="emailfac">Correo</label>
                                 <input type="text" readonly size="50" name="emailfac" id="emailfac" value ="{{factura.email}}">
+                                <br>
+                                <label class="ancho80" for="regimen">Regimen</label>
+                                <input type="text" readonly size="50" name="regimen" id="regimen" value = {{factura.descriregimen}} >
                     </td>
                     </tr>
                     <tr>

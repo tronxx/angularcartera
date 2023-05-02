@@ -1,0 +1,29 @@
+<div mat-dialog-content>
+    <form #formularioCliente="ngForm" >
+        <div name="relacion">
+            <mat-card>
+                <mat-card-title>Datos de Relacion</mat-card-title>
+                <h1 *ngIf="tienda"> Tienda: {{tienda.clave}} {{tienda.nombre}} </h1>
+                <mat-form-field>
+                    <input matInput placeholder="Fecha" type="date" name="fecha" id="fecha" [(ngModel)] ="fecha"> 
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-select name="promot" placeholder="Cobratario" [(ngModel)]= "promotor" >
+                        <mat-option *ngFor="let promotor of promotores" value="{{promotor.cvepromo}}"
+                          selected="promotsel == promotor.cvepromo"
+                        >
+                        {{promotor.cvepromo}} {{promotor.nombre}}
+                        </mat-option>
+
+                    </mat-select>
+                </mat-form-field>
+            </mat-card>
+        </div>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>
+    <button mat-raised-button  color="primary"   (click)="closeyes()">Aceptar</button>
+</div>
+

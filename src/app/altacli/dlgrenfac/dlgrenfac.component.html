@@ -1,4 +1,3 @@
-<app-spinner></app-spinner>
 <div mat-dialog-content>
     <form #formularioCliente="ngForm" *ngIf= "renfac">
         <div name="factura">
@@ -15,7 +14,7 @@
                     <br>
     
                 </div>
-                <label class="ancho80" for="descri">Descripcion</label>
+                <label class="ancho80" for="descri">Descripción</label>
                 <input type="text" name="descri" id="descri" size="40"
                 [disabled]="!datoshabilitados"
                 [(ngModel)] = "renfac.concepto"
@@ -111,5 +110,3 @@
     [disabled]="!datoshabilitados"
     color="primary"   (click)="closeyes()">Aceptar</button>
 </div>
-
-       

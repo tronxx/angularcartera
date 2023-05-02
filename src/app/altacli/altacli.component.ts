@@ -245,12 +245,12 @@ export class AltacliComponent implements OnInit {
         } else {
           const dialogref = this.dialog.open(DialogBodyComponent, {
             width:'350px',
-            data: "Cliente Inexistente. Desea dar de alta ?"
+            data: "Cliente Inexistente"
           });
           dialogref.afterClosed().subscribe(res => {
-            if(res) {
-              this.pidedatosnuevocliente();
-            }
+            //if(res) {
+            //  this.pidedatosnuevocliente();
+            //}
           });
      
         }
@@ -282,7 +282,7 @@ export class AltacliComponent implements OnInit {
       result.error = " Fecha Inválida:" + fechavta ;
     } else {
       dias = Math.abs(dias);
-      if(dias > 20 ) {
+      if(dias > 60 ) {
         result.resultado = "ERROR";
         result.error += " Fecha Fuera de Rango:" + fechavta + " " + dias.toString() + " Dias";
       }

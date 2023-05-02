@@ -9,4 +9,6 @@ export interface Relcob
     estado: number;
     cia: number;
     tiporel: number;
+    promot: string;
+    nombrepromo: string;
 }

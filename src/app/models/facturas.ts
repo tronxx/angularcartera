@@ -19,4 +19,6 @@ export interface Factura {
     metodopago: string;
     cvemetodopago: string;
     rfc: string;
+    regimen: string;
+    descriregimen: string;
 }

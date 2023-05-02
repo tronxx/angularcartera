@@ -1,4 +1,3 @@
-<app-spinner></app-spinner>
 <div mat-dialog-content>
     <form #formularioCliente="ngForm" (ngSubmit)="formularioEnviado()">
         <label for="codigo">Codigo
@@ -91,7 +90,7 @@
                                 oninput="this.value = this.value.toUpperCase()" >
             </mat-card>
             <mat-card>
-                <label for="jefgpo">Promotor
+                <label for="jefgpo">Entregado Por
                     <select name="jefgpo" id="jefgpo" value="{{nvocli.promotor}}" 
                      [(ngModel)]= "nvocli.promotor" >
                     <option *ngFor="let mipromo of promotor" value="{{mipromo.cvepromo}}"

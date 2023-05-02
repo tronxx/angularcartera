@@ -18,8 +18,10 @@ import { formatNumber,  CommonModule,  CurrencyPipe, formatCurrency, formatDate,
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogBodyComponent } from './dialog-body/dialog-body.component';
 import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card'; 
+import { MatCheckbox, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule  } from '@angular/material/select';
@@ -57,9 +59,13 @@ import { DlgimpripolComponent } from './dlgimpripol/dlgimpripol.component';
 import { PolenganComponent } from './polengan/polengan.component';
 import { SpinnerModule } from './common/spinner/spinner.module';
 import { SpinnerInterceptor } from './common/interceptors/spinner.interceptor';
-import { CaprelcobComponent } from './caprelcob/caprelcob.component';
 import { DlgpidprofertaComponent } from './common/dlgpidproferta/dlgpidproferta.component';
 import { PidepasswdComponent } from './common/pidepasswd/pidepasswd.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatOptionModule } from '@angular/material/core';
+import { ListarelcobComponent } from './caprelcob/listarelcob/listarelcob.component';
+import { DlgdatosrelcobComponent } from './caprelcob/dlgdatosrelcob/dlgdatosrelcob.component';
+import { DetallesrelcobComponent } from './caprelcob/detallesrelcob/detallesrelcob.component';
 
 
 @NgModule({
@@ -100,9 +106,11 @@ import { PidepasswdComponent } from './common/pidepasswd/pidepasswd.component';
     AgregarenpolComponent,
     DlgimpripolComponent,
     PolenganComponent,
-    CaprelcobComponent,
     DlgpidprofertaComponent,
     PidepasswdComponent,
+    ListarelcobComponent,
+    DlgdatosrelcobComponent,
+    DetallesrelcobComponent,
   ],
   imports: [
     BrowserModule,
@@ -117,8 +125,12 @@ import { PidepasswdComponent } from './common/pidepasswd/pidepasswd.component';
     MatRadioModule,
     MatCardModule,
     MatSelectModule,
+    MatCheckboxModule,
     MatProgressBarModule,
     MatSlideToggleModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatOptionModule,
     BrowserAnimationsModule,
     SpinnerModule,
   ],

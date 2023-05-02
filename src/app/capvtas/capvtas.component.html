@@ -1,4 +1,3 @@
-<app-spinner></app-spinner>
 <div>
     <h2>Datos de la Nueva Venta</h2>
     <label >Proporcione los productos y seleccione el tipo de Venta</label><br>
@@ -140,6 +139,10 @@
     
         </div>
         <div>
+            <label class="ancho160" for="servicio">Servicio/Redondeo</label>
+            <input type="number"  name="servicio" id="servicio"  
+              [(ngModel)]="servicio" (blur)="calcular_totales()" >
+            <br>
             <label class="ancho160" for="importe">Importe</label>
             <input type="text" readonly name="importe" id="importe" value = "{{totimporte | currency}} ">
             <br>
@@ -176,7 +179,7 @@
                 <input type="text" id="prodfin" readonly name="prodfin" value="{{totprodfin | currency}} ">
             </div>
             <label class="ancho160" for="totgral">Total Venta</label>
-            <input type="text" id="totgral" readonly name="totgral" value="{{totgral | currency}} ">
+            <input type="text" id="totgral" readonly name="totgral" value="{{totgral + servicio | currency}} ">
             <label for="">Tasa Descto {{this.factordscto}} </label>
             <br>
             <div *ngIf="hayerror">
