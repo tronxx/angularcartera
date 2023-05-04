@@ -1,0 +1,10 @@
+
+.ancho80 {
+    display: inline-block;
+    width: 160px;
+}
+  
+.ancho40 {
+    display: inline-block;
+    width: 80px;
+}

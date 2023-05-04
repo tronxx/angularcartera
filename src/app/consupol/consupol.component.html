@@ -1,0 +1,86 @@
+<app-spinner></app-spinner>
+<div id="datospoliza">
+    <label for="tienda">
+        Codigo
+        <input size="5" [disabled]="!datospolenabled_z" type="text" name="tienda" [(ngModel)]="tda_z" id="tienda" placeholder="tienda">
+    </label>
+    <label for="nomtda"> {{nomtda_z }} </label>
+    <label for="fecha">
+        Fecha
+        <input size="20" type="date"  name="fecha"  [(ngModel)]="fechapol_z" id="fecha">
+    </label>
+    <button mat-raised-button color="primary" (click)="aceptarpoliza()">Aceptar</button>
+    
+</div>
+<hr>
+<div  id="despliegapoliza">
+    <button mat-raised-button color="primary" (click)="imprimirpoliza()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon">print</mat-icon>
+        Imprimir Poliza
+    </button>
+    <button mat-raised-button color="primary" (click)="imprimirdespacho()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon">print</mat-icon>
+        Imprimir Despacho
+    </button>
+    <button *ngIf="poltimbrado_z == 'S'" mat-raised-button color="primary" (click)="imprimir_timbre()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon">print</mat-icon>
+        Complemento Poliza
+    </button>
+    <button *ngIf="rectimbrado_z == 'S'" mat-raised-button color="primary" (click)="imprimir_cfdi_recargo()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon">print</mat-icon>
+        Pdf Recargo
+      </button>
+  
+    <table id="tbl_renpol" border="1" class="hoover">
+        <thead>
+            <tr>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Concepto</th>
+                <th>Vence</th>
+                <th>Dias</th>
+                <th>Bonificacion</th>
+                <th>Recargos</th>
+                <th>Importe</th>
+                <th>Neto</th>
+                <th>Uuid</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let renglon of renglonesPoliza">
+                <td>{{renglon.numcli}}</td>
+                <td>{{renglon.nombre}} </td>
+                <td>{{renglon.concep}} </td>
+                <td> {{renglon.fecven}} </td>
+                <td> {{renglon.dias}} </td>
+                <td align="right" *ngIf="renglon.bonificacion > 0"> {{renglon.bonificacion | currency}} </td>
+                <td *ngIf="renglon.bonificacion <= 0">  </td>
+                <td align="right" *ngIf="renglon.recargo > 0"> {{renglon.recargo | currency}} </td>
+                <td *ngIf="renglon.recargo <= 0">  </td>
+                <td align="right" >{{renglon.importe | currency}} </td>
+                <td align="right" >{{renglon.importe - renglon.bonificacion + renglon.recargo | currency}} </td>
+                <td> {{renglon.uuid}} </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td>Totales </td>
+                <td> </td>
+                <td align="right" > {{totalbonifcs_z | currency}} </td>
+                <td align="right" > {{totalrecargs_z | currency}} </td>
+                <td align="right" > {{totalimports_z | currency}} </td>
+                <td align="right" > {{totalimports_z - totalbonifcs_z + totalrecargs_z | currency}} </td>
+                <td> </td>
+            </tr>
+
+        </tfoot>
+    </table>
+</div>
+<div>
+    Status Poliza: {{statuspol_z}} <br>
+    TimbrePoliza : {{poltimbrado_z}} Uuid:{{uuidpol_z}} 
+    <br>
+    TimbreRecargo: {{rectimbrado_z}} Uuid:{{uuidrec_z}}
+
+</div>

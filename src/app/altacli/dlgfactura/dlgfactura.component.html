@@ -1,0 +1,114 @@
+<div>
+    <form #formularioCliente="ngForm" (ngSubmit)="formularioEnviado()" *ngIf= "factura">
+        <div name="factura">
+            <mat-card>
+                <mat-card-title>Datos de Factura</mat-card-title>
+                <table *ngIf="factura">
+                    <tr>
+                        <td>
+                            <button mat-raised-button color="primary" 
+                                [disabled]="escerrada" (click)="editar_factura()" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
+                                 Modificar Factura
+                            </button>
+                            <button mat-raised-button color="primary" 
+                            [disabled]="escerrada || !fechacorrecta_z" (click)="cerrar_factura()" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">lock</mat-icon>
+                                Cerrar Factura
+                            </button>
+                            <button mat-raised-button color="primary" 
+                                [disabled]="!escerrada" (click)="imprimir_factura()" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+                                Imprimir Factura
+                            </button>
+                            <br>
+                                <label class="ancho80" for="seriefac">Serie</label> 
+                                <input type="text" size="5"  name="serifac" id="seriefac" value=" {{factura.serie}}"> 
+                                <label for="numfac">Numero</label> 
+                                <input type="text" size="8" name="numfac" id="numfac" value = "{{factura.numero}}" > 
+                                <label for="fechafac">Fecha</label> 
+                                <div *ngIf="!escerrada" >
+                                    <input type="text" size="10" name="fechafac" id="fechafac" value ="{{factura.fecha}}"> 
+                                    <label color="warn" for="fecha">Fecha de cierre </label>
+                                    <input type="date" name="fecha" id="fecha" (change)="validar_fecha_cierre()" [(ngModel)]="strfeccierre_z" >
+                                    <div *ngIf="!fechacorrecta_z">
+                                        <p>Para poder cerrar la Factura debe Proporcionar una Fecha Válida</p>
+                                    </div>
+                                </div>
+                                <br>
+                                <label class="ancho80" for="prodfin">Prod.F</label>
+                                <input type="text" size="10" name="prodfin" id="prodfin" 
+                                 value ="{{factura.prodfin | currency }}" >
+                                <label for="impfac"> Importe</label> 
+                                <input type="text" size="10" name="impfac" id="impfac" 
+                                value ="{{factura.subtot | currency}}" >
+                                <label for="ivafac">Iva</label>
+                                <input type="text" size="10" name="ivafac" id="ivafac" value = "{{factura.iva | currency}}" >
+                                <label for="totalfac">Total</label> 
+                                <input type="text" size="10" name="totalfac" id="totalfac" value ="{{factura.total | currency}}">
+                                 <br>
+                                <label class="ancho80" for="uuidfac">UUID</label> 
+                                <input type="text" size="40" name="uuidfac" id="uuidfac" value ="{{factura.uuid}}">
+                                <br>
+                                <label class="ancho80" for="metpag">Met.Pago</label> 
+                                <input type="text" size="20" name="matpag" id="metpag" value ="{{factura.metodopago}} ">
+                                <label for="usocfdi">Uso CFDI</label>
+                                <input type="text" size="20" name="usocfdi" id="usocfdi" value ="{{factura.usocfdi}}">
+                                <br>
+                                <label class="ancho80" for="rfcfac">RFC</label>
+                                <input type="text" size="15"  name="rfcfac" id="rfcfac" value ="{{factura.rfc}}">
+                                <label for="emailfac">Correo</label>
+                                <input type="text" size="50" name="emailfac" id="emailfac" value ="{{factura.email}}">
+                    </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                            <button mat-raised-button color="primary" (click)="agregar_renfac()" >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
+                                Agregar Renglon
+                            </button>
+                            <br>
+            
+                            <table border="1">
+                                <thead>
+                                    <tr>
+                                        <th>Codigo</th>
+                                        <th>Descripcion</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio.U</th>
+                                        <th>Importe</th>
+                                        <th>Folio</th>
+                                        <th>Serie</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let mirenfac of renfacfo">
+                                        <td>{{mirenfac.codigo}}</td>
+                                        <td>{{mirenfac.concepto}} </td>
+                                        <td> {{mirenfac.canti}} </td>
+                                        <td>{{mirenfac.preciou | currency}} </td>
+                                        <td> {{mirenfac.importe + mirenfac.iva | currency}} </td>
+                                        <td> {{mirenfac.folio}} </td>
+                                        <td> {{mirenfac.serie}} </td>
+                                        <button mat-raised-button color="warn" (click)="eliminar_renfac(mirenfac)" >
+                                            <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
+                                            Eliminar
+                                        </button>
+            
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                </table>
+
+
+            </mat-card>
+        </div>
+
+    </form>
+</div>
+

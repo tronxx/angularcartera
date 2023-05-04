@@ -1,0 +1,27 @@
+<div mat-dialog-content><h1>{{datos.title}}</h1>  <br>
+    <label for="fechaini" class ="ancho120"  >Fecha Inicial</label>
+    <input type="date" id="fechaini" [(ngModel)]="datos.fechainicial">
+    <br>
+    <label for="fechafin" class ="ancho120" >Fecha Final</label>
+    <input type="date" id="fechafin"  [(ngModel)]="datos.fechafinal">
+    <br>
+    <label for="ubicini" class ="ancho120" >Punto Venta Inicial</label>
+    <input type="text" size="5" id="ubicini" [(ngModel)]="datos.ubicacioninicial"
+      oninput="this.value = this.value.toUpperCase()"
+    >
+    <br>
+    <label for="ubicfin" class ="ancho120" >Punto Venta Final</label>
+    <input type="text" size="5" id="ubicfin" [(ngModel)]="datos.ubicacionfinal"
+      oninput="this.value = this.value.toUpperCase()"
+    >
+    <br>
+    <label for="codini" class ="ancho120" >Codigo Inicial</label>
+    <input type="number" size="5" id="codini" [(ngModel)]="datos.codigoinicial" >
+    <br>
+    <label for="codfin" class ="ancho120" >Codigo Final</label>
+    <input type="number" size="5" id="codfin" [(ngModel)]="datos.codigofinal" >
+</div>
+<div mat-dialog-actions  style="display: flex; justify-content: flex-end;">
+    <button mat-raised-button style="margin-right: 5px;"  color="warn" (click)="closeno()">Cancelar</button>
+    <button mat-raised-button  color="primary"   (click)="closeyes()">Aceptar</button>
+</div>

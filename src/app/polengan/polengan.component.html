@@ -1,0 +1,41 @@
+<div id="datosventas">
+    <label for="fechaini">Fecha Inicial</label>
+    <input type="date" name="fechaini" [(ngModel)]="fechaini_z">
+    <label for="fechacin">Fecha Final</label>
+    <input type="date" name="fechafin" [(ngModel)]="fechafin_z">
+    <label for="ubica">Ubicación</label>
+    <input type="text" size="5" name="ubica" id="ubica" [(ngModel)]="misdatosrelvta.ubica">
+    <label for="codini">Código Inicial</label>
+    <input type="text"  size="5" name="codini" id="codini" [(ngModel)]="misdatosrelvta.codigoini">
+    <label for="codfin">Código Final</label>
+    <input type="text"  size="5" name="codfin" [(ngModel)]="misdatosrelvta.codigofin">
+    <button mat-raised-button color="primary" (click)="buscar_clientes()">
+        Aceptar
+    </button>
+    <br>
+    <label for="fechatimbrado">Fecha Timbrado</label>
+    <input type="date" name="fechatimbrado" (blur)="checa_datos_validos()" id="fechatimbrado"[(ngModel)]="fechatimbre_z" >
+    <button [disabled]="datosinvalidos_z" mat-raised-button color="primary" (click)="timbrar_enganches()">
+        Timbrar Enganche
+    </button>
+
+    <p *ngIf="datosinvalidos_z"> {{msgerror_z}} </p>
+</div>
+<div id="relvtas" >
+    <table border="1">
+        <tr>
+            <th>Codigo</th>
+            <th>Nombre</th>
+            <th>Compra</th>
+            <th>Cargos</th>
+            <th>Enganche</th>
+        </tr>
+        <tr *ngFor="let miclien of clientes">
+            <td>{{miclien.numcli}} </td>
+            <td>{{miclien.nombre}} </td>
+            <td>{{miclien.compra}} </td>
+            <td align ="right">{{miclien.cargos | currency}} </td>
+            <td align ="right">{{miclien.enganche | currency}} </td>
+        </tr>
+    </table>
+</div>

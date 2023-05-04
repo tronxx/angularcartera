@@ -1,0 +1,95 @@
+Tipo busqueda buscli.p
+buscar_un_cliente
+codigo
+idcli
+
+buscar_rango
+fechaini
+fechafin
+codigoini
+codigofin
+
+
+serviciospolizas.vp
+
+accion_z = "obtener_datos_poliza") {
+    $cmd_z = "./servicios.bat ";
+    $cmd_z = $cmd_z . "serviciospolizas ";
+    $cmd_z = $cmd_z . " 'CMD:obtener_datos_poliza'";
+    $cmd_z = $cmd_z . " 'fechapoliza:" . $fechapol_z . "'";
+    $cmd_z = $cmd_z . " 'tdapol:" . $tdapol_z . "'";
+    $cad_z = "comando:" . $cmd_z;
+
+accion_z = "acceder_poliza"
+    $cmd_z = $cmd_z . "serviciospolizas ";
+    $cmd_z = $cmd_z . " 'CMD:acceder_poliza'";
+    $cmd_z = $cmd_z . " 'fechapoliza:" . $fechapol_z . "'";
+    $cmd_z = $cmd_z . " 'tdapol:" . $tdapol_z . "'";
+    $cad_z = "comando:" . $cmd_z;
+
+accion_z : "buscar_codigos_polizas"
+    $cmd_z = $cmd_z . "serviciospolizas ";
+    $cmd_z = $cmd_z . " 'CMD:" . $accion_z . "'";
+    $cmd_z = $cmd_z . " 'idusuario:" . $idusuario_z . "'";
+
+accion_z : "buscar_cobratario"
+    $cmd_z = "./servicios.bat ";
+    $cmd_z = $cmd_z . "serviciospolizas ";
+    $cmd_z = $cmd_z . " 'CMD:" . $accion_z . "'";
+    $cmd_z = $cmd_z . " 'codprom:" . $codprom_z . "'";
+
+
+accion_z = "cerrar_poliza"
+timbrarpolizafechaespecial:
+Sistema = Fecha de Sistema
+Especial = Fecha especial
+Poliza = Fecha de Poliza (por Defecto)
+
+    $cmd_z = "./servicios.bat ";
+    $cmd_z = $cmd_z . "serviciospolizas ";
+    $cmd_z = $cmd_z . " 'CMD:cerrar_poliza'";
+    $cmd_z = $cmd_z . " 'fechapoliza:" . $fechapol_z . "'";
+    $cmd_z = $cmd_z . " 'tdapol:" . $tdapol_z . "'";
+    $cmd_z = $cmd_z . " 'fechatimbrepol:" . $fechatimbrepol_z . "'";
+    $cmd_z = $cmd_z . " 'timbrarpolizafechaespecial:" . $timbrarpolizafechaespecial_z . "'";
+
+    
+    
+
+CMD: buscar_cobratario
+codprom: codigo del cobratario y si tiene -1 devuelve todos
+
+modo: agregar_pago
+datospago.codigo:
+datospago.cobratario:
+datospago.idcli:
+datospago.idusuario:
+datospago.idpoliza:
+datospago.tipopago:A=Acuenta C=Completo S=Saldo
+datospago.ltaini:
+datospago.ltafin:
+datospago.vence: yyyy-mm-dd
+datospago.concepto:
+datospago.conceptocompl:
+datospago.tipomov:AB AR NE
+datospago.recobon:
+datospago.importe:
+datospago.dias:
+
+
+modo: buscar_renpol
+idpoliza
+
+
+serviciosclientes:
+url + "clientes/servicios.php"
+
+modo=obtener_estado_cuenta_cliente" + 
+codigo:numcli			-> Codigo del Cliente
+modopdf:modopdf			-> Si/No
+consolicitud:consolicitud	-> Si/no
+conobservaciones:conobservaciones	-> Si/no
+nummaximoobservaciones:nummaximoobservaciones	-> Número máximo de Observaciones
+estadocuentaespecial:estadocuentaespecial	-> Si/No
+
+

@@ -1,0 +1,57 @@
+<app-spinner></app-spinner>
+<div mat-dialog-content>{{message}}
+    <label for="nombre">
+        <input type="text" placeholder="Teclee el Nombre" [(ngModel)]="nombus" >
+    </label>
+    <label for="chk_vigentes">
+        Solo Clientes Vigentes
+        <input type="checkbox" name="chk_vigentes" id="chk_vigentes" [(ngModel)]="vigentes">
+    </label>
+    
+    <button mat-raised-button  color="primary" (click)="busca_nombre()" > 
+        <mat-icon aria-hidden="false" aria-label="Example home icon">search</mat-icon>
+        Buscar
+    </button>
+    <div [hidden]="!messages" >
+        <label id="messages" color="warn"> {{messages}} </label>
+    </div>
+    <div *ngIf= "cliente" >
+        <label for="">Cliente Seleccionado: {{cliente.numcli}} {{cliente.nombre}} </label>
+    </div>
+    <table id="tbl_clientes" border="1" >
+        <thead>
+            <tr>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Direccion</th>
+                <th>Q/M</th>
+                <th>Saldo</th>
+                <th>Compra</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr 
+            [class.trselected] = "micliente.numcli == numcli_z"
+            *ngFor="let micliente of clientes" (click)="select_cliente(micliente)" >
+                <td>
+                    <input type="checkbox" 
+                    [checked] = "micliente.numcli == numcli_z"
+                    >  
+                    {{micliente.numcli}} 
+                </td>
+                <td>{{micliente.nombre}} </td>
+                <td>{{micliente.direc}} </td>
+                <td>{{micliente.qom}} </td>
+                <td align ="right">{{ micliente.cargos - micliente.abonos | currency }}</td>
+                <td>{{micliente.compra}} </td>
+            </tr>
+        </tbody>
+                
+
+    </table>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>
+    <button mat-raised-button  color="primary"   (click)="closeyes()">Aceptar</button>
+</div>
+
