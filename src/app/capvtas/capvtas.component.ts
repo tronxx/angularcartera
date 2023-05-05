@@ -813,18 +813,18 @@ async grabar_cliente(datoscliente: string): Promise <any> {
   this.articuloscotizados.forEach(ren => {
     if(ren.codigo != "AUXILIAR") {
       if(this.qom == "C") {
-        if((this.ticte == "CC" && ren.esoferta || this.ticte == "TC") && (ren.esoferta)) {
+        if((this.ticte == "CC" || this.ticte == "TC") && (ren.esoferta)) {
             ren.preciou = Math.round(ren.proferta * (1 + this.factoroferta / 100) + .49);
             opcion_z = "O";
         } else {
-          ren.preciou = Math.round (ren.preciou * (ren.piva / 100 + 1) * (1 - (this.factordscto/100))+ .49);
+          ren.preciou = Math.round (ren.precionormal *  (1 - (this.factordscto/100))+ .49);
         }
       } else{
         if(this.nulet  < 5) {
-          ren.preciou = Math.round (ren.preciou * (ren.piva / 100 + 1) * (1 - (this.factordscto/100)) + .49);
+          ren.preciou = Math.round (ren.precionormal *  (1 - (this.factordscto/100)) + .49);
           // ren.preciou = ren.preciou * (ren.piva / 100 + 1);
         } else {
-          ren.preciou = Math.round (ren.preciou * (ren.piva / 100 + 1));
+          ren.preciou = Math.round (ren.precionormal * (ren.piva / 100 + 1));
           // ren.preciou = ren.preciou * (ren.piva / 100 + 1);
         }
       }
@@ -832,6 +832,8 @@ async grabar_cliente(datoscliente: string): Promise <any> {
   
     }
    
+    console.log('Para Grabar:', ren);
+    
     miotrorenfac.push(ren)
   });
 
