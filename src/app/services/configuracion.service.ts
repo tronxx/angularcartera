@@ -126,13 +126,7 @@ export class ConfiguracionService {
     let midia_z = 0;
     if (this.cia) {
       if( this.cia.AplicarContingencia  && (strfecvta < this.cia.FechaContingencia)) {
-        meses_z = Math.floor(this.cia.DiasContingencia / 30);
-        dias_z = (this.cia.DiasContingencia % 30);
-        vencimiento_z.setMonth(vencimiento_z.getMonth() + meses_z);
-        console.log('Es Contingencia: Fecha con Meses', vencimiento_z);
-        nvafecha_z = vencimiento_z.getDate() + dias_z ;
-        console.log('nvafecha: Fecha con Dias', nvafecha_z);
-        vencimiento_z = new Date(nvafecha_z);
+        vencimiento_z = this.SumaDiasaFecha(vencimiento_z, this.cia.DiasContingencia);
       }
   
     }
@@ -192,7 +186,7 @@ export class ConfiguracionService {
     return (vencimiento_z);
   }
 
-  calculateResultDate(fecha: Date, dias: number) {
+  SumaDiasaFecha(fecha: Date, dias: number) {
     let months = Math.floor(dias / 30);
     const remainingDays = dias % 30;
     const year = fecha.getFullYear();
