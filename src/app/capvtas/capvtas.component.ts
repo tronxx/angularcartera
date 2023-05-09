@@ -666,6 +666,7 @@ grabar_datos_venta() {
   }
 
 }
+
 selecciona_tarjetas_tc() {
   this.esvalido = false;
   this.qom = "C";
@@ -824,7 +825,7 @@ async grabar_cliente(datoscliente: string): Promise <any> {
           ren.preciou = Math.round (ren.precionormal *  (1 - (this.factordscto/100)) + .49);
           // ren.preciou = ren.preciou * (ren.piva / 100 + 1);
         } else {
-          ren.preciou = Math.round (ren.precionormal * (ren.piva / 100 + 1));
+          ren.preciou = Math.round (ren.precionormal );
           // ren.preciou = ren.preciou * (ren.piva / 100 + 1);
         }
       }

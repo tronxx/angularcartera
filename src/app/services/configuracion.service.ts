@@ -125,11 +125,13 @@ export class ConfiguracionService {
     let mimes_z = 0;
     let midia_z = 0;
     if (this.cia) {
-      if( this.cia.AplicarContingencia  && strfecvta < this.cia.FechaContingencia) {
+      if( this.cia.AplicarContingencia  && (strfecvta < this.cia.FechaContingencia)) {
         meses_z = Math.floor(this.cia.DiasContingencia / 30);
         dias_z = (this.cia.DiasContingencia % 30);
         vencimiento_z.setMonth(vencimiento_z.getMonth() + meses_z);
+        console.log('Es Contingencia: Fecha con Meses', vencimiento_z);
         nvafecha_z = vencimiento_z.getDate() + dias_z ;
+        console.log('nvafecha: Fecha con Dias', nvafecha_z);
         vencimiento_z = new Date(nvafecha_z);
       }
   
@@ -188,6 +190,23 @@ export class ConfiguracionService {
       // console.log("letra Par:", letra, "strfec:", strfec, " Vencimiento:", vencimiento_z.toDateString());
     }
     return (vencimiento_z);
+  }
+
+  calculateResultDate(fecha: Date, dias: number) {
+    let months = Math.floor(dias / 30);
+    const remainingDays = dias % 30;
+    const year = fecha.getFullYear();
+    let month = fecha.getMonth() + months;
+    let day = fecha.getDate() + remainingDays;
+
+    // Handle cases where the result day exceeds the number of days in the result month
+    while (day > new Date(year, month + 1, 0).getDate()) {
+      day -= new Date(year, month + 1, 0).getDate();
+      month++;
+    }
+
+    const resultDate = new Date(year, month, day);
+    return (resultDate);
   }
 
   corrige_fecha_fin_de_mes(strfec: string) {
@@ -257,6 +276,8 @@ export class ConfiguracionService {
     let fecbase_z = new Date(fechavta.replace(/-/g, '\/'));
     fecbase_z.setDate (fecbase_z.getDate() + diasgracia_z);
     fechavta = this.fecha_a_str(fecbase_z, "YYYY-mm-dd");
+    console.log('Fecha Vta:', fechavta, 'fecbase:', fecbase_z);
+    
 
     let listavencimientos_z= [];
     for (ii_z = inicio; ii_z <= final; ii_z++) {

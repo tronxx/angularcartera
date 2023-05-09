@@ -1057,7 +1057,7 @@ modificar_status_facalmomento() {
        if(res) {
         this.factura_al_momento = false;
         let paramsmodif_z = {
-          numcli: cod_z,
+          numcli: this.numcli_z,
           statusfacalmomento: "NO"
         }
         this.servicioclientes.grabar_status_cliente_modificable(JSON.stringify(paramsmodif_z)).subscribe( resalta=> {
