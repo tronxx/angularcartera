@@ -1,0 +1,46 @@
+<div *ngIf = "relcob">
+    <label>Relacion De: </label>
+    <label *ngIf = "codigopoliza" > 
+       <b> {{codigopoliza.clave }} {{codigopoliza.nombre}} </b>
+    </label>
+    <label > Fecha: <b>{{relcob.fecha}}</b>  </label>
+    <label > Cobratario: <b>{{relcob.promot}} {{relcob.nombrepromo}} </b> </label>
+    <button  mat-raised-button 
+    color="primary"
+    (click)="agregar_cliente_a_relcob()">Agregar Cliente</button>
+</div>
+<div>
+    <table border="1">
+        <tr>
+            <td>Código</td>
+            <td>Nombre</td>
+            <td>Poblacion</td>
+            <td>Entregó</td>
+            <td>Vence Plazo</td>
+            <td>Otorgó Plazo</td>
+            <td>Letras</td>
+            <td>Días</td>
+            <td>Precio<br> x Letra </td>
+            <td>Importe</td>
+            <td>Últimpo <br>Pago </td>
+            <td>Penúltimpo <br>Pago </td>
+            <td>Reporte</td>
+        </tr>
+        <tr *ngFor="let renrelco  of renglonesrelcob">
+            <td>{{renrelco.codigo}}</td>
+            <td>{{renrelco.nombre}}</td>
+            <td>{{renrelco.poblacion}}</td>
+            <td>{{renrelco.promot}}</td>
+            <td>{{renrelco.venceplazo}} </td>
+            <td>{{renrelco.promoplazo}} </td>
+            <td align="right">{{renrelco.letras}}</td>
+            <td align="right">{{renrelco.diasven}}</td>
+            <td align="right">{{renrelco.impxlet | currency}}</td>
+            <td align="right">{{renrelco.importe | currency}} </td>
+            <td>{{renrelco.ultimoabono}} </td>
+            <td>{{renrelco.penultimoabono}} </td>
+            <td>{{renrelco.reporte}} </td>
+        </tr>
+    </table>
+</div>
+

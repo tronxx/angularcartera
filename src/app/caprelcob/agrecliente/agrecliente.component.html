@@ -1,0 +1,81 @@
+<div mat-dialog-content>
+
+    <div name="relacion">
+            <mat-card>
+                <mat-card-title>Datos del Cliente</mat-card-title>
+                <h1> Agregar Cliente a Relación </h1>
+                <label for="codigo">Código
+                    <input matInput placeholder="Codigo" type="text" 
+                    name="codigo" id="codigo" (blur)="buscarcliente()" [(ngModel)] ="codcli_z"> 
+                </label>
+                
+                <button mat-raised-button color="primary" (click)="busqueda_por_nombre()">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon">search</mat-icon>
+                    Buscar por Nombre
+                </button>
+                <div *ngIf="cliente">
+                    <table border="1">
+                        <tr>
+                            <td>                       
+                                Codigo: <b>{{cliente.numcli}}</b>  
+                                Nombre: <b><label [class.labelgray]="cliente.status"  >{{cliente.nombre}}</label>  </b><br>
+                                Direccion: <b>{{cliente.direc}} {{cliente.poblac}} </b> <br>
+                                Enganche: <b>{{cliente.enganche | currency }}</b> 
+                                lta 1/1 : <b>{{cliente.letra1  | currency}}</b>  
+                                N.Letras: <b>{{cliente.nulet}} </b>
+                                de <b>{{cliente.canle | currency}}</b> 
+                                Bonificacion: <b>{{cliente.bonificacion  | currency }} </b><br>
+                                Cargos: <b>{{cliente.cargos  | currency}}</b>  
+                                Abonos: <b>{{cliente.abonos  | currency }}</b> 
+                                Saldo: <b>{{ cliente.cargos - cliente.abonos  | currency }}</b>
+                                <label  class="labelgray" *ngIf="cliente.diasgracia" >Promcion: {{cliente.diasgracia}} </label>
+                                <br>
+                                Compra: <b>{{cliente.compra}} </b>
+                                <br>
+            
+                            </td>
+                            <td>
+                                Vencimientos:<br>
+                                <div class="boxscroll">
+    
+                                    <ul>
+                                        <li for="" *ngFor="let mivencimiento of listavencimientos_z" >
+                                            Letra: {{mivencimiento.letra}}/{{cliente.nulet}}
+                                            Vence: {{mivencimiento.vence}}
+                                        </li>
+        
+                                    </ul>
+    
+                                </div>
+                            </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">{{observs_z}} </td>
+                    </tr>
+                </table>
+
+                </div>
+
+                    <label for="">Letra Inicial
+                    <input matInput placeholder="Letra Inicial"
+                      type="number" [(ngModel)] = "ltaini_z"
+                    >
+                    </label>
+                    <label for=""> Letra Final
+                        <input matInput placeholder="Letra Final"
+                        type="number" (blur)="calcula_importe()" [(ngModel)] = "ltafin_z"
+                      >
+                    </label>
+                    <label for=""> Importe 
+                        <input matInput placeholder="Importe"
+                        type="number" [(ngModel)] = "importe_z"
+                      >
+                    </label>
+
+            </mat-card>
+            <div mat-dialog-actions>
+                <button  mat-raised-button color="primary" (click)="siaceptarcliente()" >Aceptar</button>
+                <button  mat-raised-button color="warn" (click)="closeno()">Cancelar</button>
+            </div>
+    </div>
+</div>

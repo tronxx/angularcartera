@@ -1,0 +1,46 @@
+export interface Cliente {
+    idcli: number;
+    numcli: string;
+    nombre: string;
+    direc: string;
+    poblac: string;
+    status: string;
+    fechavta: string;
+    qom: string;
+    ticte: string;
+    ubica: string;
+    promotor: string;
+    opcion: string;
+    comisionprom: number;
+    enganche: number;
+    servicio: number;
+    letra1: number;
+    nulet: number;
+    canle: number;
+    bonificacion: number;
+    cargos: number;
+    abonos: number;
+    preciolista: number;
+    compra: string;
+    piva: number;
+    factura: number;
+    comisagente: number;
+    pgocom: string;
+    pdsc: number;
+    fechalta: string;
+    ultmod: string;
+    fecsal: string;
+    diacum: number;
+    mescum: number;
+    nompil1: string;
+    nompil2: string;
+    appat: string;
+    apmat: string;
+    calle: string;
+    numpred: string;
+    codpost: string;
+    colonia: string;
+    email: string;
+    diasgracia: number;
+
+}

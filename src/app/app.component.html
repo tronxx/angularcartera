@@ -1,0 +1,17 @@
+<mat-toolbar color="primary" class="mat-elevation-z4">
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>My App</span>
+  <span class="example-spacer"></span>
+  <a mat-button routerLink="/main">Cartera</a>
+  <a mat-button *ngFor="let opcion of menus_z"  routerLink="{{opcion.link}}" >{{opcion.titulo}}</a>
+  <div class="derecha"></div>
+  <a mat-raised-button *ngFor="let opcion of menuder_z" color="accent"  routerLink="{{opcion.link}}" >
+    <mat-icon>exit_to_app</mat-icon>
+    {{opcion.titulo}}
+  </a>
+  
+</mat-toolbar>
+
+<router-outlet></router-outlet>

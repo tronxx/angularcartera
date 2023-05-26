@@ -1,0 +1,81 @@
+Ventas
+<form (ngSubmit)='onSubmit()' #myForm="ngForm">
+    <label >Fecha Inicial:
+        <input type="date" id="fechaini" name="fechaini" [(ngModel)]="mimodelo.fechaini">
+    </label>
+    <label >Fecha Final:
+        <input type="date" id="fechafin" name="fechafin" [(ngModel)]="mimodelo.fechafin">
+    </label>
+    <label >Codigo Inicial:
+        <input type="text" id="codigoini" size="5" name="codigoini" [(ngModel)]="mimodelo.codigoini">
+    </label>
+    <label >Codigo Final
+        <input type="text" id="codigofin" size="5" name="codigofin" [(ngModel)]="mimodelo.codigofin">
+    </label>
+    <label >Ubicacion Inicial:
+        <input type="text" id="ubicaini" size="5" name="ubicaini" [(ngModel)]="mimodelo.ubicacioninicial">
+    </label>
+    <label >Ubicacion Final:
+        <input type="text" id="ubicafin" size="5" name="ubicafin" [(ngModel)]="mimodelo.ubicacionfinal">
+    </label>
+    <button mat-raised-button color="primary"  type="submit" class="btn btn-primary" > Aceptar</button>
+    {{mimodelo.clavecia}} 
+</form>
+<a routerLink="/altacli/nuevocli">
+    <button mat-raised-button color="primary"  >
+        <mat-icon aria-hidden="false" aria-label="Example new icon">assignment_ind</mat-icon>
+        Código Cliente
+    </button>
+</a>
+
+<button mat-raised-button color="primary" (click)="relvtas()">
+    <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+    Imprimir Reporte
+</button>
+<button mat-raised-button color="primary" (click)="repcomis()">
+    <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+    Reporte Comisiones
+</button>
+
+
+<table id="tbl_clientes" border="1" class="hover" >
+    <thead>
+        <tr>
+            <th>Accion</th>
+            <th>Codigo</th>
+            <th>Nombre</th>
+            <th>Direccion</th>
+            <th>Ubicación</th>
+            <th>Q/M</th>
+            <th>Enganche</th>
+            <th>P.LIsta</th>
+            <th>Saldo Enganche</th>
+            <th>Letras</th>
+            <th>Precio x Letra</th>
+            <th>Cargos</th>
+            <th>Abonos</th>
+            <th>Saldo</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let cliente of clientes">
+            <td> <a routerLink="/altacli/{{cliente.numcli}}"><button mat-raised-button color="primary" > Detalles</button></a> </td>
+            <td>{{cliente.numcli}}</td>
+            <td>{{cliente.nombre}} {{cliente.status}}</td>
+            <td>{{cliente.direc}} </td>
+            <td>{{cliente.ubica}} </td>
+            <td>{{cliente.qom}} </td>
+            <td align ="right">{{cliente.enganche | currency }} </td>
+            <td align ="right">{{cliente.preciolista | currency }} </td>
+            <td align ="right">{{cliente.letra1 | currency }} </td>
+            <td align ="right">{{cliente.nulet}} </td>
+            <td align ="right">{{cliente.canle | currency }} </td>
+            <td align ="right">{{cliente.cargos | currency }} </td>
+            <td align ="right">{{cliente.abonos | currency }} </td>
+            <td align ="right">{{ cliente.cargos - cliente.abonos | currency }}</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+

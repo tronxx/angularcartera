@@ -1,0 +1,26 @@
+
+.ancho80 {
+    display: inline-block;
+    width: 80px;
+}
+  
+.ancho40 {
+    display: inline-block;
+    width: 80px;
+}
+
+.yellow-icon {
+    color: yellow;
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.yellow-icon svg {
+    fill: yellow;
+}
+
+.red-icon {
+    color: red;
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.red-icon svg {
+    fill: red;
+}

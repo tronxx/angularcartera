@@ -1,0 +1,29 @@
+fieldset {
+    display: block;
+    border:1px solid;
+}
+
+.box-border {
+    display: block;
+    border:1px solid;
+}
+
+
+.ancho80 {
+    display: inline-block;
+    width: 80px;
+}
+  
+.ancho40 {
+    display: inline-block;
+    width: 80px;
+}
+
+.labelgray {
+    background-color:lightgray;
+    border:1px solid;   
+}
+
+.editgray {
+    background-color:cyan;
+}

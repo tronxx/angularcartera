@@ -1,0 +1,48 @@
+<app-spinner></app-spinner>
+<div mat-dialog-content>{{message}}
+    <label for="codigo">
+        Codigo
+        <input type="text" placeholder="Codigo" [(ngModel)]="codigo_z" >
+    </label>
+   
+    <button mat-raised-button  color="primary" (click)="busca_articulos()" > 
+        <mat-icon aria-hidden="false" aria-label="Example home icon">search</mat-icon>
+        Buscar
+    </button>
+    <div [hidden]="!messages_z" >
+        <label id="messages" color="warn"> {{messages_z}} </label>
+    </div>
+
+    <div>
+        <label >Articulo Seleccionado: </label> 
+        <label *ngIf= "articulo" > {{articulo.codigo}} {{articulo.descri}} </label>
+    </div>
+
+    <table id="tbl_articulos" border="1">
+        <thead>
+            <tr color="0fff">
+                <th>Codigo</th>
+                <th>Descripcion</th>
+                <th>Linea</th>
+                <th>Precio.U</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr 
+            [class.trselected] = "miarticulo.codigo == codigo_z"
+            *ngFor="let miarticulo of articulos" (click)="select_articulo(miarticulo)" >
+                <td>
+                    <input type="checkbox" [checked] = "miarticulo.codigo == codigo_z"> 
+                    {{miarticulo.codigo}} </td>
+                <td>{{miarticulo.descri}} </td>
+                <td>{{miarticulo.linea}} </td>
+                <td>{{ miarticulo.preciou | currency }} </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>
+    <button mat-raised-button  color="primary"   (click)="closeyes()">Aceptar</button>
+</div>
+

@@ -1,0 +1,202 @@
+<form #formularioCliente="ngForm" (ngSubmit)="formularioEnviado()" *ngIf= "solicitud">
+        <table border="1">
+            <tr>
+                <td>
+                    <div *ngIf="cliente">
+                        <label for=""> <b> Cliente</b> 
+                            {{numcli_z}} {{cliente.nombre}}
+                        </label>
+                        <a routerLink="{{linkcliente}}"> 
+                            <button mat-raised-button color="primary"  >
+                                <mat-icon aria-hidden="false" aria-label="Example new icon">keyboard_arrow_left</mat-icon>
+                                 Regresar
+                                </button>
+                        </a>
+                    
+                    </div>
+                    <label for="ocupacion">Ocupacion </label> 
+                    <input size="30" type="text" name="ocupacion" id="ocupacion" 
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.ocupacion" >
+                    <label for="ingresos">Ingresos</label>
+                    <input size="12" type="number" name="ingresos" id="ingresos"
+                    [(ngModel)]="solicitud.ingresos">
+                    <label for="dependientes">Dependientes</label>
+                    <input size="5" type="number" name="dependientes" id="dependientes"
+                    [(ngModel)]="solicitud.dependientes">
+                    <br>
+                    <label for="sexo">Sexo</label>
+                    <select name="sexo" id="sexo" [(ngModel)]="solicitud.sexo" >
+                        <option *ngFor="let misexo of sexos"
+                         value="{{misexo.clave}}" 
+                         [selected]="misexo.clave == solicitud.sexo">
+                            {{misexo.descri}}
+                        </option>
+                    </select>
+                    <label for="edad">Edad</label>
+                    <input size="5" type="number" name="edad" id="edad" 
+                    [(ngModel)]="solicitud.edad">
+                    <label for="edocivil">Estado Civil </label>
+                    <select name="edocivil" id="edocivil" [(ngModel)]="solicitud.estadocivil" >
+                        <option *ngFor="let miedocivil of edoscivil" 
+                        value="{{miedocivil.clave}}"
+                        [selected]="solicitud.estadocivil == miedocivil.clave"
+                        > {{miedocivil.descri}} </option>
+                    </select>
+                    <br>
+                    <label for=""> <b>Datos del Trabajo del Cliente</b> </label><br>
+                    <label size="30" for="trabajo">Lugar</label>
+                    <input type="text" name="trabajo" id="trabajo"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.trabajo">
+                    <label for="telefono">Telefono</label>
+                    <input size="30" type="text" name="telefono" id="telefono"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.telefono">
+                    <br>
+                    <label for="dirtra">Direccion</label>
+                    <input size="30" type="text" name="dirtra" id="dirtra"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.direcciontrabajo">
+                    <label for="antigtra">Antigüead</label>
+                    <input size="5" type="number" name="antigtra" id="antigtra"
+                    [(ngModel)]="solicitud.antiguedad">
+                    <hr>
+                    <label for=""><b>Datos del Conyuge del Cliente</b></label>
+                    <br>
+                    <label for="conyuge">Nombre</label>
+                    <input size="30" type="text" name="conyuge" id="conyuge"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.conyuge">
+                    <label for="ocupacony">Ocupacion</label>
+                    <input size="30" type="text" name="ocupacony" id="ocupacony"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.ocupacionconyuge">
+                    <label for="ingcony">Ingresos</label>
+                    <input size="12" type="number" name="ingcony" id="ingcony"
+                    [(ngModel)]="solicitud.ingresosconyuge">
+                    <br>
+                    <label for="trabcony">Trabajo</label>
+                    <input size="30" type="text" name="trabcony" id="trabcony"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.trabajoconyuge">
+                    <label for="dirtrabcony">Direccion Trabajo</label>
+                    <input size="30" type="text" name="dirtrabcony" id="dirtrabcony"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.direcciontrabconyuge">
+                    <br>
+                    <label for="antigcony">Antigüedad</label>
+                    <input size="5" type="number" name="antigcony" id="antigcony"
+                    [(ngModel)]="solicitud.antiguedadconyuge">
+                    <label for="telefonocony">Telefono</label>
+                    <input size="30" type="text" name="telefonocony" id="telefonocony"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.telefonoconyuge">
+                </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for=""> <b>Datos del Aval</b> </label>
+                        <br>
+                    <label for="aval">Generales</label>
+                    <input size="30" type="text" name="aval" id="aval"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.aval">
+                    <label for="ocupaaval">Ocupacion</label>
+                    <input size="30" type="text" name="ocupaaval" id="ocupaaval"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.ocupacionaval">
+                    <label for="ingaval">Ingresos</label>
+                    <input size="12" type="number" name="ingaval" id="ingaval"
+                    [(ngModel)]="solicitud.ingresosaval">
+                    <br>
+                    <label for="trabaval">Trabajo</label>
+                    <input size="30" type="text" name="trabaval" id="trabaval"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.trabajoaval">
+                    <label for="antingaval">Anitgüedad</label>
+                    <input size="5" type="number" name="antingaval" id="antingaval"
+                    [(ngModel)]="solicitud.antiguedadaval">
+                    <br>
+                    <label for="telaval">Telefono</label>
+                    <input size="30" type="text" name="telaval" id="telaval"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.telefonoaval">
+                    <hr>
+                    <label for=""><b>Datos del Conyuge del Aval </b></label>
+                    <br>
+                    <label for="conyugval">Nombre</label>
+                    <input size="30" type="text" name="conyugaval" id="conyugaval"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.conyugeaval">
+                    <label for="ocupaconyugval">Ocupacion</label>
+                    <input size="30" type="text" name="ocupaconyugaval" id="ocupconyugaval"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.ocupacionconyugeaval">
+                    <br>
+                    <label for="ingconyugval">Ingresos</label>
+                    <input size="12" type="number" name="ingconyugaval" id="ingconyugaval"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.ingresosconyugeaval">
+                    <label for="trabconyugval">Trabajo</label>
+                    <input size="30" type="text" name="trabconyugaval" id="trabconyugaval"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.trabajoconyugeaval">
+                    <label for="antigconyugval">Antiguedad</label>
+                    <input size="5" type="number" name="antigconyugaval" id="antigconyugaval"
+                    [(ngModel)]="solicitud.antiguedadconyugeaval">
+                    <label for="telconyugval">Telefono</label>
+                    <input size="30" type="text" name="telconyugaval" id="telconyugaval"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.telconyugeaval">
+                    <br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <label for="familiar">Familiar</label>
+                    <input size="30" type="text" name="familiar" id="familiar"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.familiar">
+                    <label for="dirfamiliar">Direccion del Familiar</label>
+                    <input size="30" type="text" name="dirfamiliar" id="dirfamiliar"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.direccionfamiliar">
+                    <br>
+                    <label for="conocido">Conocido</label>
+                    <input size="30" type="text" name="conocido" id="conocido"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.conocido">
+                    <label for="dirconocido">Direccion del Conocido</label>
+                    <input type="text" name="dirconocido" id="dirconocido"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="30"
+                    [(ngModel)]="solicitud.direccionconocido">
+                    <br>
+                    <label for="referencia1">Referencia</label>
+                    <input size="70" type="text" name="referencia1" id="referencia1"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="65"
+                    [(ngModel)]="solicitud.referencia1">
+                    <br>
+                    <label for="referencia1a">Referencia 1a</label>
+                    <input size="70" type="text" name="referencia1a" id="referencia1a"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="65"
+                    [(ngModel)]="solicitud.referencia1a">
+                    <br>
+                    <label for="referencia2">Referencia 2</label>
+                    <input size="70" type="text" name="referencia2" id="referencia2"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="65"
+                    [(ngModel)]="solicitud.referencia2">
+                    <br>
+                    <label for="observaciones">Observaciones</label>
+                    <input size="70" type="text" name="observaciones" id="observaciones"
+                    oninput="this.value = this.value.toUpperCase()"  maxlength="65"
+                    [(ngModel)]="solicitud.observaciones">
+                </td>
+            </tr>
+          </table>
+        
+    </form>
+    <button mat-raised-button  color="warn" >Cancelar</button>
+    <button mat-raised-button  color="primary" (click)="grabar_solicitud()" >Aceptar</button>
+
+

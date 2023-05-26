@@ -1,0 +1,16 @@
+label {
+    padding-left: 3px;
+    margin-right: 3px;
+  }
+
+  .boxscroll {
+    height:200px; 
+    width: 300px;
+    overflow: auto;
+    display: block;
+  }
+
+  .labelgray {
+    background-color:lightgray;
+  }
+  
