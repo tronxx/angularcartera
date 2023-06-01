@@ -322,6 +322,22 @@ export class PolizasService {
     window.open(miurl, "_blank");
   }
 
+  reporte_repacupo_pdf ( params: string): Observable<any>  {
+    let misparams = JSON.parse(params);
+    
+    var miurl = this.url + "polizas/servicios.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=JSON.stringify(misparams);
+    return this.http.post<any>(miurl, misparams, {'headers':headers});
+    
+  }
+
+  descargar_archivo (params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Debug: Estoy en obtenpdfcfdi ", params);
+    const miurl = this.url + "polizas/servicios.php?modo=descargar_archivo&filename="+misparams.filename;
+    window.open(miurl, "_blank");
+  }
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

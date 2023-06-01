@@ -22,6 +22,7 @@ import { Usocfdi } from '../../models/usocfdi';
 import { Metodopagocfdi } from '../../models/metodopagocfdi';
 import {RegimenFiscal } from '../../models'
 
+
 @Component({
   selector: 'app-dlgdatosfactura',
   templateUrl: './dlgdatosfactura.component.html',
@@ -35,6 +36,7 @@ export class DlgdatosfacturaComponent implements OnInit {
   statuscli = "";
   ubiage = "";
   esrfcgenerico = true;
+  todocorrecto_z = true;
   
   metodospago : Metodopagocfdi [] = [];
   usoscfdi : Usocfdi[] = [];
@@ -114,19 +116,45 @@ export class DlgdatosfacturaComponent implements OnInit {
     );
    }
 
-  
+  checa_fecha() {
+    const fechamin = this.configuracion.SumaDiasaFecha(new Date(), -20);
+    const strfecmin_z = this.configuracion.fecha_a_str(fechamin, "YYYY-mm-dd");
+    this.todocorrecto_z = true;
+    if(this.factura) {
+      if(this.factura?.fecha < strfecmin_z) { 
+        this.todocorrecto_z = false; 
+        this.alerta( this.factura.fecha + " La fecha no puede ser menor a " + strfecmin_z);
+      } 
+    }
+    return(this.todocorrecto_z);
+  }
+
   formularioEnviado() {
 
   }
 
   closeyes() {
-    console.log("Debug: Cerrando dlgdatosfac ", this.factura);
-    this.dialogRef.close(this.factura);
+    // console.log("Debug: Cerrando dlgdatosfac ", this.factura);
+    if(this.checa_fecha()) {
+      this.dialogRef.close(this.factura);
+    }
+    
   }
 
   closeno() {
     this.dialogRef.close(false);
   }
 
+  alerta(mensaje: string) {
+    const dialogref = this.dialog.open(DialogBodyComponent, {
+      width:'350px',
+      data: mensaje
+    });
+    dialogref.afterClosed().subscribe(res => {
+      //console.log("Debug", res);
+    });
+  
+  }
+  
 
 }

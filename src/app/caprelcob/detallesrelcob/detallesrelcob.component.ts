@@ -142,4 +142,44 @@ export class DetallesrelcobComponent implements OnInit {
 
   }
 
+  eliminar_renglon_relcob(renrelco: Renrelco) {
+    const dialogref = this.dialog.open(DialogBodyComponent, {
+      width:'350px',
+      data: 'Seguro de Eliminar : ' +renrelco.codigo + 
+      " " + renrelco.nombre
+    });
+    dialogref.afterClosed().subscribe(res => {
+      if(res) {
+        let params_z = {
+          modo: "eliminar_renglon_relacion_relcob",
+          idcarrenrelco: renrelco.idcarrenrelco
+        }
+        this.relcobservice.eliminar_renglon_relacion_cobranza(JSON.stringify(params_z)).subscribe( resalta=> 
+          {
+            console.log("Resultado:", res);
+            
+            if(resalta.status == "OK") {
+              this.busca_renglones_relcob();
+            } else {
+              this.alerta("Error:" + resalta.error);
+              console.log("Debug: Error", resalta);
+            }
+  
+          });
+        }
+    });
+  
+  }
+
+  alerta(mensaje: string) {
+    const dialogref = this.dialog.open(DialogBodyComponent, {
+      width:'350px',
+      data: mensaje
+    });
+    dialogref.afterClosed().subscribe(res => {
+      //console.log("Debug", res);
+    });
+  
+  }
+  
 }

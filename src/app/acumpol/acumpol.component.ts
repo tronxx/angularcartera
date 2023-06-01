@@ -124,6 +124,47 @@ export class AcumpolComponent implements OnInit {
     )
 }
 
+imprimir_repacupo_pdf() {
+  var params = {
+    "modo":"reporte_acumulado_polizas_pdf",
+    "fechainicial": this.strfechaini,
+    "fechafinal": this.strfechafin,
+    "codigoinicial": this.tda_z,
+    "codigofinal":this.tda_z,
+    "titulo":"Reporte acumulado de Pólizas del " + 
+      this.strfechaini + " Al " + this.strfechafin + 
+      " Del Codigo " + this.tda_z + " " + this.nomtda_z
+  };
+  //console.log("idusuario:" + this.usrreg_z.idusuario);
+  this.enespera = true;
+  this.serviciopolizas.reporte_repacupo_pdf(JSON.stringify(params)).subscribe(
+    respu => {
+      console.log("respu", respu);
+      const params =  {
+        filename: respu.output
+      }
+      this.serviciopolizas.descargar_archivo(JSON.stringify(params));
+      //this.descargarArchivo(respu, "repacupo.pdf");
+    }
+  )
+
+  
+}
+
+descargarArchivo(response: any, fileName: string): void {
+  const dataType = response.type;
+  const binaryData = [];
+  binaryData.push(response);
+
+  const filePath = window.URL.createObjectURL(new Blob (binaryData, {type: dataType}));
+  const downloadLink = document.createElement('a');
+  downloadLink.href = filePath;
+  downloadLink.setAttribute('download', fileName);
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+
+}
+
 imprimir_poliza() {
   // Si una póliza existe y no está cerrada lo mando a consulta de esa
   // póliza para que se pueda cerrar

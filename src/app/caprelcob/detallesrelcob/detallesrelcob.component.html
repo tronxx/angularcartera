@@ -11,21 +11,25 @@
 </div>
 <div>
     <table border="1">
-        <tr>
-            <td>Código</td>
-            <td>Nombre</td>
-            <td>Poblacion</td>
-            <td>Entregó</td>
-            <td>Vence Plazo</td>
-            <td>Otorgó Plazo</td>
-            <td>Letras</td>
-            <td>Días</td>
-            <td>Precio<br> x Letra </td>
-            <td>Importe</td>
-            <td>Últimpo <br>Pago </td>
-            <td>Penúltimpo <br>Pago </td>
-            <td>Reporte</td>
-        </tr>
+        <thead  style = "background-color: silver;" >
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Poblacion</th>
+                <th>Entregó</th>
+                <th>Vence Plazo</th>
+                <th>Otorgó Plazo</th>
+                <th>Letras</th>
+                <th>Días</th>
+                <th>Precio<br> x Letra </th>
+                <th>Importe</th>
+                <th>Últimpo <br>Pago </th>
+                <th>Penúltimpo <br>Pago </th>
+                <th>Reporte</th>
+                <th>Acciones</th>
+            </tr>
+    
+        </thead>
         <tr *ngFor="let renrelco  of renglonesrelcob">
             <td>{{renrelco.codigo}}</td>
             <td>{{renrelco.nombre}}</td>
@@ -40,6 +44,14 @@
             <td>{{renrelco.ultimoabono}} </td>
             <td>{{renrelco.penultimoabono}} </td>
             <td>{{renrelco.reporte}} </td>
+            <td>
+                <button  mat-raised-button 
+                color="warn"
+                (click)="eliminar_renglon_relcob(renrelco)">
+                <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
+                Eliminar Cliente</button>
+            
+            </td>
         </tr>
     </table>
 </div>
