@@ -20,6 +20,7 @@ import { Renrelco } from '../../models';
 import { RelcobService } from '../../services/relcob.service';
 import { DlgdatosrelcobComponent } from './../dlgdatosrelcob/dlgdatosrelcob.component'
 import { AgreclienteComponent } from '../agrecliente/agrecliente.component';
+import { GenerarelcobComponent } from '../generarelcob/generarelcob.component';
 
 @Component({
   selector: 'app-detallesrelcob',
@@ -169,6 +170,24 @@ export class DetallesrelcobComponent implements OnInit {
         }
     });
   
+  }
+
+  generar_relacion() {
+    const params_z = {
+      "idrelcob": this.idrelcob_z
+    }
+    const dialogref = this.dialog.open(GenerarelcobComponent, {
+      width:'800px',
+      data: JSON.stringify("")
+    });
+    dialogref.afterClosed().subscribe(res => {
+      if(res) {
+        
+        console.log("Se ha generado una relación");
+        
+      }
+    });
+
   }
 
   alerta(mensaje: string) {

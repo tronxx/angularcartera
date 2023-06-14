@@ -4,7 +4,9 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Relcob } from '../models';
-import { Renrelco } from '../models/renrelco';
+import { Renrelco } from '../models';
+import { Rutasmor } from '../models';
+import { Desrutasmor } from '../models';
 import { ConfiguracionService } from './configuracion.service'
 import { Compania } from '../models'
 
@@ -112,6 +114,36 @@ export class RelcobService {
     pipe(
       tap(_ => this.log('fetched agrega_renglones_relacion_cobranza')),
       catchError(this.handleError<any>('Ocurrio un error en Post agrega_renglones_relacion_cobranza'))
+
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  obtener_rutas_morosos ( params: string): Observable<Rutasmor[]> {
+    
+    var miurl = this.url + "relcob/servicios.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=JSON.stringify(params);
+    
+    return this.http.post<Rutasmor[]>(miurl, params, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Relaciones Cobranza')),
+      catchError(this.handleError<Rutasmor[]>('Ocurrio un error en Post obtener codigos polizas'))
+
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  obtener_poblciones_rutas_morosos ( params: string): Observable<Desrutasmor[]> {
+    
+    var miurl = this.url + "relcob/servicios.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=JSON.stringify(params);
+    
+    return this.http.post<Desrutasmor[]>(miurl, params, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Relaciones Cobranza')),
+      catchError(this.handleError<Desrutasmor[]>('Ocurrio un error en Post obtener codigos polizas'))
 
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});

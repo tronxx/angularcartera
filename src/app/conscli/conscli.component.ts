@@ -7,6 +7,8 @@ import { ConfiguracionService } from '../services/configuracion.service';
 import { Cliente } from '../models/clientes';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { DlgreltraspComponent } from '../common/dlgreltrasp/dlgreltrasp.component';
+import { DlgrepcliviComponent } from '../common/dlgrepclivi/dlgrepclivi.component';
+
 @Component({
   selector: 'app-conscli',
   templateUrl: './conscli.component.html',
@@ -85,5 +87,24 @@ export class ConscliComponent implements OnInit {
   onNoClick() {
 
   }
+
+  impresion_repclivi() {
+    let message = {
+      codigoinicial: this.mimodelo.codigoini,
+      codigofinal: this.mimodelo.codigofin,
+      titulo: "Reporte de Clientes Vigentes"
+    }
+    const dialogref = this.dialog.open(DlgrepcliviComponent, {
+      width:'650px',
+      data: JSON.stringify(message)
+    });
+    dialogref.afterClosed().subscribe(res => {
+      if (res) {
+        let params = res;
+      }
+    });
+
+  }
+
 
 }

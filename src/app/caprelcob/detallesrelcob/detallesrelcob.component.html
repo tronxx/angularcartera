@@ -5,9 +5,12 @@
     </label>
     <label > Fecha: <b>{{relcob.fecha}}</b>  </label>
     <label > Cobratario: <b>{{relcob.promot}} {{relcob.nombrepromo}} </b> </label>
-    <button  mat-raised-button 
-    color="primary"
-    (click)="agregar_cliente_a_relcob()">Agregar Cliente</button>
+    <button  mat-raised-button  color="primary"
+      (click)="agregar_cliente_a_relcob()">Agregar Cliente
+    </button>
+    <button  mat-raised-button  color="primary"
+      (click)="generar_relacion()">Generar Relación
+    </button>
 </div>
 <div>
     <table border="1">

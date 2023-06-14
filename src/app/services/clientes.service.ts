@@ -175,6 +175,21 @@ export class ClientesService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  obtener_lista_letras_impresas ( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+   
+    return this.http.post<any>(miurl, parametros, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched letras impresas')),
+      catchError(this.handleError<any>('Ocurrio un error en Post obtener_lista_letras_impresas'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
   obtenubivta ( parametros: string): Observable<Ubivta[]> {
     
     let respu_z = "";
@@ -1272,6 +1287,39 @@ export class ClientesService {
       catchError(this.handleError<Factorvtacred[]>('Ocurrio un error en Post obtenfactorvtacrd'))
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  imprime_repclivi(params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Estoy en serviciosaltas:", misparams);
+    let miurl = this.url + "polizas/servicios.php?" +
+    'modo=reporte_clientes_vigentes' + 
+    '&fechabase=' + misparams.fechabase +
+    '&codigoinicial='+misparams.codigoinicial +
+    '&codigofinal='+misparams.codigofinal +
+    '&diainicial='+misparams.diainicial +
+    '&diafinal='+misparams.diafinal +
+    '&poblacioninicial=' + misparams.poblacioninicial  +
+    '&poblacionfinal='+misparams.poblacionfinal ;
+    // console.log("Debug: imprime_repcomis", miurl);
+    window.open(miurl, "_blank");
+
+  }
+
+  imprime_analitico_clientes_saldados(params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Estoy en serviciosaltas:", misparams);
+    let miurl = this.url + "polizas/servicios.php?" +
+    'modo=reporte_clientes_saldaron_en_poliza' + 
+    '&fechainicial=' + misparams.fechainicial +
+    '&fechafinal=' + misparams.fechafinal +
+    '&codigoinicial='+misparams.codigoinicial +
+    '&codigofinal='+misparams.codigofinal +
+    '&poblacioninicial=' + misparams.poblacioninicial  +
+    '&poblacionfinal='+misparams.poblacionfinal ;
+    // console.log("Debug: imprime_repcomis", miurl);
+    window.open(miurl, "_blank");
+
   }
 
   obtentabladesctocont ( ): Observable<Tabladesctocont []> {

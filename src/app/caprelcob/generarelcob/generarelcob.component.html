@@ -1,0 +1,35 @@
+<div mat-dialog-content>
+
+    <div name="rutas">
+            <mat-card>
+                <mat-card-title>Seleccione la Ruta</mat-card-title>
+                <mat-form-field>
+                    <mat-label>Número Máximo de Clientes</mat-label>
+                    <input matInput type="number" [(ngModel)]="maxnumcli">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>
+                        Ruta
+                    </mat-label>
+                    <mat-select [ngModel]="rutasmor" (ngModelChange)="onChangeObj($event)" >
+                        <mat-option  *ngFor="let rutamor of rutasmor " value={{rutamor.idruta}}>
+                            {{rutamor.cveruta}} {{rutamor.cvepromo}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div>
+                    <p>
+                        <button for="" *ngFor = "let mipob of desrutasmor">
+                            {{mipob.poblacion}}
+                        </button>
+                    </p>
+                </div>
+
+            </mat-card>
+            <div mat-dialog-actions>
+                <button  mat-raised-button color="warn" (click)="closeno()">Cancelar</button>
+                <button  mat-raised-button color="primary" (click)="closeyes()" >Aceptar</button>
+            </div>
+    </div>
+</div>
+

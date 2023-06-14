@@ -189,14 +189,26 @@ export class ConfiguracionService {
   SumaDiasaFecha(fecha: Date, dias: number) {
     let months = Math.floor(dias / 30);
     const remainingDays = dias % 30;
-    const year = fecha.getFullYear();
+    let year = fecha.getFullYear();
     let month = fecha.getMonth() + months;
     let day = fecha.getDate() + remainingDays;
 
     // Handle cases where the result day exceeds the number of days in the result month
-    while (day > new Date(year, month + 1, 0).getDate()) {
-      day -= new Date(year, month + 1, 0).getDate();
-      month++;
+    if(dias > 0) {
+      while (day > new Date(year, month + 1, 0).getDate()) {
+        day -= new Date(year, month + 1, 0).getDate();
+        month++;
+      }
+  
+    } else {
+      while (day < 1) {
+        month--;
+        if (month < 0) {
+          month = 11;
+          year--;
+        }
+        day += new Date(year, month + 1, 0).getDate();
+      }
     }
 
     const resultDate = new Date(year, month, day);

@@ -106,7 +106,7 @@ export class AltacliComponent implements OnInit {
     {clave:"M", descri:"Masculino"}
   ];
 
-  
+  letrasyaimpresas_z : number[] = [];  
   diasmes_z = [ {dia: 1}];
   mescum = "";
 
@@ -1011,26 +1011,62 @@ cerrarcliente() {
   );
 }
 
-imprimir_letras() {
-  let ltaini_z = 1;
-  let ltafin_z = 0;
-  if(this.cliente) {
-    ltafin_z = this.cliente.nulet;
-    if(this.cliente.letra1) {
-      ltaini_z = 0;
-    }
+async imprimir_letras() {
+  let nulets = 0;
+  
+  if(!this.cliente) {
+    this.alerta("Aun no ha accesado ningun cliente");
+    return;
   }
+  nulets = this.cliente.nulet;
+  this.letrasyaimpresas_z = [];
+  if(this.sinpassword) {
+    await this.buscar_letras_impresas();
+  }
+  let nletrasimpresas = this.letrasyaimpresas_z.length;
+  
+  console.log("Letras Ya Impresas:", nletrasimpresas, nulets);
+  
+  if(nletrasimpresas >= nulets) {
+     this.alerta("Ya se han impreso todas las letras");
+     return;
+  }
+  let ltaini_z = nulets;
+  let ltafin_z = 0;
+  for (let mii_z = 1; mii_z <= nulets; mii_z++) {
+     if (!this.letrasyaimpresas_z.includes(mii_z) ) {
+       if(mii_z < ltaini_z) ltaini_z = mii_z;
+       if(mii_z > ltafin_z) ltafin_z = mii_z;
+     } 
+  }
+
   let params_z = {
     "ltaini": ltaini_z,
     "ltafin": ltafin_z,
+    "letrasimpresas": this.letrasyaimpresas_z,
     "title": "Seleccione Las letras a Imprimir"
   }
   const dialogref = this.dialog.open(DlgimpriletrasComponent, {
     width:'350px',
     data: JSON.stringify( params_z)
   });
+  let yaimprimi_z = 0;
   dialogref.afterClosed().subscribe(res => {
     if(res) {
+      let valido = true;
+      for (let mii_z = res.ltaini; mii_z <= res.ltafin; mii_z++) {
+         
+         if(valido) {
+          console.log("Checando Letra:", mii_z, "Valido:", valido);
+          if (this.letrasyaimpresas_z.includes(mii_z) ) {
+            valido = false; yaimprimi_z = mii_z;
+          } 
+         }
+      }
+      if(!valido) {
+        this.alerta("La letra " + yaimprimi_z.toString() + " Ya fue impresa previamente");
+        return;
+      }
       let params_z = {
         "numcli": this.numcli_z,
         "letrainicial": res.ltaini,
@@ -1039,6 +1075,32 @@ imprimir_letras() {
       this.servicioclientes.imprimir_letras_altas(JSON.stringify(params_z));
     }
   });
+}
+
+async buscar_letras_impresas() {
+  let numcli_z = "";
+  if(!this.cliente) {
+    this.alerta("Aun no ha accesado ningun cliente");
+  } else {
+    numcli_z = this.cliente.numcli;
+    let params_z = {
+      modo: "obtener_lista_letras_impresas",
+      codigo: numcli_z
+    }
+    let parms_z = JSON.stringify(params_z);
+    this.letrasyaimpresas_z = [];
+    try {
+        let res = await this.servicioclientes.obtener_lista_letras_impresas(parms_z).toPromise();
+        for(let mii_z of res) {
+          this.letrasyaimpresas_z.push(mii_z.letra);
+        }
+        
+    } catch(err) {
+        console.log(err); // you might not actually want to eat this exception.
+    }        
+
+  }
+ 
 }
 
 modificar_status_facalmomento() {
@@ -1055,6 +1117,7 @@ modificar_status_facalmomento() {
       console.log("Regresando de Pide Password", res, params_z);
        
        if(res) {
+        this.sinpassword = false;
         this.factura_al_momento = false;
         let paramsmodif_z = {
           numcli: this.numcli_z,

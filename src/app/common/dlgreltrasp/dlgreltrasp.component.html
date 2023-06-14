@@ -1,29 +1,41 @@
-<div mat-dialog-content><h1>{{datos.title}}</h1>  <br>
-    <label for="fecha" class ="ancho120"  >Fecha</label>
-    <input type="date" id="fechaini" [(ngModel)]="fecha">
-    <br>
-    <label for="fechafin" class ="ancho120" >Numero Reporte</label>
-    <select [ngModel]="reltrasps" name="numrep" id="numrep" (ngModelChange)="onChangeObj($event)"  >
-        <option *ngFor="let reltrasp of reltrasps " value={{reltrasp.clave}}>
-            {{reltrasp.clave}} {{reltrasp.descri}}
-        </option>
-    </select>
+<div mat-dialog-content><h1>{{datos.title}}</h1>  
+    <div>
+        <mat-form-field class="form-field">
+            <mat-label>
+                Fecha
+            </mat-label>
+            <input matInput type="date" [(ngModel)]="fecha">
+        </mat-form-field>
+        </div>
+        <div>
+           <mat-form-field>
+            <mat-label>
+                Numero de Reporte
+            </mat-label>
+            <mat-select [ngModel]="reltrasps" (ngModelChange)="onChangeObj($event)" >
+                <mat-option  *ngFor="let reltrasp of reltrasps " value={{reltrasp.clave}}>
+                    {{reltrasp.clave}} {{reltrasp.descri}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
     <div *ngIf="reltrasp">
-        <table border="1">
+        <table border="1" width="100%">
             <tr>
-                <td>Poblacion Inicial: {{reltrasp.ciudadinicial}}  </td> 
+                <td>
+                    {{reltrasp.clave}} {{reltrasp.descri}} <br>
+                    Poblacion Inicial: {{reltrasp.ciudadinicial}}  
+                    <br>
+                    Poblacion Final: {{reltrasp.ciudadfinal}} </td>
             </tr>
             <tr>
-                <td>Poblacion Final: {{reltrasp.ciudadfinal}} </td>
-            </tr>
-            <tr>
-                <td>Dia Inicial: {{reltrasp.diainicial}}  <br>
+                <td>Dia Inicial: {{reltrasp.diainicial}} 
                     Dia Final: {{reltrasp.diafinal}} 
                 </td>
             </tr>
             <tr>
                 <td>
-                    Codigos:  <br>
+                    Codigos: 
                     <label for="" *ngFor="let codigo of reltrasp.codigos">
                         {{codigo.codigo}}
                     </label>

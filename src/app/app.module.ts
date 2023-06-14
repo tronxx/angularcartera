@@ -68,6 +68,9 @@ import { DlgdatosrelcobComponent } from './caprelcob/dlgdatosrelcob/dlgdatosrelc
 import { DetallesrelcobComponent } from './caprelcob/detallesrelcob/detallesrelcob.component';
 import { AgreclienteComponent } from './caprelcob/agrecliente/agrecliente.component';
 import { DatoscliComponent } from './common/datoscli/datoscli.component';
+import { DlgrepcliviComponent } from './common/dlgrepclivi/dlgrepclivi.component';
+import { DlganclisalComponent } from './common/dlganclisal/dlganclisal.component';
+import { GenerarelcobComponent } from './caprelcob/generarelcob/generarelcob.component';
 
 
 @NgModule({
@@ -115,6 +118,9 @@ import { DatoscliComponent } from './common/datoscli/datoscli.component';
     DetallesrelcobComponent,
     AgreclienteComponent,
     DatoscliComponent,
+    DlgrepcliviComponent,
+    DlganclisalComponent,
+    GenerarelcobComponent,
   ],
   imports: [
     BrowserModule,

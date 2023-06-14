@@ -1,0 +1,60 @@
+<div mat-dialog-content>
+    <h1>{{datos.title}}</h1> 
+    <div>
+        <mat-form-field class="form-field">
+            <mat-label>
+                Fecha
+            </mat-label>
+            <input matInput type="date" [(ngModel)]="fecha">
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="form-field">
+            <mat-label>
+                Codigo Inicial
+            </mat-label>
+            <input matInput type="number" [(ngModel)]="codigoinicial">
+        </mat-form-field>
+        <mat-form-field class="form-field">
+            <mat-label>
+                Codigo Final
+            </mat-label>
+            <input matInput type="number" [(ngModel)]="codigofinal">
+        </mat-form-field>
+    
+    </div>
+    <div>
+        <mat-form-field class="form-field">
+            <mat-label>
+                Día Cartera Inicial
+            </mat-label>
+            <input matInput type="number" [(ngModel)]="diainicial">
+        </mat-form-field>
+        <mat-form-field class="form-field">
+            <mat-label>
+                Día Cartera Final
+            </mat-label>
+            <input matInput type="number" [(ngModel)]="diafinal">
+        </mat-form-field>
+    
+    </div>
+    <div>
+        <mat-form-field class="form-field">
+            <mat-label>
+                Población Inicial
+            </mat-label>
+            <input matInput type="text" [(ngModel)]="pobini_z">
+        </mat-form-field>
+        <mat-form-field class="form-field">
+            <mat-label>
+                Población Final
+            </mat-label>
+            <input matInput type="text" [(ngModel)]="pobfin_z">
+        </mat-form-field>
+    
+    </div>
+</div>
+<div mat-dialog-actions  style="display: flex; justify-content: flex-end;">
+    <button mat-raised-button style="margin-right: 5px;"  color="warn" (click)="closeno()">Cancelar</button>
+    <button mat-raised-button  color="primary"   (click)="closeyes()">Aceptar</button>
+</div>

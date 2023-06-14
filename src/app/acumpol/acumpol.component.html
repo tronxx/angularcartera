@@ -1,34 +1,43 @@
 
 <div id="datospoliza">
-    <label for="tienda">
-        Codigo
-        <input size="5" [disabled]="!datospolenabled_z" type="text" name="tienda" [(ngModel)]="tda_z" id="tienda" placeholder="tienda">
-    </label>
-    <label for="nomtda"> {{nomtda_z }} </label>
-    <label for="fechainicial">
-        Fecha Inicial
-        <input size="20" type="date"  name="fechainicial"  [(ngModel)]="strfechaini" id="fechainicial">
-    </label>
-    <label for="fechafinal">
-        Fecha Final
-        <input size="20" type="date"  name="fechafinal"  [(ngModel)]="strfechafin" id="fechafinal">
-    </label>
-    <button mat-raised-button color="primary" (click)="buscarpolizas()">Aceptar</button>
-    <button mat-raised-button color="primary" (click)="imprimir_poliza()">
-        <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
-        Imprimir  Poliza
-    </button>
-    <button mat-raised-button color="primary" (click)="imprimir_repacupo_pdf()">
-        <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
-        Reporte Acumulado de Pólizas
-    </button>
+    <div>
+        <button mat-raised-button color="primary" (click)="imprimir_poliza()">
+            <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+            Imprimir  Poliza
+        </button>
+        <button mat-raised-button color="primary" (click)="imprimir_repacupo_pdf()">
+            <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+            Reporte Acumulado de Pólizas
+        </button>
+        <button mat-raised-button color="primary" (click)="impresion_anclisal()">
+            <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+            Reporte Clientes Saldados
+        </button>
+    
+    </div>
+    <div>
+        <label for="tienda">
+            Codigo
+            <input size="5" [disabled]="!datospolenabled_z" type="text" name="tienda" [(ngModel)]="tda_z" id="tienda" placeholder="tienda">
+        </label>
+        <label for="nomtda"> {{nomtda_z }} </label>
+        <label for="fechainicial">
+            Fecha Inicial
+            <input size="20" type="date"  name="fechainicial"  [(ngModel)]="strfechaini" id="fechainicial">
+        </label>
+        <label for="fechafinal">
+            Fecha Final
+            <input size="20" type="date"  name="fechafinal"  [(ngModel)]="strfechafin" id="fechafinal">
+        </label>
+        <button mat-raised-button color="primary" (click)="buscarpolizas()">Aceptar</button>
+    </div>
 </div>
 <hr>
 
 <div *ngIf="polizas">
     <table border="1" class="hover">
-        <thead>
-            <th>Detaller</th>
+        <thead  style = "background-color: silver;" >
+            <th>Detalles</th>
             <th>Fecha</th>
             <th>Importe</th>
             <th>Bonificaciones</th>

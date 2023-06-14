@@ -15,6 +15,7 @@ export class DlgimpriletrasComponent implements OnInit {
 
   ltaini = 0;
   ltafin = 0;
+  letrasimpresas = [];
   title ="";
   constructor(
     public dialogRef: MatDialogRef<DlgimpriletrasComponent>,
@@ -27,6 +28,7 @@ export class DlgimpriletrasComponent implements OnInit {
     this.ltaini = params_z.ltaini;
     this.ltafin = params_z.ltafin;
     this.title = params_z.title;
+    this.letrasimpresas = params_z.letrasimpresas
   }
 
   closeyes () {

@@ -847,6 +847,10 @@ async grabar_cliente(datoscliente: string): Promise <any> {
   nvocli.fechavta = "2022-09-09";
   nvocli.clienterespu.status = this.nvoclistatus;
   nvocli.clienterespu.qom = this.qom;
+  nvocli.clienterespu.appat = nvocli.clienterespu.appat.trim();
+  nvocli.clienterespu.apmat = nvocli.clienterespu.apmat.trim();
+  nvocli.clienterespu.nompil1 = nvocli.clienterespu.nompil1.trim();
+  nvocli.clienterespu.nompil2 = nvocli.clienterespu.nompil2.trim();
   nvocli.clienterespu.ticte = this.ticte;
   nvocli.clienterespu.ubica = this.ubica;
   nvocli.clienterespu.opcion = opcion_z;

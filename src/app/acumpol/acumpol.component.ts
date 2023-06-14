@@ -12,6 +12,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import { DialogBodyComponent } from '../dialog-body/dialog-body.component';
 import { ReplaySubject } from 'rxjs';
 import { SpinnerComponent } from '../common/spinner/spinner.component';
+import { DlganclisalComponent } from '../common/dlganclisal/dlganclisal.component';
 
 @Component({
   selector: 'app-acumpol',
@@ -226,6 +227,24 @@ alerta(mensaje: string)  {
     }
   });
   return (yesno_z);
+
+}
+
+impresion_anclisal() {
+  let message = {
+    codigoinicial: this.tda_z,
+    codigofinal: this.tda_z,
+    titulo: "Reporte de Clientes Saldados"
+  }
+  const dialogref = this.dialog.open(DlganclisalComponent, {
+    width:'650px',
+    data: JSON.stringify(message)
+  });
+  dialogref.afterClosed().subscribe(res => {
+    if (res) {
+      let params = res;
+    }
+  });
 
 }
 
