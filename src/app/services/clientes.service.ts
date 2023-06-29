@@ -29,11 +29,13 @@ import { Reltrasp } from '../models';
 import { Factorvtacred } from '../models';
 import { Tabladesctocont  } from '../models';
 import { RegimenFiscal } from '../models';
+import { SabanaVtas } from '../models';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ClientesService {
+export class 
+ClientesService {
   url = "";
 
   constructor(private http: HttpClient, private configuracion: ConfiguracionService) { 
@@ -74,6 +76,48 @@ export class ClientesService {
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
+
+  obten_sabanas_vtas ( parametros: string): Observable<SabanaVtas[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    
+    return this.http.post<SabanaVtas[]>(miurl, parametros, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Clientes')),
+      catchError(this.handleError<SabanaVtas[]>('Ocurrio un error en Post obten clientes'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  genera_sabanas_vtas ( parametros: string): Observable<SabanaVtas[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    
+    return this.http.post<SabanaVtas[]>(miurl, parametros, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Clientes')),
+      catchError(this.handleError<SabanaVtas[]>('Ocurrio un error en Post obten clientes'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  imprimir_sabanas_vtas ( parametros: string)  {
+    
+    let misparams = JSON.parse(parametros);
+    // console.log("Debug: Estoy en obtenpdfcfdi ", params);
+    let miurl = this.url + "altas/serviciosaltas.php?modo=imprimir_sabana_ventas"+
+      "&idsabanavta="+misparams.idsabanavta +
+       "&titulo="+misparams.titulo +
+       "&ubicacion="+misparams.ubicacion;
+    window.open(miurl, "_blank");
+  }
+
 
   obtenrelvtas_enganches ( parametros: string): Observable<Cliente[]> {
     

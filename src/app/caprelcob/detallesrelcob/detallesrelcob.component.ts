@@ -33,6 +33,7 @@ export class DetallesrelcobComponent implements OnInit {
   renglonesrelcob: Renrelco[] = [];
   codigopoliza?: CodigoPoliza;
   idrelcob_z = 0;
+  creandoRelacion = false;
 
   usrreg_z = {
     "idusuario":0,
@@ -97,7 +98,6 @@ export class DetallesrelcobComponent implements OnInit {
     this.relcobservice.busca_renglones_relacion_cobranza(JSON.stringify(params_z)).subscribe(
       respu => {
         this.renglonesrelcob  = respu;
-        console.log("Respu:", respu);
       }
     )
 
@@ -112,8 +112,7 @@ export class DetallesrelcobComponent implements OnInit {
     dialogref.afterClosed().subscribe(res => {
       if(res) {
         this.agregar_cliente(res);
-        console.log("Se ha agregado cliente");
-        
+       
       }
     });
 
@@ -137,7 +136,6 @@ export class DetallesrelcobComponent implements OnInit {
     this.relcobservice.agrega_renglones_relacion_cobranza(JSON.stringify(params_z)).subscribe(
       result => {
         this.busca_renglones_relcob();
-        console.log("Se ha agregado la nueva relacion", result);
       }
     );
 
@@ -157,13 +155,11 @@ export class DetallesrelcobComponent implements OnInit {
         }
         this.relcobservice.eliminar_renglon_relacion_cobranza(JSON.stringify(params_z)).subscribe( resalta=> 
           {
-            console.log("Resultado:", res);
-            
+           
             if(resalta.status == "OK") {
               this.busca_renglones_relcob();
             } else {
               this.alerta("Error:" + resalta.error);
-              console.log("Debug: Error", resalta);
             }
   
           });
@@ -174,16 +170,27 @@ export class DetallesrelcobComponent implements OnInit {
 
   generar_relacion() {
     const params_z = {
-      "idrelcob": this.idrelcob_z
+      "idrelcob": this.idrelcob_z,
+      "numeromaximoclientes": 10
     }
     const dialogref = this.dialog.open(GenerarelcobComponent, {
       width:'800px',
-      data: JSON.stringify("")
+      data: JSON.stringify(params_z)
     });
     dialogref.afterClosed().subscribe(res => {
       if(res) {
+        this.creandoRelacion = true;
         
-        console.log("Se ha generado una relación");
+        let params_z = {
+          modo: "genera_relacion",
+          idrelacion: this.idrelcob_z,
+          numeromaximoclientes: res.numeromaximoclientes,
+          idruta: res.idruta
+        }
+        this.relcobservice.generar_relacion_cobranza(JSON.stringify(params_z)).subscribe( resul => {
+          this.creandoRelacion = false;
+          if(resul) this.busca_renglones_relcob();
+        })
         
       }
     });

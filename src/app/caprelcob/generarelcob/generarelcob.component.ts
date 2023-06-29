@@ -45,7 +45,7 @@ export class GenerarelcobComponent implements OnInit {
     "nivel":""
   }
 
-  maxnumcli = 10;
+  numeromaximoclientes = 10;
 
   constructor(
     public dialog: MatDialog, public dialogRef: MatDialogRef<GenerarelcobComponent>,
@@ -59,6 +59,9 @@ export class GenerarelcobComponent implements OnInit {
   ngOnInit(): void {
     const params = JSON.parse(this.message);
     this.idrelcob_z = params.idrelcob;
+    this.numeromaximoclientes = params.numeromaximoclientes;
+    console.log("Maxnumcli:", this.numeromaximoclientes);
+    
     this.buscar_rutas_mor()
   }
 
@@ -73,6 +76,7 @@ export class GenerarelcobComponent implements OnInit {
   }
 
   onChangeObj(idruta: any) {
+    this.idrutamor_z = idruta;
     const params_z = {
       modo: "obtener_poblaciones_rutas_morosos",
       idruta: idruta
@@ -91,7 +95,8 @@ export class GenerarelcobComponent implements OnInit {
   closeyes() {
     let resultado = {
       idrelcob: this.idrelcob_z,
-      maxnumcli: this.maxnumcli
+      idruta: this.idrutamor_z,
+      numeromaximoclientes: this.numeromaximoclientes
     }
     this.dialogRef.close(resultado);
   }

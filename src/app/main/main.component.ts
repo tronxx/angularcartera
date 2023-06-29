@@ -23,6 +23,7 @@ export class MainComponent implements OnInit {
     { link: "/polengan", titulo: "Pólizas Enganche", active:"active"  },
     { link: "/nvavta", titulo: "Facturacion", active:"active"  },
     { link: "/listarelcob", titulo: "Relacion de Cobranza", active:"active"  },
+    { link: "/sabanavtas", titulo: "Sabana de Ventas", active:"active"  },
 
   ];
 

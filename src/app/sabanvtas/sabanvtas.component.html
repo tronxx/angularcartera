@@ -1,0 +1,51 @@
+<div>
+    <label class="ancho80" for="ubicacion">Ubicacion </label>
+    <select name="ubicacion" id="ubicacion" value="ubica"
+         [(ngModel)]= "ubica"  >
+        <option *ngFor="let miubica of ubivta" value="{{miubica.ubica}}"
+          [selected]="ubica == miubica.ubica">
+          {{miubica.ubica}} {{miubica.nombre}}
+          </option>
+    </select>
+
+    <label for="fecha">Fecha Inicial</label>
+    <input type="date" name="fechaini" id="fechaini" [(ngModel)]="fechaini" >
+    <label for="fecha">Fecha Final</label>
+    <input type="date" name="fechafin" id="fechafin" [(ngModel)]="fechafin" >
+    <button mat-raised-button 
+    color="primary"
+    (click)="buscar_sabnavtas()">Aceptar</button>
+
+</div>
+
+<div>
+    <div>
+        <button mat-raised-button color="primary" (click)="generar_saban_vtas()" >
+            <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
+            Nueva Relacion
+        </button>
+    
+        <table border="1">
+            <tr>
+                <th>Folio</th>
+                <th>Fecha</th>
+                <th>Fecha Inicial</th>
+                <th>Fecha Final</th>
+                <th>Acciones</th>
+            </tr>
+            <tr *ngFor="let sabana of sabanasvtas">
+                <td>{{sabana.folio}} </td>
+                <td>{{sabana.fecha}} </td>
+                <td> {{sabana.fechainicial}} </td>
+                <td>{{sabana.fechafinal}} </td>
+                <td>
+                    <button  mat-raised-button  color="primary"
+                    
+                    (click)="imprmir_relacion(sabana)">Imprimir
+                  </button>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+</div>

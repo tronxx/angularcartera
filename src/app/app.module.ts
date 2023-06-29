@@ -71,6 +71,8 @@ import { DatoscliComponent } from './common/datoscli/datoscli.component';
 import { DlgrepcliviComponent } from './common/dlgrepclivi/dlgrepclivi.component';
 import { DlganclisalComponent } from './common/dlganclisal/dlganclisal.component';
 import { GenerarelcobComponent } from './caprelcob/generarelcob/generarelcob.component';
+import { SabanvtasComponent } from './sabanvtas/sabanvtas.component';
+import { DlgnvasabanaComponent } from './sabanvtas/dlgnvasabana/dlgnvasabana.component';
 
 
 @NgModule({
@@ -121,6 +123,8 @@ import { GenerarelcobComponent } from './caprelcob/generarelcob/generarelcob.com
     DlgrepcliviComponent,
     DlganclisalComponent,
     GenerarelcobComponent,
+    SabanvtasComponent,
+    DlgnvasabanaComponent,
   ],
   imports: [
     BrowserModule,
