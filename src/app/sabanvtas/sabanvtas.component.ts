@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common';
 import { Ubivta } from '../models/ubivta';
 import { SabanaVtas } from '../models/';
 import { DlgnvasabanaComponent } from './dlgnvasabana/dlgnvasabana.component';
+import { DialogBodyComponent } from '../dialog-body/dialog-body.component';
 
 @Component({
   selector: 'app-sabanvtas',
@@ -81,7 +82,9 @@ export class SabanvtasComponent implements OnInit {
       this.servicioclientes.obten_sabanas_vtas(JSON.stringify(params_z)).subscribe(
         respu => {
           this.sabanasvtas = respu;
-          
+          if(this.sabanasvtas.length < 1) {
+            this.alerta("No hay ningún registro con esas características");
+          }
         }
       );
 
@@ -111,24 +114,69 @@ export class SabanvtasComponent implements OnInit {
       });
       dialogref.afterClosed().subscribe(res => {
         if(res) {
-          console.log(res);
+          //console.log(res);
+          this.si_generar_sabana_vtas(res);
         }
       });
   
 
     }
 
+    si_generar_sabana_vtas(res: any) {
+      //console.log("Parametros:", res);
+      let params_z = {
+        fechainicial: res.fechainicial,
+        fechafinal: res.fechafinal,
+        fecha: res.fecha,
+        ubicacion: res.ubicacion,
+        modo: 'generar_sabana_ventas'
+      }
+      this.servicioclientes.genera_sabanas_vtas(JSON.stringify(params_z)).subscribe( resul => {
+        let resultado = JSON.parse(JSON.stringify(resul));
+         if(resultado.status == "OK") {
+            this.sabanavtas = {
+              folio: resultado.folio,
+              fechainicial: res.fechainicial,
+              fechafinal: res.fechafinal,
+              idsabana: resultado.idsabana,
+              fecha: res.fecha,
+              ubica: res.ubicacion,
+              cia: 0
+            };
+            this.imprmir_relacion(this.sabanavtas);
+            this.buscar_sabnavtas();
+
+         } else {
+          this.alerta("Error:" + resultado.mensaje);
+         }
+
+      });
+
+    }
+
     imprmir_relacion (sabanvtas : SabanaVtas) {
+      let ubi = this.ubivta.filter(mi => mi.ubica === this.ubica)[0];
+      
       let params_z = {
         modo: "imprimir_sabana_ventas",
         idsabanavta: sabanvtas.idsabana,
         ubicacion: this.ubica,
-        titulo:"Sabana de Ventas Numero " + String( sabanvtas.folio) +
+        titulo:"Sabana de Ventas " +ubi.ubica + " " + ubi.nombre.trim() + " Numero " + String( sabanvtas.folio) +
         " Fecha:" + sabanvtas.fecha + " Con Ventas del " + sabanvtas.fechainicial +
         " Al " + sabanvtas.fechafinal
       }
       this.servicioclientes.imprimir_sabanas_vtas(JSON.stringify(params_z));
     }
     
+    alerta(mensaje: string) {
+      const dialogref = this.dialog.open(DialogBodyComponent, {
+      width:'350px',
+      data: mensaje
+    });
+    dialogref.afterClosed().subscribe(res => {
+      //console.log("Debug", res);
+    });
+
+}
 
 }

@@ -45,6 +45,16 @@
                 </div>
                 <div>
                     <mat-card>
+                        <div>
+                            <p> {{msg_z}}</p>
+                            <div id="errores"  [hidden]="!errorespago()">
+                                <p style="background:orange; font-weight:bold; padding:15px;">
+                                    <mat-icon class="red-icon">warning</mat-icon>
+                                    {{errores_z}} 
+                                    </p>
+                            </div>
+    
+                        </div>
                         
                         <label for="tipopago">
                             Pago
@@ -120,11 +130,6 @@
                             <input size = "10" type="text" name="cambio" id="cambio" [disabled]="true"
                             value="{{cambio | currency}} ">
                         </label>
-                        <br>
-                        <p> {{msg_z}}</p>
-                        <div id="errores"  [hidden]="!errorespago()">
-                            <label for="errores" class="lbl danger" > {{errores_z}} </label>
-                        </div>
                     </mat-card>
                 </div>
             </div>

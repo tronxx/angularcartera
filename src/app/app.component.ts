@@ -18,7 +18,7 @@ export class AppComponent {
     { link: "/acumpol", titulo: "Consulta de Polizas", active:"active"  },
     { link: "/detallescli", titulo: "Detalles Cliente", active:"active"  },
     { link: "/listaaltas", titulo: "Complementos Altas", active:"active"  },
-    { link: "/sabanvtas", titulo: "Sabana de Ventas", active:"active"  },
+    { link: "/sabanavtas", titulo: "Sabana de Ventas", active:"active"  },
   ];
   menuder_z= [
     { link: "/login", titulo: "Acceso", active:""  }

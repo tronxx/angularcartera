@@ -47,7 +47,7 @@
                                     <label color="warn" for="fecha">Fecha de cierre</label>
                                     <input type="date" name="fecha" id="fecha" (change)="validar_fecha_cierre()" [(ngModel)]="strfeccierre_z" >
                                     <div *ngIf="!fechacorrecta_z">
-                                        <p>
+                                        <p style="background:orange; font-weight:bold; padding:15px;">
                                         <mat-icon class="red-icon">warning</mat-icon>
                                         {{msgerror_z}} 
                                         </p>

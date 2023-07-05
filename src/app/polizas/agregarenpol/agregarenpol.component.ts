@@ -602,6 +602,9 @@ validarpago() {
   if(this.datospago.tipopago == "A" && this.datospago.importe >= this.impxcob_z) {
     this.errores_z.push("Si es A cuenta el Importe debe ser menor al valor de la letra");
   }
+  if(this.datospago.conceptocompl.includes('/')) {
+    this.errores_z.push("El complemento del concepto no puede contener el caracter / ");
+  }
   this.aceptarpago = !this.errorespago();
   return(!this.errorespago());
   if(this.tda_z == "") {
@@ -637,6 +640,7 @@ calcula_bonif_o_rec(miletra_z:number) {
 }
 
 define_bonif_abierta() {
+  this.validarpago();
   let miltafin_z = Number(this.datospago.ltafin);
   this.bonif_cerrada = true;
   if(this.tipopagosel_z == "A") {
@@ -688,7 +692,7 @@ siaceptarpago() {
     if(this.validarpago()) {
         this.confirma_aceptar_pago();
     } else {
-      this.alerta("Hay Errores en el pago");
+      this.alerta("Hay Errores en el pago:" + this.errores_z.toString());
     }
 
 }

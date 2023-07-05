@@ -108,6 +108,7 @@ export class CapvtasComponent implements OnInit {
   mitarjetatc = "";
   contarjetatc = false;
   escredito = false;
+  simostrarprodfin = true;
   qom = "C";
   ticte = "CC";
   ubica = "AC";
@@ -438,9 +439,10 @@ export class CapvtasComponent implements OnInit {
       );
 
       if(!this.factorlet) this.factorlet = 1 / this.nulet;
-      this.preciolet = Math.round(((this.tottotal - this.enganche) * this.factorlet));
+      this.preciolet = Math.round((((this.tottotal - this.descto) - this.enganche) * this.factorlet));
       this.totgral = this.enganche +  (this.preciolet * this.nulet);
       this.totprodfin = this.totgral - this.tottotal;
+      if(this.totprodfin < 0) this.simostrarprodfin = false; else  this.simostrarprodfin = true;
     } else {
       this.factordscto = this.buscar_tasa_descto_cont(milinea, this.ticte, this.mitarjetatc);
       if(this.factordscto == -1 ) {

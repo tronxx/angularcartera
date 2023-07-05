@@ -33,6 +33,9 @@ export class DetallesrelcobComponent implements OnInit {
   renglonesrelcob: Renrelco[] = [];
   codigopoliza?: CodigoPoliza;
   idrelcob_z = 0;
+  estadocerrado_z = 9;
+  estadoabierto_z = 0;
+
   creandoRelacion = false;
 
   usrreg_z = {
@@ -100,6 +103,17 @@ export class DetallesrelcobComponent implements OnInit {
         this.renglonesrelcob  = respu;
       }
     )
+
+  }
+
+  imprimir_relcob() {
+    let params_z = {
+      titulo: "Relación de Cobranza del " + this.relcob?.fecha +  " Cobratario: " + this.relcob?.promot +
+       " " + this.relcob?.nombrepromo,
+      idrelacion: this.idrelcob_z,
+      modo: "imprimir_relacion_relcob"
+    }
+    this.relcobservice.imprimir_relcob(JSON.stringify(params_z));
 
   }
 

@@ -4,7 +4,8 @@
             <mat-card>
                 <mat-card-title>Datos de Sabana de Ventas</mat-card-title>
                 <h1 *ngIf="ubica_z"> Ubicacion: {{ubica_z.ubica}} {{ubica_z.nombre}} </h1>
-                <p>
+                <p style="background:orange; font-weight:bold; padding:15px;">
+                    <mat-icon class="red-icon">warning</mat-icon>
                     Todas las ventas del rango de fechas se cerrarán
                 </p>
                 <mat-form-field>
@@ -13,11 +14,11 @@
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Fecha Inicial</mat-label>
-                    <input matInput placeholder="Fecha" type="date" name="fecha" id="fecha" [(ngModel)] ="fechainicial_z"> 
+                    <input matInput placeholder="Fecha" type="date" name="fecha" id="fechainicial" [(ngModel)] ="fechainicial_z"> 
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Fecha Final</mat-label>
-                    <input matInput placeholder="Fecha" type="date" name="fecha" id="fecha" [(ngModel)] ="fechafinal_z"> 
+                    <input matInput placeholder="Fecha" type="date" name="fecha" id="fechafinal" [(ngModel)] ="fechafinal_z"> 
                 </mat-form-field>
 
             </mat-card>

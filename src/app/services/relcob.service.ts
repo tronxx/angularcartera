@@ -134,6 +134,14 @@ export class RelcobService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  imprimir_relcob (params:string) {
+    let misparams = JSON.parse(params);
+    //console.log("Debug: Estoy en obtentxtcomplmentopol ", params);
+    var miurl = this.url + "relcob/servicios.php?modo=imprimir_relacion_relcob&idrelacion"+
+    "&idrelacion="+misparams.idrelacion+"&titulo="+misparams.titulo;
+    window.open(miurl, "_blank");
+  }
+
   obtener_poblciones_rutas_morosos ( params: string): Observable<Desrutasmor[]> {
     
     var miurl = this.url + "relcob/servicios.php"

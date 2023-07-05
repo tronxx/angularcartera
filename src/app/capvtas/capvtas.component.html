@@ -156,7 +156,7 @@
             <label class="ancho160" for="total">Total</label>
             <input type="text" id="total" name="total" value="{{tottotal | currency}} ">
             <br>
-            <div *ngIf ="!escredito && descto"> 
+            <div *ngIf ="descto"> 
                 <label class="ancho160" for="descto">Descuento</label>
                 <input type="text" readonly value = "{{descto | currency}}">
             </div>
@@ -179,8 +179,10 @@
                 <label for="preciolet">Importe por Letra</label>
                 <input type="text" id="preciolet" readonly name="preciolet" value="{{preciolet | currency}} ">
                 <br>
-                <label class="ancho160" for="prodfin">Prod.Financieros</label>
-                <input type="text" id="prodfin" readonly name="prodfin" value="{{totprodfin | currency}} ">
+                <div *ngIf="simostrarprodfin">
+                    <label class="ancho160" for="prodfin">Prod.Financieros</label>
+                    <input type="text" id="prodfin" readonly name="prodfin" value="{{totprodfin | currency}} ">
+                </div>
             </div>
             <label class="ancho160" for="totgral">Total Venta</label>
             <input type="text" id="totgral" readonly name="totgral" value="{{totgral + servicio | currency}} ">

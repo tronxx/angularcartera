@@ -42,7 +42,7 @@ export class DlgnvasabanaComponent implements OnInit {
     this.fechainicial_z = this.configuracion.fecha_a_str(hoy_z, "YYYY-mm-dd");
     this.fechafinal_z = this.fechainicial_z;
     this.fecha = this.fechainicial_z;
-    console.log("Params", misparam_z);
+    // console.log("Params", misparam_z);
     
   }
 
@@ -50,7 +50,8 @@ export class DlgnvasabanaComponent implements OnInit {
     let resultado = {
       fecha: this.fecha,
       fechainicial: this.fechainicial_z,
-      fechafinal: this.fechainicial_z,
+      fechafinal: this.fechafinal_z,
+      ubicacion: this.ubica_z?.ubica,
     }
     this.dialogRef.close(resultado);
   }

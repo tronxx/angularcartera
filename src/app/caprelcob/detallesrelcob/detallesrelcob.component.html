@@ -11,6 +11,12 @@
     <button  mat-raised-button  color="primary"
       (click)="generar_relacion()">Generar Relación
     </button>
+    <button mat-raised-button color="primary" 
+     (click)="imprimir_relcob()" >
+      <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+      Imprimir
+</button>
+
 </div>
 <div>
     <table border="1">
@@ -29,6 +35,7 @@
                 <th>Últimpo <br>Pago </th>
                 <th>Penúltimpo <br>Pago </th>
                 <th>Reporte</th>
+                <th>Estado</th>
                 <th>Acciones</th>
             </tr>
     
@@ -48,7 +55,10 @@
             <td>{{renrelco.penultimoabono}} </td>
             <td>{{renrelco.reporte}} </td>
             <td>
-                <button  mat-raised-button 
+                <label *ngIf="renrelco.estado == estadocerrado_z">Liquidadado</label>
+            </td>
+            <td>
+                <button  mat-raised-button *ngIf="renrelco.estado != estadocerrado_z"
                 color="warn"
                 (click)="eliminar_renglon_relcob(renrelco)">
                 <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>

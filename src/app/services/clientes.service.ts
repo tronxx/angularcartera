@@ -99,10 +99,10 @@ ClientesService {
     const headers = { 'content-type': 'text/plain'};
     const body=parametros;
     
-    return this.http.post<SabanaVtas[]>(miurl, parametros, {'headers':headers}).
+    return this.http.post<any>(miurl, parametros, {'headers':headers}).
     pipe(
       tap(_ => this.log('fetched Clientes')),
-      catchError(this.handleError<SabanaVtas[]>('Ocurrio un error en Post obten clientes'))
+      catchError(this.handleError<any>('Ocurrio un error en Post genera_sabanas_vtas'))
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }

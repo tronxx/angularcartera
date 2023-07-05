@@ -82,6 +82,10 @@ export class ListarelcobComponent implements OnInit {
 
   }
 
+  liquidar_relcob() {
+    
+  }
+
   detalles_relcob(relcob: Relcob) {
     let minvourl_z = [
       '/detallesrelcob/' + relcob.idcarrelcob
