@@ -18,6 +18,7 @@ import { PolenganComponent } from './polengan/polengan.component'
 import { DetallesrelcobComponent } from './caprelcob/detallesrelcob/detallesrelcob.component';
 import { ListarelcobComponent } from './caprelcob/listarelcob/listarelcob.component';
 import { SabanvtasComponent } from './sabanvtas/sabanvtas.component';
+import { LiqrelcobComponent } from './caprelcob/liqrelcob/liqrelcob.component'
 
 const routes: Routes = [
   { path: 'conscli', component: ConscliComponent, canActivate : [AuthGuard]  },
@@ -37,6 +38,7 @@ const routes: Routes = [
   { path: 'nvavta', component: CapvtasComponent, canActivate : [AuthGuard] },
   { path: 'listarelcob', component: ListarelcobComponent, canActivate : [AuthGuard] },
   { path: 'detallesrelcob/:idrelcob', component: DetallesrelcobComponent, canActivate : [AuthGuard] },
+  { path: 'liqrelcob/:idrelcob', component: LiqrelcobComponent, canActivate : [AuthGuard] },
   { path: 'sabanavtas', component: SabanvtasComponent, canActivate : [AuthGuard] },
   { path: 'main', component: MainComponent },
   {path: '', redirectTo: 'main', pathMatch: 'full'}

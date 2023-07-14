@@ -12,4 +12,5 @@ export class CajaComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  
 }

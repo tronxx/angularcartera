@@ -104,6 +104,21 @@ export class RelcobService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  agregar_plazo ( params: string): Observable<any> {
+    
+    var miurl = this.url + "relcob/servicios.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=JSON.stringify(params);
+    
+    return this.http.post<any>(miurl, params, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched agrega_renglones_relacion_cobranza')),
+      catchError(this.handleError<any>('Ocurrio un error en Post agrega_renglones_relacion_cobranza'))
+
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
   eliminar_renglon_relacion_cobranza ( params: string): Observable<any> {
     
     var miurl = this.url + "relcob/servicios.php"

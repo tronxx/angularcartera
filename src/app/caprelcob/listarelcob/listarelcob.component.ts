@@ -82,13 +82,19 @@ export class ListarelcobComponent implements OnInit {
 
   }
 
-  liquidar_relcob() {
-    
-  }
-
-  detalles_relcob(relcob: Relcob) {
+    detalles_relcob(relcob: Relcob) {
     let minvourl_z = [
       '/detallesrelcob/' + relcob.idcarrelcob
+    ];
+    //this.alerta("Voy a hacer route navigate: " + minvourl_z + " Respu:" + JSON.stringify(mirespu_z));
+    console.log("Voy a ir a mi url:", minvourl_z);
+    
+    this.router.navigate(minvourl_z)
+  }
+  
+  liquidar_relcob(relcob: Relcob) {
+    let minvourl_z = [
+      '/liqrelcob/' + relcob.idcarrelcob
     ];
     //this.alerta("Voy a hacer route navigate: " + minvourl_z + " Respu:" + JSON.stringify(mirespu_z));
     console.log("Voy a ir a mi url:", minvourl_z);

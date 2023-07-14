@@ -105,13 +105,17 @@
                         </label>
                         <label for="recobon">
                             <input size = "10" type="number" name="recobon" id="recobon" [disabled]="bonif_cerrada" (blur)="calculaNeto()" [(ngModel)] = "datospago.recobon" >
-                            <label *ngIf="esconrec_z" for=""> Recargo Cobrado: {{ recargoscobrados_z | currency }}</label>
+                            <label *ngIf="esconrec_z" > Recargo Cobrado: {{ recargoscobrados_z | currency }}</label>
                         </label>
                         <br>
                         <label for="importe">
                             Importe
                             <input size = "10" type="number" [disabled]="importecerrado" name="importe" id="importe" (blur)="calculaNeto()" [(ngModel)] = "datospago.importe" >
                         </label>
+                        <div *ngIf = "esmoroso" >
+                            <label for="comision">Comision {{datospago.cobratario}} </label>
+                            <input size = "10" type="number" [disabled]="importecerrado" name="comision" id="comision" [(ngModel)] = "datospago.comision" >
+                        </div>
                         
                         <label for="neto">
                             Neto:

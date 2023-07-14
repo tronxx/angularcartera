@@ -1,0 +1,172 @@
+<div *ngIf = "relcob">
+    <div *ngIf = "codigopoliza" >
+        <label for="tdapol">Póliza de 
+            <b> {{codigopoliza.clave }} {{codigopoliza.nombre}} </b>
+        </label>
+        <label for="fechapol">Fecha:</label>
+        <input type="date" [disabled]="no_master" [(ngModel)]="fechapol">
+        <button  mat-raised-button  color="primary"
+        (click)="aceptar_fecha_pol()">Aceptar
+      </button>
+      <div *ngIf="!polizaactiva_z">
+        <p style="background:orange; font-weight:bold; padding:15px;">
+            Debe Hacer click en Aceptar para acceder a la póliza y poder liquidar
+        </p>
+      </div>
+      <div *ngIf="polizacerrada_z">
+        <p style="background:orange; font-weight:bold; padding:15px;">
+            Póliza cerrada, no puede agregar datos a esta póliza
+        </p>
+      </div>
+      
+    </div>
+        <label>Relacion De: </label>
+    <label *ngIf = "codigopoliza" > 
+       <b> {{codigopoliza.clave }} {{codigopoliza.nombre}} </b>
+    </label>
+    <label > Fecha: <b>{{relcob.fecha}}</b>  </label>
+    <label > Cobratario: <b>{{relcob.promot}} {{relcob.nombrepromo}} </b> </label>
+    <button  mat-raised-button  color="primary"
+      (click)="agregar_cliente_a_relcob()">Agregar Cliente
+    </button>
+    <button  mat-raised-button  color="primary"
+      (click)="generar_relacion()">Generar Relación
+    </button>
+    <button mat-raised-button color="primary" 
+     (click)="imprimir_relcob()" >
+      <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+      Imprimir
+</button>
+
+</div>
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+    <mat-tab label="Relacion Cobranza">
+        <table border="1">
+            <thead  style = "background-color: silver;" >
+                <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Poblacion</th>
+                    <th>Entregó</th>
+                    <th>Vence Plazo</th>
+                    <th>Otorgó Plazo</th>
+                    <th>Letras</th>
+                    <th>Días</th>
+                    <th>Precio<br> x Letra </th>
+                    <th>Importe</th>
+                    <th>Últimpo <br>Pago </th>
+                    <th>Penúltimpo <br>Pago </th>
+                    <th>Reporte</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+        
+            </thead>
+            <tr *ngFor="let renrelco  of renglonesrelcob">
+                <td>{{renrelco.codigo}}</td>
+                <td>{{renrelco.nombre}}</td>
+                <td>{{renrelco.poblacion}}</td>
+                <td>{{renrelco.promot}}</td>
+                <td>{{renrelco.venceplazo}} </td>
+                <td>{{renrelco.promoplazo}} </td>
+                <td align="right">{{renrelco.letras}}</td>
+                <td align="right">{{renrelco.diasven}}</td>
+                <td align="right">{{renrelco.impxlet | currency}}</td>
+                <td align="right">{{renrelco.importe | currency}} </td>
+                <td>{{renrelco.ultimoabono}} </td>
+                <td>{{renrelco.penultimoabono}} </td>
+                <td>{{renrelco.reporte}} </td>
+                <td>
+                    <label *ngIf="renrelco.estado == estadocerrado_z">Liquidadado</label>
+                </td>
+                <td>
+                    <div *ngIf="polizaactiva_z">
+                        <button [cdkMenuTriggerFor]="menu" class="example-standalone-trigger">Acciones</button>
+                        <ng-template #menu>
+                            <div class="example-menu" cdkMenu>
+                                <button class="example-menu-item" (click)="cobrar(renrelco)" cdkMenuItem> 
+                                    <mat-icon aria-hidden="false" aria-label="Example new icon">attach_money</mat-icon>
+                                    Cobrar
+                                </button>
+                                <button class="example-menu-item" cdkMenuItem (click)="recojas(renrelco)">
+                                    <mat-icon aria-hidden="false" aria-label="Example new icon">thumb_down</mat-icon>
+                                    Recojas 
+                                </button>
+                                <button class="example-menu-item" cdkMenuItem (click)="devolver_recoja(renrelco)">
+                                    <mat-icon aria-hidden="false" aria-label="Example new icon">thumb_up</mat-icon>
+                                    Devolver
+                                </button>
+                                <button class="example-menu-item" cdkMenuItem (click)="plazo(renrelco)" >
+                                    <mat-icon aria-hidden="false" aria-label="Example new icon">calendar_today</mat-icon>
+                                    Plazo
+                                </button>
+                                <button class="example-menu-item" cdkMenuItem (click)="observaciones(renrelco)" >
+                                    <mat-icon aria-hidden="false" aria-label="Example new icon">assignment</mat-icon>
+                                    Observaciones
+                                </button>
+                            </div>
+                        </ng-template>
+                    </div>
+                
+                </td>
+            </tr>
+        </table>
+    
+    </mat-tab>
+    <mat-tab label="Póliza">
+        <table id="tbl_renpol" border="1" >
+            <thead style = "background-color: silver;">
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>Concepto</th>
+                    <th>Bonificacion</th>
+                    <th>Recargos</th>
+                    <th>Importe</th>
+                    <th>Neto</th>
+                    <th>Cobratario</th>
+                    <th>Comisión</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let renglon of renglonesPoliza">
+                    <td>{{renglon.numcli}}</td>
+                    <td>{{renglon.nombre}} </td>
+                    <td>{{renglon.concep}} </td>
+                    <td align="right" *ngIf="renglon.bonificacion > 0"> {{renglon.bonificacion | currency}} </td>
+                    <td *ngIf="renglon.bonificacion <= 0">  </td>
+                    <td align="right" *ngIf="renglon.recargo > 0"> {{renglon.recargo | currency}} </td>
+                    <td *ngIf="renglon.recargo <= 0">  </td>
+                    <td align="right" >{{renglon.importe | currency}} </td>
+                    <td align="right" >{{renglon.importe - renglon.bonificacion + renglon.recargo | currency}} </td>
+                    <td>{{renglon.cobr2}} </td>
+                    <td align="right"> {{renglon.comis | currency}} </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td>Totales </td>
+                    <td> </td>
+                    <td align="right" > {{totalbonifcs_z | currency}} </td>
+                    <td align="right" > {{totalrecargs_z | currency}} </td>
+                    <td align="right" > {{totalimports_z | currency}} </td>
+                    <td align="right" > {{totalimports_z - totalbonifcs_z + totalrecargs_z | currency}} </td>
+                    <td> </td>
+                </tr>
+
+            </tfoot>
+        </table>
+
+
+    </mat-tab>
+</mat-tab-group>
+
+<div>
+</div>
+<div class="overlay" *ngIf="creandoRelacion"  >
+    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+</div>
+
+
+

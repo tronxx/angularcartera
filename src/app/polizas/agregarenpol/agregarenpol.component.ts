@@ -6,6 +6,7 @@ import { Cliente } from '../../models/clientes';
 import { Aval } from '../../models/aval'
 import { Poliza } from '../../models/polizas';
 import { Renpol } from '../../models/renpol';
+import { Promotor } from '../../models/promotor';
 import { FormsModule } from '@angular/forms';
 import { formatNumber,  CommonModule,  CurrencyPipe, formatCurrency, formatDate, DatePipe } from '@angular/common';
 import { isEmpty } from 'rxjs/operators';
@@ -51,14 +52,12 @@ export class AgregarenpolComponent implements OnInit {
   ultimo_z = "";
   esstatus1 = true;
 
-  cobratario = {
-    "idpromot": 0,
-    "cvepromo":"",
-    "poc":"",
-    "nombre":""
-  }
+  cobratario ?: Promotor;
+  
+  esmoroso = false;
   tda_z = "";
   tdaspol_z? = {};
+  promotor? : Promotor;
   fechapol_z = "";
   fechasrv_z = "";
   nomtda_z = "";
@@ -150,9 +149,12 @@ export class AgregarenpolComponent implements OnInit {
     "neto":0,
     "dias":0,
     "idusuario":0,
-    "cobratario":"",
     "vence":"",
-    "claveempresa":""
+    "comision": 0,
+    "cobratario":"",
+    "moroso":"",
+    "claveempresa":"",
+    "idrenrelco":0,
   }
 
   vence_z  = new Date();
@@ -173,7 +175,26 @@ export class AgregarenpolComponent implements OnInit {
   ngOnInit(): void {
     let params_z = JSON.parse(this.message);
     this.codcli_z = params_z.codigo;
+    if(params_z.polizamorosos) {
+      this.esmoroso = true;
+      this.datospago.cobratario = params_z.cobratario;
+      this.datospago.idrenrelco = params_z.idrenrelco;
+      this.buscar_promotor(params_z.cobratario);
+    }
+
     this.buscarcliente();
+
+  }
+
+  buscar_promotor(cobratario: string) {
+    const params_z = {
+      modo:"buscar_cobratario",
+      codprom: cobratario
+
+    }
+    this.serviciopolizas.busca_cobratarios(JSON.stringify(params_z)).subscribe( res => {
+        this.cobratario = res[0];
+    });
 
   }
 
@@ -351,6 +372,20 @@ export class AgregarenpolComponent implements OnInit {
     
   });
 
+  this.calcula_comision();
+
+}
+
+calcula_comision () {
+  let comxlet_z = 0;
+  let comxrec_z = 0;
+  if(this.cobratario) {
+    comxlet_z = this.cobratario.comxlet;
+    comxrec_z = this.cobratario.comxrec;
+  }
+  if(this.esmoroso && this.tipomovsel_z == "R") {
+      this.datospago.comision = Math.round( this.datospago.importe * comxlet_z ) / 100;
+  }
 }
 
 generanumpagos(inicio:number, final:number) {
@@ -706,6 +741,12 @@ confirma_aceptar_pago() {
   dialogref.afterClosed().subscribe(res => {
     //console.log("Debug", res);
     if(res) {
+      if(this.esmoroso) { 
+        this.datospago.moroso = "SI";
+
+      } else {
+        this.datospago.moroso = "NO";
+      }
       this.datospago.tipopago = this.tipopagosel_z;
       this.datospago.tipomov = this.tipomovsel_z;
       this.datospago.vence = this.configuracion.fecha_a_str(this.vence_z, "YYYY-mm-dd");

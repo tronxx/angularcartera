@@ -27,7 +27,15 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule  } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatSpinner } from '@angular/material/progress-spinner';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatOptionModule } from '@angular/material/core';
+import { ReactiveFormsModule } from '@angular/forms';
+
+import {CdkMenu, CdkMenuItem, CdkMenuTrigger} from '@angular/cdk/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
 import { DlgedoctaComponent } from './common/dlgedocta/dlgedocta.component';
 import { DlgbuscliComponent } from './common/dlgbuscli/dlgbuscli.component';
@@ -61,8 +69,6 @@ import { SpinnerModule } from './common/spinner/spinner.module';
 import { SpinnerInterceptor } from './common/interceptors/spinner.interceptor';
 import { DlgpidprofertaComponent } from './common/dlgpidproferta/dlgpidproferta.component';
 import { PidepasswdComponent } from './common/pidepasswd/pidepasswd.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatOptionModule } from '@angular/material/core';
 import { ListarelcobComponent } from './caprelcob/listarelcob/listarelcob.component';
 import { DlgdatosrelcobComponent } from './caprelcob/dlgdatosrelcob/dlgdatosrelcob.component';
 import { DetallesrelcobComponent } from './caprelcob/detallesrelcob/detallesrelcob.component';
@@ -73,6 +79,8 @@ import { DlganclisalComponent } from './common/dlganclisal/dlganclisal.component
 import { GenerarelcobComponent } from './caprelcob/generarelcob/generarelcob.component';
 import { SabanvtasComponent } from './sabanvtas/sabanvtas.component';
 import { DlgnvasabanaComponent } from './sabanvtas/dlgnvasabana/dlgnvasabana.component';
+import { LiqrelcobComponent } from './caprelcob/liqrelcob/liqrelcob.component';
+import { DlgplazosComponent } from './common/dlgplazos/dlgplazos.component';
 
 
 @NgModule({
@@ -125,6 +133,8 @@ import { DlgnvasabanaComponent } from './sabanvtas/dlgnvasabana/dlgnvasabana.com
     GenerarelcobComponent,
     SabanvtasComponent,
     DlgnvasabanaComponent,
+    LiqrelcobComponent,
+    DlgplazosComponent,
   ],
   imports: [
     BrowserModule,
@@ -145,14 +155,21 @@ import { DlgnvasabanaComponent } from './sabanvtas/dlgnvasabana/dlgnvasabana.com
     MatInputModule,
     MatFormFieldModule,
     MatOptionModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ReactiveFormsModule,
+    CdkMenu,
+    CdkMenuTrigger,
     BrowserAnimationsModule,
+    MatMomentDateModule,    
     SpinnerModule,
   ],
   providers: [ 
     UsuariosService, 
      ConfiguracionService,
-     {provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi:true},
-     DatePipe],
+      MatNativeDateModule,
+      MatDatepickerModule,
+      DatePipe],
   bootstrap: [AppComponent],
   
 })

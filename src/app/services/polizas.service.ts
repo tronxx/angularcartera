@@ -120,26 +120,25 @@ export class PolizasService {
 
   }
 
+  buscar_recoja ( params: string): Observable<any> {
+    let miurl = this.url + "polizas/servicios.php"
+    const headers = { 'content-type': 'text/plain'};
+    //const body=JSON.stringify(misparams);
+    console.log("Debug: buscar_recoja params:", params);
+    
+    return this.http.post<any>(miurl, params, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched recoja')),
+      catchError(this.handleError<any>('Ocurrio un error en Post buscar_recoja'))
+
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+
+  }
+
 
   agregar_pago ( params: string): Observable<any> {
-    let misparamold_z = { 
-      "idcli":0,
-      "idpoliza":0,
-      "tipopago":"",
-      "ltaini":"",
-      "ltafin":"",
-      "concepto":"",
-      "conceptocompl":"",
-      "tipomov":"",
-      "recobon":0,
-      "importe":0,
-      "neto":0,
-      "dias":0,
-      "idusuario":0,
-      "cobratario":"",
-      "vence":""
-    }
-    misparamold_z = JSON.parse(params);
+    const misparamold_z = JSON.parse(params);
     
     let misparams = {
       "modo":"agregar_pago",
@@ -157,7 +156,10 @@ export class PolizasService {
       "dias":misparamold_z.dias,
       "idusuario":misparamold_z.idusuario,
       "cobratario":misparamold_z.cobratario,
-      "vence":misparamold_z.vence
+      "vence":misparamold_z.vence,
+      "comision":misparamold_z.comision,
+      "moroso":misparamold_z.moroso,
+      "idrenrelco":misparamold_z.idrenrelco,
     }
     
     

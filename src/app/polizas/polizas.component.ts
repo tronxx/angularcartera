@@ -147,8 +147,10 @@ export class PolizasComponent implements OnInit {
     "neto":0,
     "dias":0,
     "idusuario":0,
+    "comision":0,
     "cobratario":"",
     "vence":"",
+    "moroso":"",
     "claveempresa":""
   }
 

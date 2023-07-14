@@ -1,0 +1,21 @@
+
+.example-menu-item,
+.example-standalone-trigger {
+  background-color: blanchedalmond;
+  cursor: pointer;
+  border: none;
+
+  user-select: none;
+  min-width: 64px;
+  line-height: 36px;
+  padding: 0 16px;
+
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  flex: 1;
+}
+
+.example-standalone-item[aria-expanded='true'] {
+    background-color: rgb(208, 208, 208);
+  }
