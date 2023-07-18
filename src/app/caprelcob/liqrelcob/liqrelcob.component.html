@@ -26,12 +26,11 @@
     </label>
     <label > Fecha: <b>{{relcob.fecha}}</b>  </label>
     <label > Cobratario: <b>{{relcob.promot}} {{relcob.nombrepromo}} </b> </label>
-    <button  mat-raised-button  color="primary"
-      (click)="agregar_cliente_a_relcob()">Agregar Cliente
-    </button>
-    <button  mat-raised-button  color="primary"
-      (click)="generar_relacion()">Generar Relación
-    </button>
+    <div *ngIf="puedeagregar_z">
+        <input type="text" placeholder="Codigo" [(ngModel)]="codcli_z">
+        <button  mat-raised-button  color="primary" (click)="cobrar_cliente()">Cobrar Cliente
+      </button>
+    </div>
     <button mat-raised-button color="primary" 
      (click)="imprimir_relcob()" >
       <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>

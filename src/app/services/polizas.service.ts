@@ -199,6 +199,19 @@ export class PolizasService {
     window.open(miurl, "_blank");
   }
 
+  imprimir_liq_moroso_cobratario (params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Debug: Estoy en imprimir_liq_moroso_cobratario ", params);
+    let miurl = this.url + "polizas/servicios.php?"+
+    "modo="+misparams.modo;
+    miurl += "&idpoliza="+misparams.idpoliza;
+    miurl += "&primerpromotor=" + misparams.primerpromotor;
+    miurl += "&ultimopromotor=" + misparams.ultimopromotor;
+    miurl += "&titulo=" + misparams.titulo;
+    console.log("Debug: Estoy en imprimir_liq_moroso_cobratario url", miurl);
+    window.open(miurl, "_blank");
+  }
+
 
   obtencarta(params:string) {
     let empresa = "xx";
@@ -233,6 +246,25 @@ export class PolizasService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
 
   }
+
+  cerrar_comiscob  ( params: string): Observable<any> {
+    let misparams = JSON.parse(params);
+    
+    
+    var miurl = this.url + "polizas/servicios.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=JSON.stringify(misparams);
+    
+    return this.http.post<any>(miurl, misparams, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched renpol')),
+      catchError(this.handleError<any>('Ocurrio un error en Post cerrar_comiscob'))
+
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+
+  }
+
 
   obtener_datos_poliza ( params: string): Observable<any> {
     let misparams = JSON.parse(params);

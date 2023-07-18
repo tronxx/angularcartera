@@ -39,6 +39,8 @@ export class LiqrelcobComponent implements OnInit {
   renglonesPoliza : Renpol[] = [];
   cobratario?: Promotor;
 
+  puedeagregar_z = false;
+
   idrelcob_z = 0;
   estadocerrado_z = 9;
   estadoabierto_z = 0;
@@ -51,6 +53,7 @@ export class LiqrelcobComponent implements OnInit {
   totalrecargs_z = 0;
   totalimports_z = 0;
   cia_z?: Compania;
+  codcli_z = "";
   
   creandoRelacion = false;
 
@@ -134,9 +137,11 @@ export class LiqrelcobComponent implements OnInit {
           if (this.poliza.status == "C") {
             this.alerta("Poliza Cerrada");
             this.polizacerrada_z = true;
+            this.puedeagregar_z = false;
             //console.log("Debug: ", this.errorespoliza);
           } else {
             this.polizaactiva_z = true;
+            this.puedeagregar_z = true;
             this.tda_z = this.poliza.tda;
             this.fechapol = this.poliza.fecha;
             this.polizaactiva_z = true;
@@ -191,13 +196,40 @@ export class LiqrelcobComponent implements OnInit {
   }
 
   imprimir_relcob() {
+    const dialogref = this.dialog.open(DialogBodyComponent, {
+      width:'800px',
+      data: "Se cerrará la Cobnanza de este cobratario, seguro de Imprimir la Liquidación ?  "
+    });
+    dialogref.afterClosed().subscribe(res => {
+      if(res) {
+        const params_z = {
+          modo: "imprimir_liq_poliza_morosos_pdf",
+          idpoliza: this.idpoliza,
+          primerpromotor: this.relcob?.promot,
+          ultimopromotor: this.relcob?.promot,
+          titulo:"Liq. Morosos Poliza " + this.codigopoliza?.clave + " " +
+          this.codigopoliza?.nombre + " Del " + this.fechapol +
+          " Cobratario:" + this.relcob?.promot + 
+          " " + this.relcob?.nombrepromo
+
+        }
+        this.serviciospolizas.imprimir_liq_moroso_cobratario(JSON.stringify(params_z));
+        const params2_z = {
+          modo:"cerrar_status_comiscob",
+          tdapol: this.tda_z,
+          fechapol : this.fechapol,
+          promotor: this.relcob?.promot
+        }
+        this.serviciospolizas.cerrar_comiscob(JSON.stringify(params2_z)).subscribe( res => {
+          this.alerta("Se ha cerrado la relacion");
+        })
+        
+      }
+    });
 
   }
 
   
-  agregar_cliente_a_relcob() {
-  }
-
   recojas(renglon: Renrelco) {
     let params_z = {
       modo: "buscar_recoja",
@@ -404,43 +436,33 @@ export class LiqrelcobComponent implements OnInit {
   }
 
 
-  agregar_cliente( datos: any) {
-    
-    const params_z = {
-      modo: "agregar_renglon_relacion_relcob",
-      idrelacion: this.relcob?.idcarrelcob,
-      idpromot: this.relcob?.idpromot,
-      codigo: datos.codigo,
-      ltaini: datos.ltaini,
-      ltafin: datos.ltafin,
-      impxlet: datos.impxlet,
-      abonos: datos.importe,
-      idusuario: this.usrreg_z.idusuario,
-      cia: this.relcob?.cia,
-      numrel: 1,
-    }
-    this.relcobservice.agrega_renglones_relacion_cobranza(JSON.stringify(params_z)).subscribe(
-      result => {
-        this.busca_renglones_relcob();
-      }
-    );
-
-  }
-
-  eliminar_renglon_relcob(renrelco: Renrelco) {
-  }
 
   generar_relacion() {
 
   }
 
-  cobrar(renglon: Renrelco) {
+  cobrar_cliente() {
     let params_z = {
+      codigo: this.codcli_z,
+      cobratario: this.relcob?.promot,
+      polizamorosos: true,
+      idrenrelco: -1
+    }
+    this.proceder_cobrar(params_z);
+
+  }
+
+  cobrar (renglon: Renrelco) {
+      let params_z = {
         codigo: renglon.codigo,
         cobratario: this.relcob?.promot,
         polizamorosos: true,
         idrenrelco: renglon.idcarrenrelco
     }
+    this.proceder_cobrar(params_z);
+  }
+
+  proceder_cobrar(params_z: any) {
     const dialogref = this.dialog.open(AgregarenpolComponent, {
       width:'800px',
       data: JSON.stringify(params_z)
