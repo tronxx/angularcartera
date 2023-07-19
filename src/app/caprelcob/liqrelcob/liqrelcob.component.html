@@ -8,6 +8,12 @@
         <button  mat-raised-button  color="primary"
         (click)="aceptar_fecha_pol()">Aceptar
       </button>
+      <button *ngIf="polizaactiva_z" mat-raised-button color="primary" 
+      (click)="imprimir_poliza()" >
+       <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+       Imprimir Póliza
+      </button>
+ 
       <div *ngIf="!polizaactiva_z">
         <p style="background:orange; font-weight:bold; padding:15px;">
             Debe Hacer click en Aceptar para acceder a la póliza y poder liquidar
@@ -34,8 +40,8 @@
     <button mat-raised-button color="primary" 
      (click)="imprimir_relcob()" >
       <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
-      Imprimir
-</button>
+      Imprimir Liquidación
+    </button>
 
 </div>
 <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
@@ -79,7 +85,7 @@
                     <label *ngIf="renrelco.estado == estadocerrado_z">Liquidadado</label>
                 </td>
                 <td>
-                    <div *ngIf="polizaactiva_z">
+                    <div *ngIf="!polizacerrada_z">
                         <button [cdkMenuTriggerFor]="menu" class="example-standalone-trigger">Acciones</button>
                         <ng-template #menu>
                             <div class="example-menu" cdkMenu>

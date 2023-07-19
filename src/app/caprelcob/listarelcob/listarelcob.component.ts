@@ -144,6 +144,7 @@ export class ListarelcobComponent implements OnInit {
         this.servicosRelcob.agrega_nueva_relcob(JSON.stringify(params_z)).subscribe(
           result => {
             console.log("Se ha agregado la nueva relacion", result);
+            this.buscarrelcobs();
           }
         );
         console.log("Regresando de dlgdatosrelcob", res);

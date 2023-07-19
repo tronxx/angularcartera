@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ClientesService } from '../../services/clientes.service';
 import { ConfiguracionService } from '../../services/configuracion.service';
 import { PolizasService } from '../../services/polizas.service';
+import { formatNumber,  CommonModule,  CurrencyPipe, formatCurrency, formatDate, DatePipe } from '@angular/common';
 import { Cliente } from '../../models';
 import { Compania } from '../../models';
 import { Relcob } from '../../models';
@@ -14,7 +15,6 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import {CdkMenu, CdkMenuItem, CdkMenuTrigger} from '@angular/cdk/menu';
 import { DialogBodyComponent } from '../../dialog-body/dialog-body.component';
 import { DlgplazosComponent } from '../../common/dlgplazos/dlgplazos.component';
-import { DatePipe } from '@angular/common';
 import { Promotor } from '../../models';
 import { CodigoPoliza } from '../../models';
 import { Renrelco } from '../../models';
@@ -54,6 +54,8 @@ export class LiqrelcobComponent implements OnInit {
   totalimports_z = 0;
   cia_z?: Compania;
   codcli_z = "";
+  claveempresa = "";
+  uuidrec_z = "";
   
   creandoRelacion = false;
 
@@ -85,6 +87,7 @@ export class LiqrelcobComponent implements OnInit {
     this.usrreg_z =  JSON.parse(mistorage_z);
     if(this.usrreg_z.nivel == "S") this.no_master = false;
     this.cia_z =  this.serviciospolizas.obtendatoscia();
+    this.claveempresa = this.cia_z.Clave
     this.buscar_relacion();
   }
 
@@ -138,6 +141,7 @@ export class LiqrelcobComponent implements OnInit {
             this.alerta("Poliza Cerrada");
             this.polizacerrada_z = true;
             this.puedeagregar_z = false;
+            this.polizaactiva_z = true;
             //console.log("Debug: ", this.errorespoliza);
           } else {
             this.polizaactiva_z = true;
@@ -153,6 +157,106 @@ export class LiqrelcobComponent implements OnInit {
 
   }
 
+  imprimir_poliza() {
+    if(this.poliza?.status == "A") {
+      this.checa_si_cerrar_poliza();
+    } else {
+      this.manda_imprimir_poliza();
+    }
+  }
+
+  manda_imprimir_poliza() {
+    const params_z = {
+      modo: "imprimir_poliza_morosos",
+      fechapoliza:this.fechapol,
+      tdapol:this.poliza?.tda
+    }
+    this.serviciospolizas.imprimir_poliza_morosos(JSON.stringify(params_z));
+
+  }
+
+  checa_si_cerrar_poliza() {
+    const mensaje_z = "Póliza Abierta se va a Cerrar, seguro de continuar con la impresión?";
+    const dialogref = this.dialog.open(DialogBodyComponent, {
+      width:'350px',
+      data: mensaje_z
+    });
+    dialogref.afterClosed().subscribe(res => {
+      //console.log("Debug", res);
+      if(res) {
+        this.checa_fecha_timbre("");
+      }
+    });
+  
+  }
+  
+  checa_fecha_timbre(mensaje: string) {
+
+    let fechapol_z = this.poliza?.fecha + "";
+    let mifecpol_z = new Date(fechapol_z.replace(/-/g, '\/'));
+    let fechahoy_z = new Date();
+    let dias = fechahoy_z.getTime()  - mifecpol_z.getTime();
+    dias = Math.floor ( dias / (86400 * 1000));
+    let fectimbre_z = this.poliza?.fecha;
+    let timbrarpolizafechaespecial = "Poliza";
+    let fecminima_z = new Date ( new Date().getTime() - ( 86400*1000*3 - 7200*1000 ));
+    let params = {
+      "modo":"cerrar_poliza",
+      "fechapoliza":this.poliza?.fecha,
+      "tdapol":this.tda_z,
+      "timbrarpolizafechaespecial":timbrarpolizafechaespecial,
+      "fechatimbrepol":fectimbre_z
+    };
+    if(dias > 3) {
+      mensaje = "Fecha de Timbrado minimo es " + this.datePipe.transform(fecminima_z,"yyyy-MM-dd"); 
+      mensaje += " Desea Timbrar con esta fecha ?: ";
+      const dialogref = this.dialog.open(DialogBodyComponent, {
+        width:'350px',
+        data: mensaje
+      });
+      dialogref.afterClosed().subscribe(res => {
+        //console.log("Debug", res);
+        if(res) {
+          params.fechatimbrepol = "" + this.datePipe.transform(fecminima_z,"yyyy-MM-dd");
+          params.timbrarpolizafechaespecial = "Especial";
+          this.cierra_poliza(JSON.stringify(params));
+        }
+      });
+    } else {
+      this.cierra_poliza(JSON.stringify(params));
+    }
+  }
+  
+  cierra_poliza( params_z: string) {
+    let params = JSON.parse (params_z);
+    console.log("Debug: Estoy en cerrar poliza:", params_z);
+    this.serviciospolizas.cierra_poliza(JSON.stringify(params)).subscribe(
+      respu => {
+        let mirespu_z = respu;
+        let uuidpol_z = mirespu_z.uuidpol;
+        let uuidrec_z = mirespu_z.uuidrec;
+        let poltimbrado_z = mirespu_z.timbradopoliza;
+        let rectimbrado_z = mirespu_z.timbradorecargo;
+        let statuspol_z =  mirespu_z.status;
+        console.log("Ya se timbró la poliza", uuidpol_z);
+        if(uuidpol_z && uuidpol_z != "-1" ) {
+            let paramcompl_z = { "uuid": uuidpol_z };
+            if(this.claveempresa == "EC") {
+              this.serviciospolizas.obten_pdf_cfdi(JSON.stringify(paramcompl_z));
+            } else {
+              this.serviciospolizas.obtentxtcomplmentopol(JSON.stringify(paramcompl_z));  
+            }
+        }
+        if(this.uuidrec_z && this.uuidrec_z != "-1" ) {
+          let paramrec_z = { "uuid": this.uuidrec_z };
+          this.serviciospolizas.obten_pdf_cfdi(JSON.stringify(paramrec_z));  
+        }
+        this.manda_imprimir_poliza();
+    }
+    );
+  
+  }
+  
   buscar_renpol() {
     let params = {
       "modo":"obtener_detalles_poliza",
@@ -296,7 +400,9 @@ export class LiqrelcobComponent implements OnInit {
     }
     this.serviciospolizas.buscar_recoja(JSON.stringify(params_z)).subscribe(resul => {
       if(resul.hayrecoja != "S") {
-        this.alerta("Este cliente no tiene una recoja ");
+        let msg_z = "Este cliente " + renglon.codigo + " "
+        + renglon.nombre + " no tiene una recoja ";
+        this.alerta(msg_z);
         return;
       }
       this.si_devolver_recoja(renglon);
@@ -351,6 +457,7 @@ export class LiqrelcobComponent implements OnInit {
       codigo: renglon.codigo,
       cobratario: this.relcob?.promot,
       polizamorosos: true,
+      fecha: this.poliza?.fecha,
       idrenrelco: renglon.idcarrenrelco
   }
   const dialogref = this.dialog.open(DlgplazosComponent, {
@@ -396,6 +503,7 @@ export class LiqrelcobComponent implements OnInit {
       codigo: renglon.codigo,
       cobratario: this.relcob?.promot,
       polizamorosos: true,
+      fecha: this.fechapol,
       idrenrelco: renglon.idcarrenrelco
   }
   const dialogref = this.dialog.open(DlgplazosComponent, {

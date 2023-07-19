@@ -212,6 +212,17 @@ export class PolizasService {
     window.open(miurl, "_blank");
   }
 
+  imprimir_poliza_morosos (params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Debug: Estoy en imprimir_poliza_morosos ", params);
+    let miurl = this.url + "polizas/servicios.php?"+
+    "modo="+misparams.modo;
+    miurl += "&fechapoliza="+misparams.fechapoliza;
+    miurl += "&tdapol=" + misparams.tdapol;
+    console.log("Debug: Estoy en imprimirpoliza_morosos url", miurl);
+    window.open(miurl, "_blank");
+  }
+
 
   obtencarta(params:string) {
     let empresa = "xx";

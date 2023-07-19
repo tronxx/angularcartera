@@ -145,7 +145,7 @@
     <div id="movimientos" *ngIf="cliente">
         <mat-tab-group>
             <mat-tab label="Movimientos">
-                <button mat-raised-button color="primary" (click)="agregar_movto()" >
+                <button [disabled]="!clienteabierto" mat-raised-button color="primary" (click)="agregar_movto()" >
                     <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
                     Agregar Movimiento
                 </button>
@@ -182,14 +182,17 @@
                         <td  align="right"> {{mimov.importe | currency}} </td>
                         <td  align="right"> {{mimov.saldo | currency}} </td>
                         <td>
-                            <button mat-raised-button color="primary" (click)="modificar_movto(mimov)" >
-                                <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
-                                Modificar
-                            </button>
-                            <button mat-raised-button color="warn" (click)="eliminar_movto(mimov)" >
-                                <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
-                                Eliminar
-                            </button>
+                            <div *ngIf="!clienteabierto">
+                                <button mat-raised-button color="primary" (click)="modificar_movto(mimov)" >
+                                    <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
+                                    Modificar
+                                </button>
+                                <button mat-raised-button color="warn" (click)="eliminar_movto(mimov)" >
+                                    <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
+                                    Eliminar
+                                </button>
+    
+                            </div>
                         </td>
                     </tr>
                 </table>   
@@ -200,7 +203,7 @@
                     <span (click)="busca_cliagentes(nvocli.idcli)">Agentes</span>
                 </ng-template>
 
-                <button mat-raised-button color="primary" (click)="agregar_agente()" >
+                <button  [disabled]="!clienteabierto" mat-raised-button color="primary" (click)="agregar_agente()" >
                     <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
                     Agregar Agente
                 </button>
@@ -221,14 +224,17 @@
                             {{miagente.comis | currency}}
                         </td>
                         <td>
-                            <button mat-raised-button color="primary" (click)="modificar_agente(miagente)" >
-                                <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
-                                Modificar
-                            </button>
-                            <button mat-raised-button color="warn" (click)="eliminar_agente(miagente)" >
-                                <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
-                                Eliminar
-                            </button>
+                            <div *ngIf="!clienteabierto">
+                                <button mat-raised-button color="primary" (click)="modificar_agente(miagente)" >
+                                    <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
+                                    Modificar
+                                </button>
+                                <button mat-raised-button color="warn" (click)="eliminar_agente(miagente)" >
+                                    <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
+                                    Eliminar
+                                </button>
+    
+                            </div>
                         </td>
                     </tr>
                 </table>   
@@ -330,7 +336,7 @@
                     <span (click)="busca_solicitud(cliente.idcli)">Datos Solicitud</span>
                 </ng-template>
                 <a routerLink="{{linksolicitud}}"> 
-                    <button mat-raised-button color="primary" >
+                    <button [disabled]="!clienteabierto" mat-raised-button color="primary" >
                         <mat-icon aria-hidden="false" aria-label="Example new icon">assignment</mat-icon>
                         Modificar
                     </button>

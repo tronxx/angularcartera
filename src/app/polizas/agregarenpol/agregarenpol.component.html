@@ -27,15 +27,17 @@
                                 <td>
                                     Vencimientos:<br>
                                     <div class="boxscroll">
-        
-                                        <ul>
-                                            <li for="" *ngFor="let mivencimiento of listavencimientos_z" >
-                                                Letra: {{mivencimiento.letra}}/{{cliente.nulet}}
-                                                Vence: {{mivencimiento.vence}}
-                                            </li>
-            
-                                        </ul>
-        
+                                        <table border="1">
+                                            <tr>
+                                                <th>Letra</th>
+                                                <th>Vence</th>
+                                            </tr>
+                                            
+                                            <tr *ngFor="let mivencimiento of listavencimientos_z">
+                                                <td>{{mivencimiento.letra}}/{{cliente.nulet}}</td>
+                                                <td>{{mivencimiento.vence}}</td>
+                                            </tr>
+                                        </table>
                                     </div>
                                 </td>
                         </tr>

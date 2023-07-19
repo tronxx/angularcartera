@@ -40,6 +40,7 @@ export class DlgplazosComponent implements OnInit {
     
     let params_z = JSON.parse(this.message);
     if(params_z.esplazo) this.esplazo_z = true;
+    this.hoy_z = new Date(params_z.fecha.replace(/-/g, '\/'));
     this.dateAdapter.setLocale('en-GB'); //dd/MM/yyyy
     this.form  = this.fb.group({
       fechaplazo :[''],
