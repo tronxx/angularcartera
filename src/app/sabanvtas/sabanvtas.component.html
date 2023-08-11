@@ -12,9 +12,14 @@
     <input type="date" name="fechaini" id="fechaini" [(ngModel)]="fechaini" >
     <label for="fecha">Fecha Final</label>
     <input type="date" name="fechafin" id="fechafin" [(ngModel)]="fechafin" >
-    <button mat-raised-button 
-    color="primary"
-    (click)="buscar_sabnavtas()">Aceptar</button>
+    <button mat-raised-button  color="primary"
+        (click)="buscar_sabnavtas()">Aceptar
+    </button>
+    <button mat-raised-button color="primary"
+        (click)="acumulado_sabnavtas()">
+        <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+        Impresion Acumulado
+    </button>
 
 </div>
 

@@ -13,6 +13,7 @@ import { Ubivta } from '../models/ubivta';
 import { SabanaVtas } from '../models/';
 import { DlgnvasabanaComponent } from './dlgnvasabana/dlgnvasabana.component';
 import { DialogBodyComponent } from '../dialog-body/dialog-body.component';
+import { DlgacumsabanasComponent } from './dlgacumsabanas/dlgacumsabanas.component';
 
 @Component({
   selector: 'app-sabanvtas',
@@ -167,6 +168,41 @@ export class SabanvtasComponent implements OnInit {
       }
       this.servicioclientes.imprimir_sabanas_vtas(JSON.stringify(params_z));
     }
+
+    acumulado_sabnavtas() {
+      let params_z = {
+        titulo: "Datos de Acumulado de Sabanas de Ventas"
+      }
+      const dialogref = this.dialog.open(DlgacumsabanasComponent, {
+        width:'800px',
+        data: JSON.stringify(params_z)
+      });
+      dialogref.afterClosed().subscribe(res => {
+        if(res) {
+          console.log(res);
+          this.si_generar_informe_sabana_vtas(res);
+        }
+      });
+  
+
+    }
+
+    si_generar_informe_sabana_vtas(res: any) {
+      console.log("Parametros:", res);
+      let params_z = {
+        fechainicial: res.fechainicial,
+        fechafinal: res.fechafinal,
+        ubicaini: res.ubicaini,
+        ubicafin: res.ubicafin,
+        tipocteinicial: res.ticteini,
+        tipoctefinal: res.tictefin,
+        qominicial: res.qomini,
+        qomfinal: res.qomfin,
+        modo: 'generar_informe_sabana_ventas'
+      }
+      this.servicioclientes.imprimir_informe_sabanas_vtas(JSON.stringify(params_z));
+    }
+
     
     alerta(mensaje: string) {
       const dialogref = this.dialog.open(DialogBodyComponent, {

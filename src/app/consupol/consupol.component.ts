@@ -107,14 +107,13 @@ export class ConsupolComponent implements OnInit {
     let mifechapol_z =  String(this.route.snapshot.paramMap.get('fecha'));
     if (mifechapol_z) {
       this.fechapol_z = mifechapol_z;
-      console.log("0: fechapol_z:", this.fechapol_z);
-      
     }
     if(mitda_z) {
       this.tda_z = mitda_z;
     }
     
     if (this.usrreg_z.nivel == "S") this.datospolenabled_z=true;
+    this.datospolenabled_z=true;
     //this.tda_z  =  String(this.route.snapshot.paramMap.get('tda'));
     //this.fechapol_z =  String(this.route.snapshot.paramMap.get('fecha'));
     //this.alerta("fechapol:"+  this.fechapol_z + " tda:" + this.tda_z);
@@ -311,7 +310,8 @@ imprimir_timbre () {
     if(this.claveempresa == "EC") {
       this.serviciopolizas.obten_pdf_cfdi(JSON.stringify(paramcompl_z));
     } else {
-      this.serviciopolizas.obtentxtcomplmentopol(JSON.stringify(paramcompl_z));  
+      //this.serviciopolizas.obtentxtcomplmentopol(JSON.stringify(paramcompl_z));  
+      this.serviciopolizas.obtenpdfcomplmentopol(JSON.stringify(paramcompl_z));  
     }
   }
 

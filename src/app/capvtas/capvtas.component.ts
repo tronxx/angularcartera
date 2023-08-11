@@ -258,7 +258,7 @@ export class CapvtasComponent implements OnInit {
       "pedirprecio": "NO",
       "buscaroferta": "NO",
       "codigo": this.codigo_z,
-      "ticte": "this.ticte",
+      "ticte": this.ticte,
       "qom": this.qom,
     }
     const dlgdatosrenfac= this.dialog.open(DlgrenfacComponent, {
@@ -344,7 +344,9 @@ export class CapvtasComponent implements OnInit {
   busca_oferta(codigo: string) {
     let poferta = 0;
     let fechahoy = this.configuracion.fecha_a_str(new Date(), "YYYY-mm-dd");
-    this.ofertas.forEach( oferta => {
+    const newoferta = this.ofertas.filter((oferta) => oferta.codigo == codigo);
+    // console.log("cpvtas compnent Ofertas Filtradas:", newoferta);
+    newoferta.forEach( oferta => {
       if(codigo == oferta.codigo) {
         if(fechahoy >= oferta.inioferta && fechahoy <= oferta.finoferta) {
           poferta = oferta.preciooferta;

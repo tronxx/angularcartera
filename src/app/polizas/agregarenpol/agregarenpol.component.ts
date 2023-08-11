@@ -16,6 +16,7 @@ import { DialogBodyComponent } from '../../dialog-body/dialog-body.component';
 import { DlgbuscliComponent } from '../../common/dlgbuscli/dlgbuscli.component';
 import { MatIconModule } from '@angular/material/icon'; 
 import { Compania } from '../../models/config';
+import { MatSelectChange } from '@angular/material/select';
 
 // 30-Sep-2022
 // Se modifica que la bonificación adelantada
@@ -356,6 +357,14 @@ export class AgregarenpolComponent implements OnInit {
 
  }
 
+ tipopagoSelectionChange(event: MatSelectChange) {
+   this.calculaConcepto();
+ } 
+
+ tipomovSelectionChange(event: MatSelectChange) {
+  this.sel_tipopago();
+} 
+
  activartipomov( tipos:string[]) {
   this.tiposmov=[];
   tipos.forEach(tipo => {
@@ -425,6 +434,8 @@ activar_tipopago(tipospagodisp:string[]) {
   let imp_z = 0;
   let nuletxpag_z = 0;
   let factor_z = 0;
+  console.log("Estoy en calculaConcepto");
+  
 
   this.datospago.tipopago = this.tipopagosel_z;
   if(this.datospago.ltaini == "SE") {
@@ -481,7 +492,7 @@ activar_tipopago(tipospagodisp:string[]) {
       let ulletconrec_z = this.calcula_bonif_o_rec(Number(this.datospago.ltafin));
       if(prletconrec_z != ulletconrec_z) {
          this.alerta("No puede mezclar letras atrasadas y al día");
-         this.closeno();
+         //this.closeno();
       }
 
     }
@@ -525,6 +536,8 @@ activar_tipopago(tipospagodisp:string[]) {
   this.datospago.neto = this.datospago.importe + this.datospago.recobon * factor_z;
   this.calcula_bonif_extra();
   this.validarpago();
+  this.recibido = this.datospago.neto;
+  console.log("Saliendo de calculaConcepto", this.datospago.neto);
 
 }
 
@@ -582,6 +595,7 @@ calculaNeto () {
   
   this.recibido = this.datospago.neto;
   console.log("Voy a Calcular cambio: recibido:", this.recibido);
+  this.calcula_comision();
   this.calcula_cambio();
   //console.log("Debug nETO:", this.datospago.neto);
 }
@@ -640,6 +654,12 @@ validarpago() {
   if(this.datospago.conceptocompl.includes('/')) {
     this.errores_z.push("El complemento del concepto no puede contener el caracter / ");
   }
+  let prletconrec_z = this.calcula_bonif_o_rec(Number(this.datospago.ltaini));
+  let ulletconrec_z = this.calcula_bonif_o_rec(Number(this.datospago.ltafin));
+  if(prletconrec_z != ulletconrec_z) {
+    this.errores_z.push("No puede mezclar letras atrasadas y al día");
+  }
+
   this.aceptarpago = !this.errorespago();
   return(!this.errorespago());
   if(this.tda_z == "") {
@@ -709,6 +729,7 @@ sel_tipopago() {
     }
     
   }
+  //this.sigletra_z = Number (this.datospago.ltaini);
   this.calculaNeto();
   // this.alerta("this.tipomovsel_z:" + this.tipomovsel_z);
 }

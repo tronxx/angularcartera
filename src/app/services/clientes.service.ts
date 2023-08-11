@@ -118,6 +118,46 @@ ClientesService {
     window.open(miurl, "_blank");
   }
 
+  imprimir_informe_sabanas_vtas ( parametros: string)  {
+    
+    let misparams = JSON.parse(parametros);
+    // console.log("Debug: Estoy en obtenpdfcfdi ", params);
+    let titulo = "Informe de Sabanas de Ventas de " + misparams.ubicaini;
+    if(misparams.ubicaini != misparams.ubicafin) {
+      titulo += " A " + misparams.ubicaini;
+    }
+    titulo += " De Tipo Cte " + misparams.tipocteinicial;
+    if(misparams.tipocteinicial != misparams.tipoctefinal) {
+      titulo += " A " + misparams.tipoctefinal;
+    }
+    titulo += " Ventas de "
+    if(misparams.qominicial != misparams.qomfinal) {
+      titulo += " Contado y Credito "
+    } else {
+      if(misparams.qominicial == "Q") {
+        titulo += " Credito "
+      } else {
+        titulo += " Contado "
+
+      }
+
+    }
+    titulo += " Del " + misparams.fechainicial;
+    titulo += " Al "  + misparams.fechafinal;
+
+    let miurl = this.url + "altas/serviciosaltas.php?modo=generar_informe_sabana_ventas"+
+      `&fechainicial=${misparams.fechainicial}` +
+      `&fechafinal=${misparams.fechafinal}` +
+      `&ubicacioninicial=${misparams.ubicaini}` +
+      `&ubicacionfinal=${misparams.ubicafin}` +
+      `&tipocteinicial=${misparams.tipocteinicial}` +
+      `&tipoctefinal=${misparams.tipoctefinal}` +
+      `&qominicial=${misparams.qominicial}` +
+      `&qomfinal=${misparams.qomfinal}` +
+      "&titulo="+titulo;
+      window.open(miurl, "_blank");
+  }
+
 
   obtenrelvtas_enganches ( parametros: string): Observable<Cliente[]> {
     

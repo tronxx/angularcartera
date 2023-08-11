@@ -13,16 +13,23 @@
        <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
        Imprimir Póliza
       </button>
+      <label for="rotarfac" *ngIf="polizaactiva_z">
+        <mat-icon aria-hidden="false" aria-label="Example new icon">autorenew</mat-icon>
+        Rotar al Imprimir
+        <input type="checkbox" name="rotarfac" id="rotarfac" [(ngModel)]="sirotarpdf" >
+      </label>
  
       <div *ngIf="!polizaactiva_z">
         <p style="background:orange; font-weight:bold; padding:15px;">
             Debe Hacer click en Aceptar para acceder a la póliza y poder liquidar
         </p>
       </div>
-      <div *ngIf="polizacerrada_z">
-        <p style="background:orange; font-weight:bold; padding:15px;">
-            Póliza cerrada, no puede agregar datos a esta póliza
-        </p>
+      <div *ngIf="polizaactiva_z">
+        <div *ngIf="polizacerrada_z">
+            <p style="background:orange; font-weight:bold; padding:15px;">
+                Póliza cerrada, no puede agregar datos a esta póliza
+            </p>
+        </div>
       </div>
       
     </div>
@@ -32,11 +39,6 @@
     </label>
     <label > Fecha: <b>{{relcob.fecha}}</b>  </label>
     <label > Cobratario: <b>{{relcob.promot}} {{relcob.nombrepromo}} </b> </label>
-    <div *ngIf="puedeagregar_z">
-        <input type="text" placeholder="Codigo" [(ngModel)]="codcli_z">
-        <button  mat-raised-button  color="primary" (click)="cobrar_cliente()">Cobrar Cliente
-      </button>
-    </div>
     <button mat-raised-button color="primary" 
      (click)="imprimir_relcob()" >
       <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
@@ -85,19 +87,19 @@
                     <label *ngIf="renrelco.estado == estadocerrado_z">Liquidadado</label>
                 </td>
                 <td>
-                    <div *ngIf="!polizacerrada_z">
+                    <div >
                         <button [cdkMenuTriggerFor]="menu" class="example-standalone-trigger">Acciones</button>
                         <ng-template #menu>
                             <div class="example-menu" cdkMenu>
-                                <button class="example-menu-item" (click)="cobrar(renrelco)" cdkMenuItem> 
+                                <button *ngIf = "!polizacerrada_z" class="example-menu-item" (click)="cobrar(renrelco)" cdkMenuItem> 
                                     <mat-icon aria-hidden="false" aria-label="Example new icon">attach_money</mat-icon>
                                     Cobrar
                                 </button>
-                                <button class="example-menu-item" cdkMenuItem (click)="recojas(renrelco)">
+                                <button *ngIf = "!polizacerrada_z" class="example-menu-item" cdkMenuItem (click)="recojas(renrelco)">
                                     <mat-icon aria-hidden="false" aria-label="Example new icon">thumb_down</mat-icon>
                                     Recojas 
                                 </button>
-                                <button class="example-menu-item" cdkMenuItem (click)="devolver_recoja(renrelco)">
+                                <button *ngIf = "!polizacerrada_z" class="example-menu-item" cdkMenuItem (click)="devolver_recoja(renrelco)">
                                     <mat-icon aria-hidden="false" aria-label="Example new icon">thumb_up</mat-icon>
                                     Devolver
                                 </button>
@@ -119,6 +121,12 @@
     
     </mat-tab>
     <mat-tab label="Póliza">
+        <div *ngIf="puedeagregar_z">
+            <input type="text" placeholder="Codigo" [(ngModel)]="codcli_z">
+            <button  mat-raised-button  color="primary" (click)="cobrar_cliente()">Cobrar Cliente
+          </button>
+        </div>
+    
         <table id="tbl_renpol" border="1" >
             <thead style = "background-color: silver;">
                 <tr>

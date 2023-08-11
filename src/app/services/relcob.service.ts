@@ -152,8 +152,10 @@ export class RelcobService {
   imprimir_relcob (params:string) {
     let misparams = JSON.parse(params);
     //console.log("Debug: Estoy en obtentxtcomplmentopol ", params);
-    var miurl = this.url + "relcob/servicios.php?modo=imprimir_relacion_relcob&idrelacion"+
-    "&idrelacion="+misparams.idrelacion+"&titulo="+misparams.titulo;
+    var miurl = this.url + "relcob/servicios.php?modo=imprimir_relacion_relcob"+
+    "&idrelacion="+misparams.idrelacion +
+    "&rotarpdf="+misparams.rotarpdf +
+    "&titulo="+misparams.titulo;
     window.open(miurl, "_blank");
   }
 

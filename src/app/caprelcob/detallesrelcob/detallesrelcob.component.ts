@@ -35,7 +35,7 @@ export class DetallesrelcobComponent implements OnInit {
   idrelcob_z = 0;
   estadocerrado_z = 9;
   estadoabierto_z = 0;
-
+  sirotarpdf = false;
   creandoRelacion = false;
 
   usrreg_z = {
@@ -107,10 +107,14 @@ export class DetallesrelcobComponent implements OnInit {
   }
 
   imprimir_relcob() {
+    let rotacion = "NO";
+    if(this.sirotarpdf) rotacion = "SI";
+
     let params_z = {
       titulo: "Relación de Cobranza del " + this.relcob?.fecha +  " Cobratario: " + this.relcob?.promot +
        " " + this.relcob?.nombrepromo,
       idrelacion: this.idrelcob_z,
+      rotarpdf: rotacion,
       modo: "imprimir_relacion_relcob"
     }
     this.relcobservice.imprimir_relcob(JSON.stringify(params_z));

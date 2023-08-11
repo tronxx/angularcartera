@@ -1,0 +1,56 @@
+<div mat-dialog-content>
+    <form #formularioCliente="ngForm" >
+        <div name="relacion">
+            <mat-card>
+                <mat-card-title>Datos de Acumulado Sabana de Ventas</mat-card-title>
+                <div class="row">
+                        <mat-form-field>
+                            <mat-label>Ubicacion Inicial</mat-label>
+                            <input matInput placeholder="Ubicacion Inicial" type="text" name="ubicaini" id="ubicaini" [(ngModel)] ="ubicaini"> 
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Ubicacion Final</mat-label>
+                            <input matInput placeholder="Ubicacion Final" type="text" name="ubicafin" id="ubicafin" [(ngModel)] ="ubicafin"> 
+                        </mat-form-field>
+                </div>
+                <div class="row">
+                    <mat-form-field>
+                        <mat-label>Fecha Inicial</mat-label>
+                        <input matInput placeholder="Fecha Inicial" type="date" name="fechainicial" id="fechainicial" [(ngModel)] ="fechainicial_z"> 
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Fecha Final</mat-label>
+                        <input matInput placeholder="Fecha Final" type="date" name="fechafinal" id="fechafinal" [(ngModel)] ="fechafinal_z"> 
+                    </mat-form-field>
+    
+                </div>
+                <div class="row">
+                    <mat-form-field>
+                        <mat-label>Tipo Ventas </mat-label>
+                        <mat-select [(ngModel)]="tipoventa">
+                            <mat-option value = "C" >Contado</mat-option>
+                            <mat-option value = "Q" >Crédito</mat-option>
+                            <mat-option value = "T" >Crédito y Contado</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="row">
+                    <mat-form-field>
+                        <mat-label>Tipo Cte Inicial</mat-label>
+                        <input matInput placeholder="Tipo Cte Inicial" type="text" name="ticteini" id="ticteini" [(ngModel)] ="ticteini"> 
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Tipo Cte Final</mat-label>
+                        <input matInput placeholder="Tipo Cte Final" type="text" name="tictefin" id="tictefin" [(ngModel)] ="tictefin"> 
+                    </mat-form-field>
+                </div>
+
+            </mat-card>
+        </div>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>
+    <button mat-raised-button  color="primary"   (click)="closeyes()">Aceptar</button>
+</div>
+

@@ -23,13 +23,17 @@
                 <label class="ancho80" for="folio">Folio</label>
                 <input type="number" size="5" min="0" name="folio" id="folio"
                 [disabled]="!datoshabilitados"
+                (blur)="valida_aceptar ()" 
                 [(ngModel)] = "renfac.folio">
 
                 <div *ngIf="pedirserie">
                     <label for="serie">Serie
                         <div *ngIf="!esmoto">
-                            <select [(ngModel)]="renfac.serie" name="serie" id="serie">
-                                <option *ngFor="let miserie of series" value="{{miserie.serie}} ">
+                            <select [(ngModel)]="renfac.serie" 
+                                name="serie" id="serie" value = "{{renfac.serie}}">
+                                <option *ngFor="let miserie of series" 
+                                  value="{{miserie.serie}}"
+                                  [selected]="miserie.serie == renfac.serie" >
                                     {{miserie.serie}}
                                 </option>
                             </select>
@@ -40,7 +44,7 @@
                             </label>
                         </div>
         
-                        <input *ngIf="seriemanual" type="text" name="serie" id="serie" size="30"
+                        <input *ngIf="seriemanual" type="text" name="seriemanual" id="seriemanual" size="30"
                         [(ngModel)] = "renfac.serie"
                         [disabled]="!datoshabilitados"
                         (blur)="valida_serie()"
@@ -50,14 +54,14 @@
                 </div>
 
                 <div *ngIf="noescomplementodatos_z">
-                    <label class="ancho80" for="preciou">Precio.U
-                        <mat-icon *ngIf="nuevorenfac.oferta == conoferta"> local_offer</mat-icon>
-                        Oferta
-                    </label>
+                    <label class="ancho80" for="preciou">Precio.U </label>
                     <input type="number" size="10" name="preciou" id="preciou"
                     [disabled]="!pedirprecio"
                     [(ngModel)]="renfac.preciou">
-                    
+                    <label for="" *ngIf="articuloenoferta_z">
+                        <mat-icon > local_offer</mat-icon>
+                        Este Producto está en Oferta {{ this.elpreciooferta_z | currency}}
+                    </label>
                     <br>
                 </div>
                 <div *ngIf="esmoto">
@@ -108,6 +112,6 @@
 <div mat-dialog-actions>
     <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>
     <button mat-raised-button 
-    [disabled]="!datoshabilitados"
+    [disabled]="!datoshabilitados || !this.aceptarok "
     color="primary"   (click)="closeyes()">Aceptar</button>
 </div>

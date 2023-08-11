@@ -38,12 +38,16 @@ export class DlgrenfacComponent implements OnInit {
   articulo? : Articulo;
   serie?: Serie;
   series : Serie[] = [];
+  serierequerida = false;
+  foliorequerido = false;
+
   esmoto = false;
   serievalida = true;
   seriemotorvalida = true;
   renfacvalido = true;
   yabusqueinven = false;
   datoshabilitados = true;
+  aceptarok = true;
   ticte = "";
   qom = "";
   nlets = 0;
@@ -70,6 +74,8 @@ export class DlgrenfacComponent implements OnInit {
   buscaroferta = true;
   conoferta = "S";
   almacen = "";
+  articuloenoferta_z = false;
+  elpreciooferta_z = 0;
   noescomplementodatos_z = false;
   factortvtacrd? : Factorvtacred;
   factoresvtacrd: Factorvtacred[] = [];
@@ -141,6 +147,8 @@ export class DlgrenfacComponent implements OnInit {
       this.pedirserie = false;
       if(this.renfac.codigo == "AUXILIAR") {
         this.datoshabilitados = true;
+        this.serierequerida = false;
+        this.foliorequerido = false;
         this.articulo = <Articulo> {};
         this.articulo.codigo=this.renfac.codigo;
         this.articulo.tipo = "GLO";
@@ -169,10 +177,15 @@ export class DlgrenfacComponent implements OnInit {
       this.renfac.concepto = this.articulo.descri;
       this.renfac.preciou = this.articulo.preciou;
       this.linea_z = this.articulo.linea;
+      this.foliorequerido = true;
       this.nuevorenfac.oferta = "N";
-      if (this.ticte == "CC" ) {
+      console.log("Este cliente ticte:", this.ticte);
+      
+      if (this.ticte == "XC" ) {
+        this.elpreciooferta_z = this.busca_oferta (this.articulo.codigo);
+        if(this.elpreciooferta_z) this.articuloenoferta_z = true;
         if(this.buscaroferta) {
-          proferta = this.busca_oferta (this.articulo.codigo);
+          proferta = this.elpreciooferta_z;
         }
         if(proferta > 0) {
           this.nuevorenfac.oferta = "S";
@@ -195,11 +208,13 @@ export class DlgrenfacComponent implements OnInit {
         this.esmoto = true;
         this.seriemanual = true;
         this.pedirserie = true;
+        this.serierequerida = true;
         this.series = [];
       } else {
         this.esmoto = false;
         this.pedirserie = false;
         if(this.articulo.tipo == "ALF") {
+          this.serierequerida = true;
           this.pedirserie = true;
           this.selecciona_serie();
           this.seriemotorvalida = true;
@@ -208,6 +223,7 @@ export class DlgrenfacComponent implements OnInit {
         } 
       }
       if(this.esmoto) this.nuevorenfac.esmoto = "S";
+      this.valida_aceptar();
 
     }
 
@@ -282,6 +298,7 @@ export class DlgrenfacComponent implements OnInit {
       respu => {
         if(respu) {
           this.series = respu;
+          if(this.series.length) this.renfac.serie = this.series[0].serie;
         }
       }
     );
@@ -294,6 +311,7 @@ export class DlgrenfacComponent implements OnInit {
     } else {
       this.serievalida = true;
     }
+    this.valida_aceptar();
   }
 
   valida_serie_moto() {
@@ -353,11 +371,34 @@ export class DlgrenfacComponent implements OnInit {
       
   }
 
+  valida_aceptar ( ) {
+    if(!this.foliorequerido) {
+      this.aceptarok = true;
+      return;
+    }
+    if(!this.renfac.folio) {
+      this.aceptarok = false;
+      return;
+    }
+    if(!this.serierequerida) {
+      this.aceptarok = true;
+      return;
+    }
+    if(this.renfac.serie.length ) {
+         this.aceptarok = true;
+     } else {
+       this.aceptarok = false;
+     }
+  }
+
   busca_oferta(codigo: string):number {
     let poferta = 0;
+    let fechahoy = this.configuracion.fecha_a_str(new Date(), "YYYY-mm-dd");
+    const newoferta = this.ofertas.filter((oferta) => oferta.codigo == codigo);
+    console.log("Ofertas Filtradas:", newoferta);
+    
     if (this.qom == "C") {
-      let fechahoy = this.configuracion.fecha_a_str(new Date(), "YYYY-mm-dd");
-      this.ofertas.forEach( oferta => {
+      newoferta.forEach( oferta => {
         if(codigo == oferta.codigo) {
           if(fechahoy >= oferta.inioferta && fechahoy <= oferta.finoferta) {
             poferta = oferta.preciooferta;

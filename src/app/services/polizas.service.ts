@@ -345,6 +345,13 @@ export class PolizasService {
     window.open(miurl, "_blank");
   }
 
+  obtenpdfcomplmentopol(params:string) {
+    let misparams = JSON.parse(params);
+    console.log("Debug: Estoy en obtentxtcomplmentopol ", params);
+    var miurl = this.url + "polizas/servicios.php?modo=obtener_pdf_complemento_pol&uuid="+misparams.uuid;
+    window.open(miurl, "_blank");
+  }
+
   obten_impresion_poliza_caja(params:string) {
     let misparams = JSON.parse(params);
     console.log("Debug: Estoy en obtentxtcomplmentopol ", params);

@@ -46,7 +46,7 @@ export class LiqrelcobComponent implements OnInit {
   estadoabierto_z = 0;
   fechapol = this.datePipe.transform(new Date(),"yyyy-MM-dd");
   polizaactiva_z = false;
-  polizacerrada_z = false;
+  polizacerrada_z = true;
   tda_z = ""
   idpoliza = -1;
   totalbonifcs_z = 0;
@@ -56,6 +56,8 @@ export class LiqrelcobComponent implements OnInit {
   codcli_z = "";
   claveempresa = "";
   uuidrec_z = "";
+  rotarpdftxt = "Rotar pdf"
+  sirotarpdf = false;
   
   creandoRelacion = false;
 
@@ -137,15 +139,16 @@ export class LiqrelcobComponent implements OnInit {
       this.serviciospolizas.buscapoliza (JSON.stringify(params)).subscribe(
         respu => {
           this.poliza = respu;
+          console.log("Debug: ", this.poliza);
           if (this.poliza.status == "C") {
             this.alerta("Poliza Cerrada");
             this.polizacerrada_z = true;
             this.puedeagregar_z = false;
             this.polizaactiva_z = true;
-            //console.log("Debug: ", this.errorespoliza);
           } else {
             this.polizaactiva_z = true;
             this.puedeagregar_z = true;
+            this.polizacerrada_z = false;
             this.tda_z = this.poliza.tda;
             this.fechapol = this.poliza.fecha;
             this.polizaactiva_z = true;
@@ -305,6 +308,9 @@ export class LiqrelcobComponent implements OnInit {
       data: "Se cerrará la Cobnanza de este cobratario, seguro de Imprimir la Liquidación ?  "
     });
     dialogref.afterClosed().subscribe(res => {
+      let rotacion = "NO";
+      if(this.sirotarpdf) rotacion = "SI";
+
       if(res) {
         const params_z = {
           modo: "imprimir_liq_poliza_morosos_pdf",
@@ -322,7 +328,8 @@ export class LiqrelcobComponent implements OnInit {
           modo:"cerrar_status_comiscob",
           tdapol: this.tda_z,
           fechapol : this.fechapol,
-          promotor: this.relcob?.promot
+          promotor: this.relcob?.promot,
+          rotarpdf: rotacion
         }
         this.serviciospolizas.cerrar_comiscob(JSON.stringify(params2_z)).subscribe( res => {
           this.alerta("Se ha cerrado la relacion");
@@ -619,6 +626,16 @@ export class LiqrelcobComponent implements OnInit {
         this.cobratario = res[0];
     });
 
+  }
+
+  rotarpdf(){
+    if(this.sirotarpdf) {
+      this.rotarpdftxt = "PDF de cabeza";
+    } else {
+      this.rotarpdftxt = "PDF Normal";
+
+    }
+    this.sirotarpdf = !this.sirotarpdf
   }
   
 
