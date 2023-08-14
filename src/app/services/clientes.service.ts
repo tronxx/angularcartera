@@ -154,7 +154,9 @@ ClientesService {
       `&tipoctefinal=${misparams.tipoctefinal}` +
       `&qominicial=${misparams.qominicial}` +
       `&qomfinal=${misparams.qomfinal}` +
+      `&acumulado=${misparams.acumulado}` +
       "&titulo="+titulo;
+      console.log("url impresion informe:", miurl);
       window.open(miurl, "_blank");
   }
 

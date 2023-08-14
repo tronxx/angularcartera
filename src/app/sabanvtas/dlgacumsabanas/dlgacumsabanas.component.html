@@ -27,10 +27,17 @@
                 <div class="row">
                     <mat-form-field>
                         <mat-label>Tipo Ventas </mat-label>
-                        <mat-select [(ngModel)]="tipoventa">
+                        <mat-select [(ngModel)]="tipoventa" name="tipoventas" id="tipoventas" >
                             <mat-option value = "C" >Contado</mat-option>
                             <mat-option value = "Q" >Crédito</mat-option>
                             <mat-option value = "T" >Crédito y Contado</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Acumulado o Analítico </mat-label>
+                        <mat-select [(ngModel)]="acumulado" name="acumulado" id="acumulado" >
+                            <mat-option value = "ACUMULADO" >Acumulado</mat-option>
+                            <mat-option value = "ANALITICO" >Analítico</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>

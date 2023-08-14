@@ -27,6 +27,7 @@ export class DlgacumsabanasComponent implements OnInit {
   tictefin = "";
   ticteini = "";
   tipoventa = "C";
+  acumulado = "";
   
   ubica_z? : Ubivta;
 
@@ -67,6 +68,7 @@ export class DlgacumsabanasComponent implements OnInit {
       ubicafin : this.ubicafin,
       tictefin : this.tictefin,
       ticteini : this.ticteini,
+      acumulado: this.acumulado,
     }
     this.dialogRef.close(resultado);
   }

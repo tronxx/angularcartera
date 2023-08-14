@@ -138,7 +138,8 @@
                                 <mat-label >Importe </mat-label>
                                 <input matInput placeholder="Importe del Pago "
                                 type="number" [disabled]="importecerrado" 
-                                name="importe" id="importe" (blur)="calculaNeto()" [(ngModel)] = "datospago.importe" 
+                                name="importe" id="importe" (blur)="calculaNeto()" 
+                                [(ngModel)] = "datospago.importe" 
                                 > 
                             </mat-form-field>
                             <mat-form-field>

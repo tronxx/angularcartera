@@ -198,6 +198,7 @@ export class SabanvtasComponent implements OnInit {
         tipoctefinal: res.tictefin,
         qominicial: res.qomini,
         qomfinal: res.qomfin,
+        acumulado: res.acumulado,
         modo: 'generar_informe_sabana_ventas'
       }
       this.servicioclientes.imprimir_informe_sabanas_vtas(JSON.stringify(params_z));
