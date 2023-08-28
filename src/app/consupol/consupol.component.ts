@@ -342,7 +342,7 @@ cierra_poliza( params_z: string) {
           if(this.claveempresa == "EC") {
             this.serviciopolizas.obten_pdf_cfdi(JSON.stringify(paramcompl_z));
           } else {
-            this.serviciopolizas.obtentxtcomplmentopol(JSON.stringify(paramcompl_z));  
+            this.serviciopolizas.obtenpdfcomplmentopol(JSON.stringify(paramcompl_z));  
           }
       }
       if(this.uuidrec_z && this.uuidrec_z != "-1" ) {

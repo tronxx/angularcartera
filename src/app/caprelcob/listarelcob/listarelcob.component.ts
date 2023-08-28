@@ -154,4 +154,52 @@ export class ListarelcobComponent implements OnInit {
 
   }
 
+  imprimir_poliza() {
+    // Si una póliza existe y no está cerrada lo mando a consulta de esa
+    // póliza para que se pueda cerrar
+    // Si la póliza no existe o ya está cerrada, simplemente lo mando a imprimir
+    let params_z = {
+      "codtda": this.codpol_z,
+      "title": "Proporcione la Fecha de la Poliza"
+    }
+    const dialogref = this.dialog.open(DlgimpripolComponent, {
+      width:'350px',
+      data: JSON.stringify( params_z)
+    });
+    dialogref.afterClosed().subscribe(res => {
+      if(res) {
+        //console.log(res);
+        let params_z = {
+          "modo":"obtener_datos_poliza",
+          "fechapoliza":res.fecha,
+          "tdapol":this.codpol_z,
+          "modopdf": res.tipoimpresion
+        }
+        this.serviciopolizas.obtener_datos_poliza(JSON.stringify(params_z)).subscribe(
+          respu => {
+            let mirespu_z = respu;
+            params_z.modo = "imprimir_poliza_morosos";
+            //console.log("Debug: 216 mirespu", mirespu_z);
+            //this.alerta(JSON.stringify(respu));
+            if(mirespu_z.error == "Poliza Inexistente") {
+              this.serviciopolizas.imprimir_poliza_morosos(JSON.stringify(params_z));
+              return;
+            }
+            if(mirespu_z.status == "C") {
+              this.serviciopolizas.imprimir_poliza_morosos(JSON.stringify(params_z));
+              return;
+            }
+            let minvourl_z = [
+              '/consupol/' + this.codpol_z +'/'+ params_z.fechapoliza
+            ];
+            //this.alerta("Voy a hacer route navigate: " + minvourl_z + " Respu:" + JSON.stringify(mirespu_z));
+            this.router.navigate(minvourl_z)
+          }
+    
+        );
+      }
+    });
+  }
+  
+
 }
