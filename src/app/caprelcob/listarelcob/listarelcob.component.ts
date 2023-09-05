@@ -201,5 +201,66 @@ export class ListarelcobComponent implements OnInit {
     });
   }
   
+  imprimir_despacho() {
+    // Si una póliza existe y no está cerrada lo mando a consulta de esa
+    // póliza para que se pueda cerrar
+    // Si la póliza no existe o ya está cerrada, simplemente lo mando a imprimir
+    let params_z = {
+      "codtda": this.codpol_z,
+      "title": "Proporcione la Fecha de la Poliza"
+    }
+    const dialogref = this.dialog.open(DlgimpripolComponent, {
+      width:'350px',
+      data: JSON.stringify( params_z)
+    });
+    dialogref.afterClosed().subscribe(res => {
+      if(res) {
+        //console.log(res);
+        let params_z = {
+          "modo":"obtener_datos_poliza",
+          "fechapoliza":res.fecha,
+          "tdapol":this.codpol_z,
+          "modopdf": res.tipoimpresion
+        }
+        this.serviciopolizas.obten_impresion_despacho_caja(JSON.stringify(params_z));
+      }
+    });
+  }
+
+  imprimir_cfdi_recargo(modo: string) {
+    let params_z = {
+      "codtda": this.codpol_z,
+      "title": "Proporcione la Fecha de la Poliza"
+    }
+    const dialogref = this.dialog.open(DlgimpripolComponent, {
+      width:'350px',
+      data: JSON.stringify( params_z)
+    });
+    dialogref.afterClosed().subscribe(res => {
+      if(res) {
+        //console.log(res);
+        let params_z = {
+          "modo":"obtener_datos_poliza",
+          "fechapoliza":res.fecha,
+          "tdapol":this.codpol_z
+        }
+        let paramrec_z = { "uuid": "-1" };
+        this.serviciopolizas.obtener_datos_poliza(JSON.stringify(params_z)).subscribe( res => {
+            if(modo == "RECARGO") {
+              paramrec_z.uuid = res.uuidrec;
+              this.serviciopolizas.obten_pdf_cfdi(JSON.stringify(paramrec_z));  
+            } else {
+              paramrec_z.uuid = res.uuidpol;
+              this.serviciopolizas.obtenpdfcomplmentopol(JSON.stringify(paramrec_z)); 
+            }
+            
+        })
+        
+      }
+    });
+
+  
+  }
+  
 
 }

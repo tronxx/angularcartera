@@ -27,6 +27,18 @@
         <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
         Imprimir Póliza Morosos
     </button>
+    <button mat-raised-button color="primary" (click)="imprimir_despacho()" >
+        <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+        Imprimir Despacho
+    </button>
+    <button mat-raised-button color="primary" (click)="imprimir_cfdi_recargo('RECARGO')" >
+        <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+        Imprimir CFDI Recargo
+    </button>
+    <button mat-raised-button color="primary" (click)="imprimir_cfdi_recargo('CFDIPOLIZA')" >
+        <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+        Imprimir Complemanto CFDI
+    </button>
     <table border="1">
         <tr>
             <th>Fecha</th>

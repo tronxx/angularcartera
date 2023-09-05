@@ -4,7 +4,12 @@
             <div class="card">
                 <div class="card">
                     <div class="card-body">
-                        <table border="1">
+                        <div *ngIf = "esmoroso" >
+                            Codigo: <b>{{cliente.numcli}}</b>  
+                            Nombre: <b><label [class.labelgray]="esstatus1"  >{{cliente.nombre}}</label>  </b>
+
+                        </div>
+                        <table border="1" *ngIf = "!esmoroso" >
                             <tr>
                                 <td width="80%">
                                     Codigo: <b>{{cliente.numcli}}</b>  

@@ -182,7 +182,7 @@
                         <td  align="right"> {{mimov.importe | currency}} </td>
                         <td  align="right"> {{mimov.saldo | currency}} </td>
                         <td>
-                            <div *ngIf="!clienteabierto">
+                            <div *ngIf="clienteabierto">
                                 <button mat-raised-button color="primary" (click)="modificar_movto(mimov)" >
                                     <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
                                     Modificar
@@ -224,7 +224,7 @@
                             {{miagente.comis | currency}}
                         </td>
                         <td>
-                            <div *ngIf="!clienteabierto">
+                            <div *ngIf="clienteabierto">
                                 <button mat-raised-button color="primary" (click)="modificar_agente(miagente)" >
                                     <mat-icon aria-hidden="false" aria-label="Example new icon">edit</mat-icon>
                                     Modificar

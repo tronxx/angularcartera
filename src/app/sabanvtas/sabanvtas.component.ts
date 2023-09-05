@@ -216,4 +216,17 @@ export class SabanvtasComponent implements OnInit {
 
 }
 
+descargar_sabana_inven (sabanvtas : SabanaVtas) {
+  let ubi = this.ubivta.filter(mi => mi.ubica === this.ubica)[0];
+  
+  let params_z = {
+    modo: "generar_archivo_sabana_vtas_para_inven",
+    idsabanavta: sabanvtas.idsabana,
+    ubicacion: this.ubica,
+  }
+  //this.alerta("Estoy en descargar_saba_inven " + JSON.stringify(params_z));
+  this.servicioclientes.descargar_sabana_inven(JSON.stringify(params_z));
+}
+
+
 }

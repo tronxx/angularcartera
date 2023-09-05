@@ -118,6 +118,19 @@ ClientesService {
     window.open(miurl, "_blank");
   }
 
+  descargar_sabana_inven ( parametros: string)  {
+    
+    let misparams = JSON.parse(parametros);
+    // console.log("Debug: Estoy en obtenpdfcfdi ", params);
+    let miurl = this.url + "altas/serviciosaltas.php?modo=generar_archivo_sabana_vtas_para_inven"+
+      "&idsabanavta="+misparams.idsabanavta +
+       "&ubicacion="+misparams.ubicacion;
+    //console.log("url decargar sabana", miurl);
+    window.open(miurl, "_blank");
+  }
+
+
+
   imprimir_informe_sabanas_vtas ( parametros: string)  {
     
     let misparams = JSON.parse(parametros);
