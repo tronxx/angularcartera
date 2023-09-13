@@ -82,6 +82,7 @@ import { DlgnvasabanaComponent } from './sabanvtas/dlgnvasabana/dlgnvasabana.com
 import { LiqrelcobComponent } from './caprelcob/liqrelcob/liqrelcob.component';
 import { DlgplazosComponent } from './common/dlgplazos/dlgplazos.component';
 import { DlgacumsabanasComponent } from './sabanvtas/dlgacumsabanas/dlgacumsabanas.component';
+import { DlgcomiscobComponent } from './caprelcob/liqrelcob/dlgcomiscob/dlgcomiscob.component';
 
 
 @NgModule({
@@ -137,6 +138,7 @@ import { DlgacumsabanasComponent } from './sabanvtas/dlgacumsabanas/dlgacumsaban
     LiqrelcobComponent,
     DlgplazosComponent,
     DlgacumsabanasComponent,
+    DlgcomiscobComponent,
   ],
   imports: [
     BrowserModule,

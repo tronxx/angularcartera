@@ -79,7 +79,7 @@
                                 <mat-form-field>
                                     <mat-label>Letra Inicial</mat-label>
                                     <input matInput placeholder="Letra Inicial" 
-                                    [disabled]="true" 
+                                    [readonly]="true" 
                                     type="number" name="ltaini" id="ubicafin" [(ngModel)]= "datospago.ltaini"> 
                                 </mat-form-field>
                                 <mat-form-field *ngIf="!ultltaoculto_z" (blur)="calcula_bonif_extra()">
@@ -99,7 +99,7 @@
                             <mat-form-field>
                                 <mat-label>Concepto</mat-label>
                                 <input matInput placeholder="Concepto" 
-                                [disabled]="true"
+                                readonly="true"
                                 type="text" name="concepto" id="concepto" [(ngModel)]= "datospago.concepto"> 
                             </mat-form-field>
                             <mat-form-field>
@@ -135,21 +135,21 @@
                                 <input matInput placeholder="Importe de Recargo o Bonificacion" 
                                   type="number" name="recobon" id="recobon" 
                                   [(ngModel)]= "datospago.recobon" 
-                                  [disabled]="bonif_cerrada" (blur)="calculaNeto()"
+                                  [readonly]="bonif_cerrada" (blur)="calculaNeto()"
                                   
                                 > 
                             </mat-form-field>
                             <mat-form-field>
                                 <mat-label >Importe </mat-label>
                                 <input matInput placeholder="Importe del Pago "
-                                type="number" [disabled]="importecerrado" 
+                                type="number" [readonly] ="importecerrado" 
                                 name="importe" id="importe" (blur)="calculaNeto()" 
                                 [(ngModel)] = "datospago.importe" 
                                 > 
                             </mat-form-field>
                             <mat-form-field>
                                 <mat-label >Neto </mat-label>
-                                <input matInput type="text" [disabled]="true" 
+                                <input matInput type="text" [readonly]="true" 
                                 name="neto" id="neto" value =  "{{datospago.neto | currency}}"
                                 > 
                             </mat-form-field>
@@ -158,7 +158,7 @@
                             <mat-form-field>
                             <mat-label >Comision {{datospago.cobratario}}  </mat-label>
                             <input matInput placeholder="Importe del Pago "
-                            type="number" [disabled]="importecerrado" 
+                            type="number" [readonly]="importecerrado" 
                             name="comision" id="comision" [(ngModel)] = "datospago.comision" >
                             </mat-form-field>
                         </div>

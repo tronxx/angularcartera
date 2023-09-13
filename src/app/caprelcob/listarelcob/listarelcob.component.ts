@@ -44,6 +44,8 @@ export class ListarelcobComponent implements OnInit {
     "iniciales":"",
     "nivel":""
   }
+  claveempresa = "";
+  cia_z ?: Compania;
  
   constructor(
     private servicioclientes: ClientesService,
@@ -59,6 +61,8 @@ export class ListarelcobComponent implements OnInit {
   ngOnInit(): void {
     var mistorage_z  = localStorage.getItem('token') || "{}";
     this.usrreg_z =  JSON.parse(mistorage_z);
+    this.cia_z =  this.serviciopolizas.obtendatoscia();
+    this.claveempresa = this.cia_z.Clave;
     this.carga_catalogos();
   }
 
@@ -251,7 +255,13 @@ export class ListarelcobComponent implements OnInit {
               this.serviciopolizas.obten_pdf_cfdi(JSON.stringify(paramrec_z));  
             } else {
               paramrec_z.uuid = res.uuidpol;
-              this.serviciopolizas.obtenpdfcomplmentopol(JSON.stringify(paramrec_z)); 
+
+              if(this.claveempresa == "EC") {
+                this.serviciopolizas.obten_pdf_cfdi(JSON.stringify(paramrec_z));
+              } else {
+                this.serviciopolizas.obtenpdfcomplmentopol(JSON.stringify(paramrec_z)); 
+              }
+    
             }
             
         })

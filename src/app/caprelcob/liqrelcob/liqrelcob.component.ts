@@ -23,7 +23,7 @@ import { DlgdatosrelcobComponent } from './../dlgdatosrelcob/dlgdatosrelcob.comp
 import { AgregarenpolComponent } from '../../polizas/agregarenpol/agregarenpol.component';
 import { Poliza } from '../../models/polizas';
 import { Renpol } from '../../models/renpol';
-
+import { DlgcomiscobComponent } from './dlgcomiscob/dlgcomiscob.component';
 @Component({
   selector: 'app-liqrelcob',
   templateUrl: './liqrelcob.component.html',
@@ -628,6 +628,22 @@ export class LiqrelcobComponent implements OnInit {
 
   }
 
+  buscar_datos_comiscob(fecha: string) {
+    const params_z = {
+      modo:"buscar_cobratarioobtener_datos_comiscob",
+      fechaini: this.fechapol,
+      fechafin: this.fechapol,
+      promoini: this.cobratario?.cvepromo,
+      promofin: this.cobratario?.cvepromo
+
+
+    }
+    this.serviciospolizas.busca_cobratarios(JSON.stringify(params_z)).subscribe( res => {
+        this.cobratario = res[0];
+    });
+
+  }
+
   rotarpdf(){
     if(this.sirotarpdf) {
       this.rotarpdftxt = "PDF de cabeza";
@@ -636,6 +652,26 @@ export class LiqrelcobComponent implements OnInit {
 
     }
     this.sirotarpdf = !this.sirotarpdf
+  }
+
+  mostrar_comiscob() {
+    let params = {
+      modo: "obtener_datos_comiscob",
+      fechainicial: this.fechapol,
+      fechafinal:this.fechapol,
+      codigoinicial: this.codigopoliza?.clave,
+      codigofinal: this.codigopoliza?.clave
+    }
+    this.serviciospolizas.obten_comiscob(JSON.stringify(params)).subscribe( res => {
+      const dialogref = this.dialog.open(DlgcomiscobComponent, {
+        width:'350px',
+        data: JSON.stringify(res)
+      });
+      dialogref.afterClosed().subscribe(res => {
+        //console.log("Debug", res);
+      });
+  
+    })
   }
   
 

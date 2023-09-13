@@ -1,0 +1,37 @@
+<div mat-dialog-content>
+    <table border="1">
+        <div *ngFor="let renglon of comiscob">
+            <tr>
+                <td colspan="2"><h1>Cobratario {{renglon.cvepromo}} </h1></td>
+            </tr>
+            <tr>
+                <td>Importe</td>
+                <td align="right"> {{renglon.importe | currency}} </td>
+            </tr>
+            <tr>
+                <td>Bonificacion</td>
+                <td align="right"> {{renglon.bonificacion | currency}} </td>
+            </tr>
+            <tr>
+                <td>Recargo</td>
+                <td align="right"> {{renglon.recargo | currency}} </td>
+            </tr>
+            <tr>
+                <td>Comisión</td>
+                <td align="right"> {{renglon.comision | currency}} </td>
+            </tr>
+            <tr>
+                <td>Neto</td>
+                <td align="right"> {{renglon.neto | currency}} </td>
+            </tr>
+
+        </div>
+    </table>
+</div>
+<div mat-dialog-actions>
+    <div  style="display: flex; justify-content: flex-end;">
+        <button mat-raised-button  color="primary" [mat-dialog-close]="true">Aceptar</button>
+        <span></span>
+        <button mat-raised-button style="margin-right: 5px;"  color="warn" (click)="closeno()">Cancelar</button>
+        </div>
+</div>

@@ -436,8 +436,8 @@ export class CapvtasComponent implements OnInit {
       this.descto = Math.floor(this.tottotal * this.factordscto / 100);
       this.totgral = this.tottotal - this.descto;
       messages_z.push("03 Es Credito Tottotal:" + 
-      this.tottotal.toString() + " totgral:" + this.totgral.toString() +
-      " Descto:"+ this.descto.toString()
+        this.tottotal.toString() + " totgral:" + this.totgral.toString() +
+        " Descto:"+ this.descto.toString() + " Factor Letra: " + this.factorlet.toString()
       );
 
       if(!this.factorlet) this.factorlet = 1 / this.nulet;

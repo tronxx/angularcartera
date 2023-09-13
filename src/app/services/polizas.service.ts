@@ -305,6 +305,18 @@ export class PolizasService {
 
   }
 
+  obten_comiscob (params: string ): Observable<any> {
+    let miurl = this.url + "polizas/servicios.php"
+    let misparams = JSON.parse(params);
+    const headers = { 'content-type': 'text/plain'};
+    return this.http.post<any>(miurl, misparams, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Comiscob')),
+      catchError(this.handleError<any>('Ocurrio un error en obtener_comiscob'))
+    );
+
+  }
+
 
   cierra_poliza ( params: string): Observable<any> {
     let misparams = JSON.parse(params);
