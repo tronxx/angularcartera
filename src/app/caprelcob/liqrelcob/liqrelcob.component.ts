@@ -592,7 +592,8 @@ export class LiqrelcobComponent implements OnInit {
   }
 
   si_aceptarpago(res: string) {
-    let datospago = JSON.parse(res);
+    let cobranza = JSON.parse(res);
+    let datospago = cobranza.datospago;
     datospago.idpoliza = this.idpoliza;
     datospago.idusuario = this.usrreg_z.idusuario;
     datospago.cobratario = this.relcob?.promot;

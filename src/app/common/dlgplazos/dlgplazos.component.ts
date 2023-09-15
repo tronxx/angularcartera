@@ -21,6 +21,7 @@ export class DlgplazosComponent implements OnInit {
   form : FormGroup = this.fb.group({
     fechaplazo :[''],
     venceplazo: [''],
+    observs:[''],
     
 
   })

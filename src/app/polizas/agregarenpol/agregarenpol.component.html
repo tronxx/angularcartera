@@ -161,6 +161,8 @@
                             type="number" [readonly]="importecerrado" 
                             name="comision" id="comision" [(ngModel)] = "datospago.comision" >
                             </mat-form-field>
+                            <button  mat-raised-button color="primary" (click)="plazo()">Plazo</button>
+
                         </div>
                         <div class="row" *ngIf = "!esmoroso">
                             <mat-form-field>

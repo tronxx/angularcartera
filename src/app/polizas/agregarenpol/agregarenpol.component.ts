@@ -17,6 +17,8 @@ import { DlgbuscliComponent } from '../../common/dlgbuscli/dlgbuscli.component';
 import { MatIconModule } from '@angular/material/icon'; 
 import { Compania } from '../../models/config';
 import { MatSelectChange } from '@angular/material/select';
+import { DlgplazosComponent } from '../../common/dlgplazos/dlgplazos.component';
+
 
 // 30-Sep-2022
 // Se modifica que la bonificación adelantada
@@ -52,7 +54,8 @@ export class AgregarenpolComponent implements OnInit {
   enespera = false;
   ultimo_z = "";
   esstatus1 = true;
-
+  conplazo = "NO";
+  datosplazo = {}
   cobratario ?: Promotor;
   
   esmoroso = false;
@@ -753,25 +756,57 @@ siaceptarpago() {
 
 }
 
+plazo() {
+  let params_z = {
+    esplazo: true,
+    codigo: this.codcli_z,
+    cobratario: this.datospago.cobratario,
+    polizamorosos: true,
+    idrenrelco: -1,
+    fecha: this.configuracion.fecha_a_str(this.fechaactual_z, "YYYY-mm-dd") 
+}
+const dialogref = this.dialog.open(DlgplazosComponent, {
+  width:'800px',
+  data: JSON.stringify(params_z)
+});
+dialogref.afterClosed().subscribe(res => {
+  if(res) {
+    this.datosplazo = res;
+    this.conplazo = "SI";
+    console.log("Datos Plazo:", this.datosplazo);
+  }
+
+});
+
+
+}
+
+
 confirma_aceptar_pago() {
   let estemov_z = this.codcli_z + ":" + this.datospago.concepto + " " + this.datospago.conceptocompl +  ":" + this.datospago.importe.toString();
   const dialogref = this.dialog.open(DialogBodyComponent, {
     width:'350px',
     data: 'Seguro de aceptar este Pago?'
   });
+  let result = {}
   dialogref.afterClosed().subscribe(res => {
     //console.log("Debug", res);
     if(res) {
-      if(this.esmoroso) { 
-        this.datospago.moroso = "SI";
-
-      } else {
-        this.datospago.moroso = "NO";
-      }
       this.datospago.tipopago = this.tipopagosel_z;
       this.datospago.tipomov = this.tipomovsel_z;
       this.datospago.vence = this.configuracion.fecha_a_str(this.vence_z, "YYYY-mm-dd");
-      this.dialogRef.close(JSON.stringify( this.datospago));    
+      if(this.esmoroso) { 
+        this.datospago.moroso = "SI";
+        result = {
+          datospago: this.datospago,
+          conplazo: this.conplazo,
+          datosplazo: this.datosplazo
+        }
+      } else {
+        result = this.datospago;
+        this.datospago.moroso = "NO";
+      }
+      this.dialogRef.close(JSON.stringify( result));    
     } else {
       this.closeno();
     }
