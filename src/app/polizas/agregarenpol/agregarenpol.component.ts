@@ -55,7 +55,12 @@ export class AgregarenpolComponent implements OnInit {
   ultimo_z = "";
   esstatus1 = true;
   conplazo = "NO";
-  datosplazo = {}
+  sitengoplazo = false;
+  datosplazo = {
+    fechaplazo: "",
+    venceplazo: "",
+    observs: ""
+  }
   cobratario ?: Promotor;
   
   esmoroso = false;
@@ -773,6 +778,7 @@ dialogref.afterClosed().subscribe(res => {
   if(res) {
     this.datosplazo = res;
     this.conplazo = "SI";
+    this.sitengoplazo = true;
     console.log("Datos Plazo:", this.datosplazo);
   }
 

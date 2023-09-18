@@ -162,6 +162,10 @@
                             name="comision" id="comision" [(ngModel)] = "datospago.comision" >
                             </mat-form-field>
                             <button  mat-raised-button color="primary" (click)="plazo()">Plazo</button>
+                            <div *ngIf="sitengoplazo">
+                                Fecha Plazo: {{datosplazo.fechaplazo}} Vence {{datosplazo.venceplazo }}
+                                Observaciones: {{datosplazo.observs}}
+                            </div>
 
                         </div>
                         <div class="row" *ngIf = "!esmoroso">

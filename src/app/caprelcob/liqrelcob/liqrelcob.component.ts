@@ -501,6 +501,24 @@ export class LiqrelcobComponent implements OnInit {
 
   });
 
+  }
+
+  agregar_plazo(datosplazo: any) {
+     let params_z = {
+        modo:'agregar_plazo',
+        fechaplazo: datosplazo.fechaplazo,
+        venceplazo: datosplazo.venceplazo,
+        codpol:this.poliza?.tda,
+        idusuario:this.usrreg_z.idusuario,
+        idpromot:this.relcob?.idpromot,
+        codigo:datosplazo.codigo,
+        observaciones: datosplazo.observs,
+        idcarrenrelco: datosplazo.idcarrenrelco
+      }
+    let result_z = {}
+      this.relcobservice.agrega_renglones_relacion_cobranza(JSON.stringify(params_z)).subscribe( res => {
+        result_z = res;
+      });
 
   }
 
@@ -598,7 +616,13 @@ export class LiqrelcobComponent implements OnInit {
     datospago.idusuario = this.usrreg_z.idusuario;
     datospago.cobratario = this.relcob?.promot;
     datospago.claveempresa = this.cia_z?.Empresa;
-    //console.log("Debug DatosPago: ", this.datospago);
+    let datosplazo = cobranza.datosplazo;
+    datosplazo.idcarrenrelco =datospago.idrenrelco;
+    datosplazo.codigo = datospago.numcli;
+    if(this.claveempresa == "EC") {
+      if(datospago.recobon == 0 ) datospago.tipomov = "AB";
+    }
+    console.log("Debug Cobranza: ", cobranza);
     this.serviciospolizas.agregar_pago(JSON.stringify(datospago)).subscribe(
     //this.serviciopolizas.agregar_pago(JSON.stringify(dummy)).subscribe(
       respu => {
@@ -609,6 +633,9 @@ export class LiqrelcobComponent implements OnInit {
           this.buscar_renpol();
           if(respu.exito) {
             console.log("Se agrego el movimiento:", respu);
+            if(cobranza.conplazo == "SI") {
+              this.agregar_plazo(datosplazo);
+            }
             this.busca_renglones_relcob();
           }
         }

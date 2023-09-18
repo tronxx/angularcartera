@@ -192,63 +192,6 @@ export class CapvtasComponent implements OnInit {
   }
   
 
-  agregar_renfac() {
-    const dialogmov = this.dialog.open(DlgbusarticuloComponent, {
-      width:'700px',
-      data: this.codigo_z
-    });
-    let piva = 16;
-    let proferta = 0;
-    dialogmov.afterClosed().subscribe(res => {
-      if (res) {
-        console.log("Linea: ", this.linea_z, " Res.linea:", res.linea);
-        if((res.linea == "MOTO" && this.linea_z !="") || this.linea_z == "MOTO") {
-          this.alerta("La Linea Moto no se puede mezclar");
-        } else {
-          this.linea_z = res.linea;
-          this.articulo = res;
-          let idren = this.articuloscotizados.length;
-          this.articulocotizado = <Nvorenfac> {};
-          this.articulocotizado.codigo = res.codigo;
-          this.articulocotizado.id = idren;
-          this.articulocotizado.canti = 1;
-          this.articulocotizado.precionormal = res.preciou;
-          this.articulocotizado.piva = piva;
-          this.articulocotizado.preciou = res.preciou / (piva / 100 + 1);
-          this.articulocotizado.concepto = res.descri;
-          this.articulocotizado.linea = this.linea_z;
-          this.articulocotizado.proferta = 0;
-          this.articulocotizado.factorvtacred = 0;
-          this.articulocotizado.tasadescto = 0;
-          this.articulocotizado.proferta = this.busca_oferta(res.codigo);
-  
-          if(this.articulocotizado.proferta) {
-            this.articulocotizado.esoferta = true;
-          } else {
-            this.articulocotizado.esoferta = false;
-          }
-          if(this.ticte == "CC" && this.articulocotizado.esoferta ) {
-              this.oferta = true;
-              this.articulocotizado.importe = this.articulocotizado.proferta / (piva / 100 + 1);
-          } else {
-              this.oferta = false;
-              this.articulocotizado.importe = this.articulocotizado.precionormal / (piva / 100 + 1);
-          }
-          this.articulocotizado.iva = this.articulocotizado.importe * piva / 100;
-  
-          this.articuloscotizados.push(this.articulocotizado);
-          //console.log("Nuevorenfac:", this.articulocotizado);
-          //console.log("Articulos Cotizados:", this.articuloscotizados);
-          
-          this.calcular_totales();
-  
-        }
-      }
-    });
-  
-     
-  }
-
 
   xagregar_renfac() {
     console.log("El codigo es", this.codigo_z);
@@ -370,7 +313,7 @@ export class CapvtasComponent implements OnInit {
     let messages_z =[];
 
     let ii_z =0;
-    let milinea = "";
+    let milinea = this.linea_z;
     this.esvalido=false;
     this.servicio = Number(this.servicio);
     if(Number(this.servicio)  < 0) {
@@ -386,6 +329,8 @@ export class CapvtasComponent implements OnInit {
     }
     this.factordscto = 0;
     this.descto = 0;
+    let mifacdescto = 0;
+    let midescto = 0;
     this.oferta = false;
     if((this.ticte == "TC" && plazotc == 0)  || this.ticte == "CC" )  {
       this.oferta = true;
@@ -402,7 +347,7 @@ export class CapvtasComponent implements OnInit {
     }
     messages_z.push("01- Ya seleccione factorDescto:" + this.factordscto.toString());
     
-
+    milinea = "-1"
     this.articuloscotizados.forEach(miren => {
       ii_z = miren.id;
       if(miren.codigo != "AUXILIAR") {
@@ -417,8 +362,9 @@ export class CapvtasComponent implements OnInit {
         this.articuloscotizados[ii_z].iva = iva;
         this.totimporte += importe;
         this.totiva +=  iva;
-        milinea = miren.linea;
-  
+        if(milinea == "-1" )  milinea = miren.linea;
+        if(milinea != "MOTO")  milinea = miren.linea;
+ 
       }
     });
     this.tottotal = Math.round((this.totimporte + this.totiva) + .49);
@@ -454,6 +400,10 @@ export class CapvtasComponent implements OnInit {
         if(!hayoferta) {
           this.descto = Math.floor(this.tottotal * this.factordscto / 100);
           this.totgral = this.tottotal - this.descto;
+            messages_z.push("04 Contado Tottotal:" + 
+            this.tottotal.toString() + " totgral:" + this.totgral.toString() +
+            " Descto:"+ this.descto.toString() + " Factor Descto:" + this.factordscto.toString()
+            );
         }
       }
     }
