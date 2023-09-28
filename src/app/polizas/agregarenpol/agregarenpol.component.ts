@@ -232,7 +232,7 @@ export class AgregarenpolComponent implements OnInit {
 
   }
 
-    calcular_datos_cliente() {
+  calcular_datos_cliente() {
 
     if(this.cliente) {
       this.abonos_z  = this.cliente.abonos;
@@ -758,6 +758,21 @@ siaceptarpago() {
     } else {
       this.alerta("Hay Errores en el pago:" + this.errores_z.toString());
     }
+
+}
+
+click_plazo() {
+  if(this.sitengoplazo) {
+    this.conplazo = "SI";
+    this.datosplazo.fechaplazo = this.configuracion.fecha_a_str(this.fechaactual_z, "YYYY-mm-dd");
+    this.datosplazo.venceplazo = this.configuracion.fecha_a_str(
+      this.configuracion.SumaDiasaFecha(this.fechaactual_z, 20), "YYYY-mm-dd");
+      this.alerta("Fecha:" + this.datosplazo.fechaplazo + 
+      " Vence" + this.datosplazo.venceplazo
+      );
+  } else {
+    this.conplazo = "NO";
+  }
 
 }
 

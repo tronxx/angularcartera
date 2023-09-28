@@ -161,10 +161,33 @@
                             type="number" [readonly]="importecerrado" 
                             name="comision" id="comision" [(ngModel)] = "datospago.comision" >
                             </mat-form-field>
-                            <button  mat-raised-button color="primary" (click)="plazo()">Plazo</button>
+                            <mat-checkbox name="pedirplazo" [(ngModel)]="sitengoplazo" (click)="click_plazo()">
+                                Agregar Plazo
+                            </mat-checkbox>
                             <div *ngIf="sitengoplazo">
-                                Fecha Plazo: {{datosplazo.fechaplazo}} Vence {{datosplazo.venceplazo }}
-                                Observaciones: {{datosplazo.observs}}
+                                <div class="row">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Fecha</mat-label>
+                                        <input matInput [matDatepicker]="picker" name="fechaplazo" [(ngModel)]="datosplazo.fechaplazo">
+                                        <mat-hint>DD/MM/YYYY</mat-hint>
+                                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                    </mat-form-field>
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Vence</mat-label>
+                                        <input matInput [matDatepicker]="pickervence" name="venceplazo" [(ngModel)]="datosplazo.venceplazo">
+                                        <mat-hint>DD/MM/YYYY</mat-hint>
+                                        <mat-datepicker-toggle matIconSuffix [for]="pickervence"></mat-datepicker-toggle>
+                                        <mat-datepicker #pickervence></mat-datepicker>
+                                    </mat-form-field>
+    
+                                </div>
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>
+                                        Observaciones
+                                    </mat-label>
+                                    <input type="text" matInput name="observs" [(ngModel)]="datosplazo.observs">
+                                </mat-form-field>
                             </div>
 
                         </div>

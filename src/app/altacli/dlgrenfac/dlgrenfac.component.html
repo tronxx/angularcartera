@@ -4,106 +4,117 @@
             <mat-card>
                 <mat-card-title>Datos de Renglon de Factura</mat-card-title>
                 <div *ngIf="noescomplementodatos_z">
-                    <label class="ancho80" for="articulo">Articulo</label>
-                    <input type="text" size="13" name="articulo" id="articulo" 
-                    [(ngModel)] = "renfac.codigo"
+                    <mat-form-field >
+                        <mat-label>Artículo</mat-label>
+                        <input matInput placeholder="Código" type="text" name="articulo" id="articulo" 
+                        [(ngModel)] = "renfac.codigo"
+                        oninput="this.value = this.value.toUpperCase()" 
+                        >
+                    </mat-form-field>
+                    <button mat-raised-button color="primary"   (click)="busca_articulo()">
+                        Buscar Articulo
+                    </button>
+                </div>
+                <mat-form-field >
+                    <mat-label>Descripción</mat-label>
+                    <input matInput placeholder="Descripción" type="text" name="descri" id="descri" 
+                    [(ngModel)] = "renfac.concepto"
+                    [disabled]="!datoshabilitados"
                     oninput="this.value = this.value.toUpperCase()" 
                     >
-                    <button mat-raised-button 
-                    color="primary"   (click)="busca_articulo()">Buscar Articulo</button>
-                    <br>
-    
-                </div>
-                <label class="ancho80" for="descri">Descripción</label>
-                <input type="text" name="descri" id="descri" size="40"
-                [disabled]="!datoshabilitados"
-                [(ngModel)] = "renfac.concepto"
-                oninput="this.value = this.value.toUpperCase()">
-                <br>
-                <label class="ancho80" for="folio">Folio</label>
-                <input type="number" size="5" min="0" name="folio" id="folio"
-                [disabled]="!datoshabilitados"
-                (blur)="valida_aceptar ()" 
-                [(ngModel)] = "renfac.folio">
-
-                <div *ngIf="pedirserie">
-                    <label for="serie">Serie
-                        <div *ngIf="!esmoto">
-                            <select [(ngModel)]="renfac.serie" 
-                                name="serie" id="serie" value = "{{renfac.serie}}">
-                                <option *ngFor="let miserie of series" 
-                                  value="{{miserie.serie}}"
-                                  [selected]="miserie.serie == renfac.serie" >
+                </mat-form-field>
+                <mat-form-field >
+                        <mat-label>Folio</mat-label>
+                        <input matInput placeholder="Folio" type="number" name="folio" id="folio" 
+                        [(ngModel)] = "renfac.folio"
+                        [disabled]="!datoshabilitados"
+                        (blur)="valida_aceptar ()" 
+                        >
+                </mat-form-field>
+                <div *ngIf="pedirserie" (blur)="valida_aceptar ()" >
+                    <div *ngIf="!esmoto">
+                        <mat-form-field >
+                            <mat-label>
+                                Serie
+                            </mat-label>
+                            <mat-select [(value)]="renfac.serie" >
+                                <mat-option *ngFor="let miserie of series" value="{{miserie.serie}}">
                                     {{miserie.serie}}
-                                </option>
-                            </select>
-                            <br>
-                            <label for="seriemanual">
-                                La serie no está en la Lista 
-                                <input type="checkbox" name="seriemanual" id="seriemanual" [(ngModel)]="seriemanual" (click)="verstatus()" >
+                                </mat-option>
+                            </mat-select>               
+                        </mat-form-field>                
+                        <mat-checkbox name="seriemanual" [(ngModel)]="seriemanual" >
+                            La serie no está en la lista                
+                        </mat-checkbox>
+                    </div>
+                    <div *ngIf="seriemanual">
+                        <mat-form-field>
+                            <mat-label>Serie</mat-label>
+                            <input matInput type="text" name="serie" id="serie" 
+                            [(ngModel)] = "renfac.serie" [disabled]="!datoshabilitados"
+                            >
+                        </mat-form-field>
+    
+                    </div>
+                    
+                    <div *ngIf="esmoto">
+                        <mat-form-field>
+                            <mat-label>Serie del Motor</mat-label>
+                            <input matInput type="text" name="seriemotor" id="seriemotor" 
+                            [(ngModel)] = "nuevorenfac.seriemotor"
+                            oninput="this.value = this.value.toUpperCase()"
+                            (blur)="valida_serie_motor_moto()"
+                            >
+                        </mat-form-field>
+                        <mat-form-field>   
+                            <mat-label >Pedimento</mat-label>
+                            <input matInput type="text" name="pedimento" id="pedimento" size="30"
+                            [(ngModel)] = "nuevorenfac.pedimento"
+                            oninput="this.value = this.value.toUpperCase()"
+                            >
+                        </mat-form-field>
+                        <mat-form-field>   
+                            <mat-label >Aduana</mat-label>
+                            <input matInput type="text" name="aduana" id="aduana" 
+                            [(ngModel)] = "nuevorenfac.aduana"
+                            oninput="this.value = this.value.toUpperCase()"
+                            >
+                        </mat-form-field>
+                        <mat-form-field>   
+                            <mat-label for="marca" >Marca</mat-label>
+                            <input matInput type="text" name="marca" id="marca"  
+                            [(ngModel)] = "nuevorenfac.marca" 
+                            oninput="this.value = this.value.toUpperCase()" >
+                        </mat-form-field>
+                        <div *ngIf="!serievalida ">
+                            <label id="serieinvalida" *ngIf="!serievalida">
+                                <mat-icon aria-hidden="false" color="warn" aria-label="Example home icon">warning</mat-icon>
+                                La serie es Invalida
                             </label>
                         </div>
+                        <div *ngIf="!seriemotorvalida">
+                            <label id="seriemotorinvalida" >
+                                <mat-icon aria-hidden="false" color="warn"  aria-label="Example home icon">warning</mat-icon>
+                                La serie del Motor es Invalida
+                            </label>
         
-                        <input *ngIf="seriemanual" type="text" name="seriemanual" id="seriemanual" size="30"
-                        [(ngModel)] = "renfac.serie"
-                        [disabled]="!datoshabilitados"
-                        (blur)="valida_serie()"
-                        oninput="this.value = this.value.toUpperCase()"
-                        >
-                    </label>
+                        </div>
+
+                    </div>
                 </div>
 
                 <div *ngIf="noescomplementodatos_z">
-                    <label class="ancho80" for="preciou">Precio.U </label>
-                    <input type="number" size="10" name="preciou" id="preciou"
-                    [disabled]="!pedirprecio"
-                    [(ngModel)]="renfac.preciou">
-                    <label for="" *ngIf="articuloenoferta_z">
-                        <mat-icon > local_offer</mat-icon>
-                        Este Producto está en Oferta {{ this.elpreciooferta_z | currency}}
-                    </label>
-                    <br>
-                </div>
-                <div *ngIf="esmoto">
-                    <label for="seriemotor" class="ancho80">Serie Motor</label>
-                    <input type="text" name="seriemotor" id="seriemotor" size="30"
-                    [(ngModel)] = "nuevorenfac.seriemotor"
-                    oninput="this.value = this.value.toUpperCase()"
-                    (blur)="valida_serie_motor_moto()"
-                    >
-                    <br>
-                    <label for="pedimento" class="ancho80">Pedimento</label>
-                    <input type="text" name="pedimento" id="pedimento" size="30"
-                    [(ngModel)] = "nuevorenfac.pedimento"
-                    oninput="this.value = this.value.toUpperCase()"
-                    >
-                    <br>
-                    <label for="aduana" class="ancho80">Aduana</label>
-                    <input type="text" name="aduana" id="aduana" size="30"
-                    [(ngModel)] = "nuevorenfac.aduana"
-                    oninput="this.value = this.value.toUpperCase()"
-                    >
-                    <br>
-                    <label for="marca" class="ancho80">Marca</label>
-                    <input type="text" name="marca" id="marca" size="30"
-                    [(ngModel)] = "nuevorenfac.marca"
-                    oninput="this.value = this.value.toUpperCase()"
-                    >
-                    <div *ngIf="!serievalida">
-                        <br>
-                        <label id="serieinvalida" *ngIf="!serievalida">
-                            <mat-icon aria-hidden="false" aria-label="Example home icon">warning</mat-icon>
-                            La serie es Invalida
-                        </label>
-                    </div>
-                    <div *ngIf="!seriemotorvalida">
-                        <label id="seriemotorinvalida" >
-                            <mat-icon aria-hidden="false" aria-label="Example home icon">warning</mat-icon>
-                            La serie del Motor es Invalida
+                    <mat-form-field>   
+                        <label >Precio.U </label>
+                        <input matInput type="number" name="preciou" id="preciou"
+                        [disabled]="!pedirprecio"
+                        [(ngModel)]="renfac.preciou">
+                        <label for="" *ngIf="articuloenoferta_z">
+                            <mat-icon > local_offer</mat-icon>
+                            Este Producto está en Oferta {{ this.elpreciooferta_z | currency}}
                         </label>
     
-                    </div>
-
+                    </mat-form-field>
                 </div>
             </mat-card>
         </div> 

@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, Input } from '@angular/core';
 import { ClientesService } from '../../services/clientes.service'
 import { FormsModule, FormControl } from '@angular/forms';
 import { formatNumber,  CommonModule,  CurrencyPipe, formatCurrency, formatDate, DatePipe } from '@angular/common';
-import { isEmpty } from 'rxjs/operators';
+import { isEmpty, map, startWith } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button'; 
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
@@ -25,6 +25,8 @@ import { Factorvtacred } from '../../models';
 import { Tabladesctocont } from '../../models';
 import { Tarjetatc } from '../../models/tipostarjetastc';
 import { SpinnerComponent } from '../../common/spinner/spinner.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-dlgrenfac',
@@ -33,7 +35,10 @@ import { SpinnerComponent } from '../../common/spinner/spinner.component';
 })
 export class DlgrenfacComponent implements OnInit {
 
-  myControl = new FormControl();
+  filteredOptions: Observable<Serie[]> | undefined;
+  myControl = new FormControl('');
+  options: Serie[] = [];
+
   renfac: Renfacfo = <Renfacfo> {}
   articulo? : Articulo;
   serie?: Serie;
@@ -84,7 +89,7 @@ export class DlgrenfacComponent implements OnInit {
   tarjetastc : Tarjetatc[] = [];
   tarjetatc?: Tarjetatc;
   ofertas: Ofertas[] = [];
-
+  
   constructor(
     public dialog: MatDialog, public dialogRef: MatDialogRef<DlgrenfacComponent>,
     @Inject(MAT_DIALOG_DATA) public message : string,
@@ -97,6 +102,7 @@ export class DlgrenfacComponent implements OnInit {
     this.renfac.canti = 1;
     let datosparam = JSON.parse(this.message);
     this.noescomplementodatos_z = true;
+    
     console.log("No es complemento datos:", datosparam.noescomplementodatos);
     
     if(datosparam.escomplementodatos == "SI" ) {
@@ -122,8 +128,8 @@ export class DlgrenfacComponent implements OnInit {
     this.nlets = datosparam.nulets;
     this.tarjeta = datosparam.tarjeta;
     this.ubica_z = datosparam.ubica_z;
-
     if(datosparam.codigo) this.busca_articulo();
+
   }
 
   closeyes() {
@@ -134,6 +140,17 @@ export class DlgrenfacComponent implements OnInit {
   closeno() {
     this.dialogRef.close(false);
   }
+
+  private _normalizeValue(value: string): string {
+    return value.toLowerCase().replace(/\s/g, '');
+  }
+
+  private _filter(value: string): Serie[] {
+    const filterValue = this._normalizeValue(value);
+    //return this.streets.filter(street => this._normalizeValue(street).includes(filterValue));
+    return this.series.filter(miserie => this._normalizeValue(miserie.serie).includes(filterValue));
+  }
+
 
   busca_articulo() {
       var params_z = {
@@ -298,6 +315,7 @@ export class DlgrenfacComponent implements OnInit {
       respu => {
         if(respu) {
           this.series = respu;
+          this.options = this.series;
           if(this.series.length) this.renfac.serie = this.series[0].serie;
         }
       }
@@ -331,6 +349,10 @@ export class DlgrenfacComponent implements OnInit {
         this.nuevorenfac.marca = this.serie.marca;
       }
     );
+  }
+
+  onChangeSerie(serie: any) {
+     this.renfac.serie = serie;
   }
 
   valida_serie_motor_moto() {

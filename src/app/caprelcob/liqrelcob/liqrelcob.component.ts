@@ -73,6 +73,12 @@ export class LiqrelcobComponent implements OnInit {
     "nivel":""
   }
 
+  datosplazo = {
+    fechaplazo: "",
+    venceplazo: "",
+    observs: ""
+  }
+
   constructor(
     public dialog: MatDialog, 
     private route: ActivatedRoute,
@@ -389,11 +395,17 @@ export class LiqrelcobComponent implements OnInit {
           comision: comision_z,
           cobratario:"",
           moroso:"SI",
-          claveempresa:"",
+          claveempresa:this.claveempresa,
           idrenrelco:renglon.idcarrenrelco,
       
         }
-        this.si_aceptarpago(JSON.stringify(aceptarpago));
+        const result = {
+          datospago: aceptarpago,
+          conplazo: 'N',
+          datosplazo: this.datosplazo
+        }
+
+        this.si_aceptarpago(JSON.stringify(result));
       }
 
     });
@@ -450,7 +462,13 @@ export class LiqrelcobComponent implements OnInit {
           idrenrelco:renglon.idcarrenrelco,
       
         }
-        this.si_aceptarpago(JSON.stringify(aceptarpago));
+        const result = {
+          datospago: aceptarpago,
+          conplazo: 'N',
+          datosplazo: this.datosplazo
+        }
+
+        this.si_aceptarpago(JSON.stringify(result));
       }
 
     });

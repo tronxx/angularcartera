@@ -34,6 +34,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatOptionModule } from '@angular/material/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 import {CdkMenu, CdkMenuItem, CdkMenuTrigger} from '@angular/cdk/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
@@ -161,6 +162,7 @@ import { DlgcomiscobComponent } from './caprelcob/liqrelcob/dlgcomiscob/dlgcomis
     MatOptionModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatAutocompleteModule,
     ReactiveFormsModule,
     CdkMenu,
     CdkMenuTrigger,

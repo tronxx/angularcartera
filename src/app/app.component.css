@@ -23,3 +23,22 @@ h1 {
   .derecha {
     flex: 1 1;
   }
+
+
+  .ancho80 {
+    display: inline-block;
+    width: 80px;
+}
+  
+.ancho40 {
+    display: inline-block;
+    width: 80px;
+}
+
+mat-form-field {
+    padding-left: 5px;
+}
+
+.material-icons.color_green { color: #00FF00; }
+.material-icons.color_white { color: #FFFFFF; }
+.material-icons.color_red { color:  #e61111;  }
