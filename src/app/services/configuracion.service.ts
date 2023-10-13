@@ -271,7 +271,7 @@ export class ConfiguracionService {
     
   }
   
-  generavencimientos (fechavta:string, qom:string, inicio:number, final:number, diasgracia_z: number) {
+  generavencimientos (fechavta:string, qom:string, inicio:number, final:number, diasgracia_z: number, letraspagadas: number) {
     let ii_z = 0;
     let letra = "";
     let vence = "";
@@ -286,6 +286,9 @@ export class ConfiguracionService {
     
 
     let listavencimientos_z= [];
+    let fechamax = this.fecha_a_str(this.SumaDiasaFecha(new Date(), -5), "YYYYmmdd");
+    let  vencido = false;
+
     for (ii_z = inicio; ii_z <= final; ii_z++) {
       if(ii_z) {
         letra = ii_z.toString().padStart(2, "0");
@@ -294,7 +297,14 @@ export class ConfiguracionService {
       }
       fecven = this.calcula_venc(fechavta, qom, ii_z );
       vence = this.fecha_a_str(fecven, "dd-mmm-YYYY");
-      listavencimientos_z.push({letra, vence});
+      const pagado = Number (letra) <= letraspagadas;
+      const fvence = this.fecha_a_str(fecven, "YYYYmmdd"); // this.config.fecha_a_str (fecven, "YYYYmmdd")
+      //console.log("Letra", miven.letra, "miven.fecven", fecven, "fechamax", fechamax, "fvence", fvence);
+      if(!pagado) {
+        vencido = fvence < fechamax;
+      }
+
+      listavencimientos_z.push({letra, vence, fecven, pagado, vencido});
 
     }
     let misven_z = JSON.stringify(listavencimientos_z);
@@ -330,6 +340,6 @@ export class ConfiguracionService {
     }
     return (strfecha_z);
   }
-
+  
 
 }

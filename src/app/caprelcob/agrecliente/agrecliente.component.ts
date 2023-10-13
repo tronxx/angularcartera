@@ -40,8 +40,11 @@ export class AgreclienteComponent implements OnInit {
   impxlet_z = 0;
 
   listavencimientos_z = [ {
-    "letra" : "",
-    "vence" : ""
+    letra: "",
+    vence: "",
+    fecven: new Date,
+    pagado: false,
+    vencido: false,
   }
 ]
 
@@ -114,14 +117,15 @@ calcular_datos_cliente() {
   if(this.cliente) {
     prlet_z = this.cliente.canle;
     nulets_z = this.cliente.nulet;
-    this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.cliente.qom, 1, this.cliente.nulet, this.cliente.diasgracia));
     ltpag_z = Math.floor ((this.cliente.abonos - this.cliente.enganche - this.cliente.servicio  ) / this.cliente.canle);
+    this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.cliente.qom, 1, this.cliente.nulet, this.cliente.diasgracia, ltpag_z));
+    
     maxlet_z = ltpag_z + 3;
     ii_z = 1;
     for(let mivence_z of this.listavencimientos_z) {
       ii_z = Number( mivence_z.letra);
       if(ii_z > ltpag_z && ii_z <= maxlet_z) {
-        fvence_z = this.configuracion.fecha_a_str( this.configuracion.calcula_venc(this.cliente.fechavta, this.cliente.qom, ii_z), "YYYYmmdd");
+        fvence_z = this.configuracion.fecha_a_str( mivence_z.fecven, "YYYYmmdd");
         if (fvence_z <= strfecmax_z) {
           ultimaletravencida_z = ii_z;
          

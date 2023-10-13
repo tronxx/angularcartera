@@ -32,8 +32,8 @@
                         >
                 </mat-form-field>
                 <div *ngIf="pedirserie" (blur)="valida_aceptar ()" >
-                    <div *ngIf="!esmoto">
-                        <mat-form-field >
+                    <div *ngIf="!esmoto" >
+                        <mat-form-field style="width: 100%;">
                             <mat-label>
                                 Serie
                             </mat-label>
@@ -42,16 +42,19 @@
                                     {{miserie.serie}}
                                 </mat-option>
                             </mat-select>               
-                        </mat-form-field>                
+                        </mat-form-field>
                         <mat-checkbox name="seriemanual" [(ngModel)]="seriemanual" >
-                            La serie no está en la lista                
+                            Teclear la serie por que no está en la lista              
                         </mat-checkbox>
                     </div>
+
                     <div *ngIf="seriemanual">
-                        <mat-form-field>
+                        <mat-form-field style="width: 100%;">
                             <mat-label>Serie</mat-label>
                             <input matInput type="text" name="serie" id="serie" 
                             [(ngModel)] = "renfac.serie" [disabled]="!datoshabilitados"
+                            (blur)="valida_serie()"
+
                             >
                         </mat-form-field>
     

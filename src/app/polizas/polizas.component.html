@@ -76,16 +76,20 @@
                                 <div class="boxscroll">
 
                                     <table border="1">
-                                        <tr>
+                                        <tr bgColor="gray">
                                             <th>Letra</th>
                                             <th>Vence</th>
+                                            <th>Pagado</th>
                                         </tr>
-                                        
-                                        <tr *ngFor="let mivencimiento of listavencimientos_z">
+                                        <tr *ngFor="let mivencimiento of letras">
                                             <td>{{mivencimiento.letra}}/{{cliente.nulet}}</td>
                                             <td>{{mivencimiento.vence}}</td>
+                                            <td >
+                                                <mat-icon *ngIf="mivencimiento.pagado">done</mat-icon>
+                                                <mat-icon *ngIf="mivencimiento.vencido" color="warn">close</mat-icon>
+                                            </td>
                                         </tr>
-                                    </table>
+                                                    </table>
                     
                                 </div>
                             </td>

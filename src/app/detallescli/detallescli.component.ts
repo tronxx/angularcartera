@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ClientesService } from '../services/clientes.service'
+import { ClientesService } from '../services/clientes.service';
+import { ConfiguracionService } from '../services/configuracion.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { formatNumber,  CommonModule,  CurrencyPipe, formatCurrency, formatDate, DatePipe } from '@angular/common';
@@ -48,11 +49,16 @@ export class DetallescliComponent implements OnInit {
   solicitudcli_z = false;
   esstatus1 = true;
   conpromocion = false;
-  listavencimientos_z = [ {
-      "letra" : "",
-      "vence" : ""
-    }
-  ]
+  mub = 0;
+
+  letras = [{
+    letra: "",
+    vence: "",
+    fecven: new Date,
+    pagado: false,
+    vencido: false,
+  }]
+
 
   strfecha_z = "";
   mimodelo = {
@@ -64,6 +70,7 @@ export class DetallescliComponent implements OnInit {
 
   constructor(public dialog: MatDialog, 
     private route: ActivatedRoute,
+    private config: ConfiguracionService,
     private servicioclientes: ClientesService) { }
 
   ngOnInit(): void {
@@ -103,11 +110,31 @@ export class DetallescliComponent implements OnInit {
           this.yaobscli_z = false;
           this.plazoscli_z = false;
           this.solicitudcli_z = false;
+          this.mub = this.calcula_mub();
+          console.log(" Debug: Valor de mub es:", this.mub);
+          
         } else {
           this.alerta("Cliente Inexistente");
         }
       }
     );
+
+  }
+
+  calcula_mub () : number {
+    let mub = 0;
+    if(this.cliente) {
+      const vtacred = (this.cliente.canle - this.cliente.bonificacion ) * this.cliente.nulet;
+      let meses = this.cliente.nulet;
+      if(this.cliente.qom == "Q" ) meses = this.cliente.nulet / 2;
+      const plistamenoseng = this.cliente.preciolista * (1 + (this.cliente.piva / 100)) - this.cliente.enganche;
+      mub = 100 * ( (vtacred / plistamenoseng) - 1);
+      if(meses) mub = mub / meses;
+      mub = Math.round(mub * 100) / 100;
+      // (porutf_z)=(aua_z)(aub_z)/(1)-(100)*; .
+
+    }
+    return (mub)
 
   }
 
@@ -117,7 +144,6 @@ export class DetallescliComponent implements OnInit {
       codigo: this.codcli_z,
       idcli : idcli_z
     }
-    console.log("Debug: Estoy en busca Aval ", idcli_z);
   
     this.servicioclientes.buscaaval(JSON.stringify(params_z)).subscribe(
       respu => {
@@ -247,13 +273,12 @@ export class DetallescliComponent implements OnInit {
     let inicial = 1;
     let misven_z = "";
     if (this.cliente) {
-      misven_z = this.servicioclientes.busca_vencimientos(
-        this.cliente.fechavta, this.cliente.qom, inicial, 
-        this.cliente.nulet, this.cliente.diasgracia
-      );
-      this.listavencimientos_z = JSON.parse(misven_z);
-      // console.log("Debug: Mis vencimientos", misven_z);
+      const letraspagadas = Math.floor((this.cliente.abonos - this.cliente.enganche) / this.cliente.canle);
 
+      this.letras = JSON.parse( this.servicioclientes.busca_vencimientos(
+        this.cliente.fechavta, this.cliente.qom, inicial, 
+        this.cliente.nulet, this.cliente.diasgracia, letraspagadas
+      ));
     }
   }
 

@@ -11,9 +11,14 @@ input  {
     width: 300px;
     overflow: auto;
     display: block;
-    border:1px solid #0ADA0A;
+    border:1px solid black;
 }
 
+.movtos {
+  overflow: auto;
+  display: block;
+  border:1px solid black;
+}
 
 .ancho80 {
     display: inline-block;
@@ -32,3 +37,11 @@ input  {
 .labelgray {
   background-color:lightgray;
 }
+
+.cliente {
+  min-height: 120px;
+  width: 100%;
+  text-align: left;
+  word-wrap: break-word;
+}
+

@@ -2,6 +2,7 @@ import { Component, OnInit,  Inject } from '@angular/core';
 import { ClientesService } from '../../services/clientes.service';
 import { PolizasService } from '../../services/polizas.service';
 import { ConfiguracionService } from '../../services/configuracion.service';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { Cliente } from '../../models/clientes';
 import { Aval } from '../../models/aval'
 import { Poliza } from '../../models/polizas';
@@ -136,11 +137,13 @@ export class AgregarenpolComponent implements OnInit {
   totalimports_z=0;
 
   msg_z ="";
-  listavencimientos_z = [ {
-        "letra" : "",
-        "vence" : ""
-      }
-  ]
+  letras = [{
+    letra: "",
+    vence: "",
+    fecven: new Date,
+    pagado: false,
+    vencido: false,
+  }]
 
 
   datospago = {
@@ -178,12 +181,14 @@ export class AgregarenpolComponent implements OnInit {
     public datepipe: DatePipe,
      private serviciopolizas: PolizasService,
      private configuracion : ConfiguracionService,
+     private dateAdapter: DateAdapter<Date>,
      @Inject(MAT_DIALOG_DATA) public message : string
   ) { }
 
   ngOnInit(): void {
     let params_z = JSON.parse(this.message);
     this.codcli_z = params_z.codigo;
+    this.dateAdapter.setLocale('en-GB'); //dd/MM/yyyy
     if(params_z.polizamorosos) {
       this.esmoroso = true;
       this.datospago.cobratario = params_z.cobratario;
@@ -265,15 +270,16 @@ export class AgregarenpolComponent implements OnInit {
       if(this.cliente.diasgracia > 0) {
         this.conpromo_z = true;
       }
+      this.ltpag_z = Math.floor ((this.abonos_z - this.engan_z - this.serv_z  ) / this.prlet_z);
 
       this.busca_aval(this.cliente.idcli);
-      this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.qom_z, 1, this.nulets_z, this.cliente.diasgracia));
+      this.letras = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.qom_z, 1, this.nulets_z, this.cliente.diasgracia, this.ltpag_z));
       //console.log('FechaStr:', this.strfechavta, 'Vencimientos:', this.listavencimientos_z);
       
 
 
       if(this.abonos_z >= (this.engan_z + this.serv_z) ) {
-         this.ltpag_z = Math.floor ((this.abonos_z - this.engan_z - this.serv_z  ) / this.prlet_z);
+         
          this.imp1_z = (this.ltpag_z * this.prlet_z) + this.engan_z + this.serv_z;
          //console.log("Debug LtaPag:" + ltpag_z.toString() + " Imp:" + this.currencyPipe.transform(imp1_z, '$'));
          //console.log("Debug LtaPag:" + this.ltpag_z.toString() + " Imp:" + this.imp1_z.toString());
@@ -566,6 +572,7 @@ calcula_bonif_extra () {
   mub_z = this.calcula_mub();
   bonifextra_z = ( ( this.prlista_z * ( 1 + this.pivacli_z / 100)  ) - this.engan_z  ) * mesesanticip_z * mub_z / 100;
   bonifextra_z = Math.round( bonifextra_z - 0.50);
+  if(bonifextra_z < 0.5) bonifextra_z = 0; 
   if(bonifextra_z) {
     message_z = "Cliente con Bonificacion Extra " + formatNumber (bonifextra_z, 'en-US', '1.0-0');
     message_z = message_z + " Bonificacion Normal: " + formatNumber((miltafin_z - miltaini_z + 1) * this.bonifi_z , 'en-US', '1.0-0');
@@ -767,9 +774,9 @@ click_plazo() {
     this.datosplazo.fechaplazo = this.configuracion.fecha_a_str(this.fechaactual_z, "YYYY-mm-dd");
     this.datosplazo.venceplazo = this.configuracion.fecha_a_str(
       this.configuracion.SumaDiasaFecha(this.fechaactual_z, 20), "YYYY-mm-dd");
-      this.alerta("Fecha:" + this.datosplazo.fechaplazo + 
-      " Vence" + this.datosplazo.venceplazo
-      );
+      // this.alerta("Fecha:" + this.datosplazo.fechaplazo + 
+      // " Vence" + this.datosplazo.venceplazo
+      // );
   } else {
     this.conplazo = "NO";
   }

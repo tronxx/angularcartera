@@ -35,7 +35,6 @@ import {Observable} from 'rxjs';
 })
 export class DlgrenfacComponent implements OnInit {
 
-  filteredOptions: Observable<Serie[]> | undefined;
   myControl = new FormControl('');
   options: Serie[] = [];
 
@@ -49,6 +48,7 @@ export class DlgrenfacComponent implements OnInit {
   esmoto = false;
   serievalida = true;
   seriemotorvalida = true;
+  seriemotovalida = false;
   renfacvalido = true;
   yabusqueinven = false;
   datoshabilitados = true;
@@ -324,6 +324,8 @@ export class DlgrenfacComponent implements OnInit {
   }
 
   valida_serie() {
+    console.log('Debug Estoy en valida_serie', this.articulo, this.renfac.serie);
+    
     if(this.articulo) {
       if(this.articulo.linea == "MOTO") this.valida_serie_moto();
     } else {
@@ -338,12 +340,14 @@ export class DlgrenfacComponent implements OnInit {
       serie: this.nuevorenfac.renfac.serie,
       seriemotor: this.nuevorenfac.seriemotor
     }
+    this.seriemotovalida = false;
     this.serievalida = false;
     console.log("Debug: Estoy en busca_articulo_serie_moto", params_z);
     this.servicioclientes.busca_serie_moto(JSON.stringify(params_z)).subscribe(
       respu=> {
         this.serie = respu;
         this.serievalida = true;
+        this.seriemotovalida = true;
         this.nuevorenfac.pedimento = this.serie.pedimento;
         this.nuevorenfac.aduana = this.serie.aduana;
         this.nuevorenfac.marca = this.serie.marca;
@@ -358,6 +362,7 @@ export class DlgrenfacComponent implements OnInit {
   valida_serie_motor_moto() {
     if(this.serie) {
       this.seriemotorvalida = (this.nuevorenfac.seriemotor == this.serie.seriemotor);
+      this.valida_aceptar();
     } else {
       this.seriemotorvalida = false;
     }
@@ -406,11 +411,20 @@ export class DlgrenfacComponent implements OnInit {
       this.aceptarok = true;
       return;
     }
-    if(this.renfac.serie.length ) {
-         this.aceptarok = true;
-     } else {
-       this.aceptarok = false;
-     }
+    console.log('Serie:', this.renfac.serie, "Es moto:", this.esmoto,
+    "Seriemotor Valida:", this.seriemotorvalida, " Seriemotovalida:", this.seriemotovalida);
+    if(!this.esmoto) {
+      if(this.renfac.serie) {
+        this.aceptarok = true;
+        return;
+      }
+    }
+    if(this.seriemotorvalida && this.seriemotovalida ) {
+        this.aceptarok = true;
+        return;
+    }
+    this.aceptarok = false;
+
   }
 
   busca_oferta(codigo: string):number {

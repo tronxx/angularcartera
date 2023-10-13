@@ -13,97 +13,109 @@
     </button>
 </div>
 <div *ngIf="cliente">
-
-<table border="1">
-    <tr>
-        <td>
-            <button mat-raised-button color="primary" (click)="impresion_edocta()">
-                <mat-icon aria-hidden="false" aria-label="Example home icon">print</mat-icon>
-                Estado Cuenta
-            </button>
-            <br>
-            <label class="ancho80" for="codigo">Coódigo</label>
-            <input readonly  name="codigo" size="12" type="text" value=" {{cliente.numcli}}"> <br>
-            <label class="ancho80" for="nombre">Nombre</label>
-            <input readonly  name="nombre" size="40" type="text" 
-            [class.editgray]="esstatus1" value=" {{cliente.nombre}}"> <br>
-            <label class="ancho80" for="direccion">Direccion</label>
-            <input readonly name="direccion" type="text" size="40" value= "{{cliente.direc}}"><br>
-            <label class="ancho80" for="poblacion">Poblacion</label>
-            <input readonly name="poblacion" type="text" size="40" value= "{{cliente.poblac}}"> <br>
-            <div id="aval" *ngIf="cliente.qom != tipocontado_z ">
-                <label class="ancho80"  for="aval">Aval </label>
-                <input readonly name="aval" type="text" size="40" value= "{{nomaval}}"> <br>
-                 <label class="ancho80" for="diraval">Direccion</label>
-                 <input readonly name="diraval" type="text" size="40" value= "{{diraval}}"> 
-            </div>
-        </td>
-        <td>
-            <label for="promotor" class="ancho80" >Entregado Por</label>
-            <input readonly name="pomotor" type="text" size="4" value= "{{cliente.promotor}}" >
-            <label for="ubicacion"> Ubicacion </label>
-            <input readonly name="ubicacion" type="text" size="4" value= "{{cliente.ubica}}">
-            <label for="opcion">Carta </label>
-            <input readonly name="opcion" type="text" size="4" value= " {{cliente.opcion}} "><br>
-            <label for="nfac">N.Factura </label>
-            <input readonly name="nfac" type="text" size="4" value= " {{cliente.factura}} "><br>
-            <label for="preciocon" class="ancho80" >Precio Lista</label>
-            <input readonly name="preciocon" type="text" size="10" value= "{{ cliente.preciolista | currency }}">
-            <label for="servicio">Servicio</label>
-            <input readonly name="servicio" type="text" size="10" value= "{{ cliente.servicio | currency }}">
-            <label for="enganche">Enganche</label>
-            <input readonly name="enganche" type="text" size="10" value= "{{ cliente.enganche | currency }}"> <br>
-            <label for="letras" class="ancho80" >Letras</label>
-            <input readonly name="leras" type="text" size="3" value= "{{ cliente.nulet  }}">
-            <label for="qom">Q/M/C</label>
-            <input readonly name="qom" type="text" size="3" value= "{{ cliente.qom }}">
-            <label for="canle">Precio x Letra</label>
-            <input readonly name="canle" type="text" size="10" value= "{{ cliente.canle | currency }}"> 
-            <br>
-            <label for="bonif">Bonificacion</label>
-            <input readonly name="bonif" type="text" size="10" value= "{{ cliente.bonificacion | currency }}"><br>
-            <label *ngIf="conpromocion"  class="labelgray" >Dias Promocion {{ cliente.diasgracia }} </label> <br>
-        </td>
-        <td>
-            Vencimientos:<br>
-            <div class="boxscroll">
-                <table border="1">
-                    <tr>
-                        <th>Letra</th>
-                        <th>Vence</th>
-                    </tr>
-                    
-                    <tr *ngFor="let mivencimiento of listavencimientos_z">
-                        <td>{{mivencimiento.letra}}/{{cliente.nulet}}</td>
-                        <td>{{mivencimiento.vence}}</td>
-                    </tr>
-                </table>
-            </div>
-
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3">
-            <label for="cargos">Cargos</label>
-            <input readonly name="cargos" type="text" size="10" value= "{{ cliente.cargos | currency }}">
-            <label for="abonos">Abonos</label>
-            <input readonly name="abonos" type="text" size="10" value= "{{ cliente.abonos | currency }}"> 
-            <label for="saldo"> Saldo</label>
-            <input readonly name="saldo" type="text" size="10" value= "{{ cliente.cargos - cliente.abonos | currency }}"> 
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3">
-            <label for="compra">Compra</label>
-            <input readonly name="compra" type="text" size="80" value= "{{compracli_z}}"> 
-        </td>
-    </tr>
-</table>
+<div class="cliente">
+    <table border="1">
+        <tr>
+            <td>
+                <button mat-raised-button color="primary" (click)="impresion_edocta()">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon">print</mat-icon>
+                    Estado Cuenta
+                </button>
+                <br>
+                <label class="ancho80" for="codigo">Coódigo</label>
+                <input readonly  name="codigo" size="12" type="text" value=" {{cliente.numcli}}"> <br>
+                <label class="ancho80" for="nombre">Nombre</label>
+                <input readonly  name="nombre" size="40" type="text" 
+                [class.editgray]="esstatus1" value=" {{cliente.nombre}}"> <br>
+                <label class="ancho80" for="direccion">Direccion</label>
+                <input readonly name="direccion" id="direccion" type="text" size="40" value= "{{cliente.direc}}"><br>
+                <label class="ancho80" for="poblacion">Poblacion</label>
+                <input readonly name="poblacion" id="poblacion" type="text" size="40" value= "{{cliente.poblac}}"> <br>
+                <div id="aval" *ngIf="cliente.qom != tipocontado_z ">
+                    <label class="ancho80"  for="aval">Aval </label>
+                    <input readonly name="aval" id="aval" type="text" size="40" value= "{{nomaval}}"> <br>
+                     <label class="ancho80" for="diraval">Direccion</label>
+                     <input readonly name="diraval"  id="diraval" type="text" size="40" value= "{{diraval}}"> 
+                </div>
+            </td>
+            <td>
+                <label for="promotor" class="ancho80" >Entregado Por</label>
+                <input readonly name="pomotor" id="pomotor" type="text" size="4" value= "{{cliente.promotor}}" >
+                <label for="ubicacion"> Ubicacion </label>
+                <input readonly name="ubicacion" id="ubicacion" type="text" size="4" value= "{{cliente.ubica}}">
+                <label for="opcion">Carta </label>
+                <input readonly name="opcion" id="opcion" type="text" size="4" value= " {{cliente.opcion}} "><br>
+                <label for="nfac">N.Factura </label>
+                <input readonly name="nfac" id="nfac" type="text" size="4" value= " {{cliente.factura}} "><br>
+                <label for="preciocon" class="ancho80" >Precio Lista</label>
+                <input readonly name="preciocon" id="preciocon" type="text" size="10" value= "{{ cliente.preciolista | currency }}">
+                <label for="servicio">Servicio</label>
+                <input readonly name="servicio" id="servicio" type="text" size="10" value= "{{ cliente.servicio | currency }}">
+                <label for="enganche">Enganche</label>
+                <input readonly name="enganche" id="enganche" type="text" size="10" value= "{{ cliente.enganche | currency }}"> <br>
+                <label for="letras" class="ancho80" >Letras</label>
+                <input readonly name="leras" id="leras" type="text" size="3" value= "{{ cliente.nulet  }}">
+                <label for="qom">Q/M/C</label>
+                <input readonly name="qom" type="text" size="3" value= "{{ cliente.qom }}">
+                <label for="canle">Precio x Letra</label>
+                <input readonly name="canle" id="canle" type="text" size="10" value= "{{ cliente.canle | currency }}"> 
+                <br>
+                <label for="bonif">Bonificacion</label>
+                <input readonly name="bonif" id="bonif" type="text" size="10" value= "{{ cliente.bonificacion | currency }}"><br>
+                <label *ngIf="conpromocion"  class="labelgray" >Dias Promocion {{ cliente.diasgracia }} </label> <br>
+                <label for="mub">MUF</label>
+                <input type="text" size="3" readonly id="mub" value = "{{mub | number: '1.2-2'}}">
+                <label for="idcli">idcli</label>
+                <input type="text" size="5" readonly id="idcli" value = "{{cliente.idcli}}">
+            </td>
+            <td>
+                Vencimientos:<br>
+                <div class="boxscroll">
+                    <table border="1">
+                        <tr bgColor="lightgray">
+                            <th>Letra</th>
+                            <th>Vence</th>
+                            <th>Pagado</th>
+                        </tr>
+                        
+                        <tr *ngFor="let mivencimiento of letras">
+                            <td>{{mivencimiento.letra}}/{{cliente.nulet}}</td>
+                            <td>{{mivencimiento.vence}}</td>
+                            <td >
+                                <mat-icon *ngIf="mivencimiento.pagado">done</mat-icon>
+                                <mat-icon *ngIf="mivencimiento.vencido" color="warn">close</mat-icon>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+    
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <label for="cargos">Cargos</label>
+                <input readonly name="cargos" type="text" size="10" value= "{{ cliente.cargos | currency }}">
+                <label for="abonos">Abonos</label>
+                <input readonly name="abonos" type="text" size="10" value= "{{ cliente.abonos | currency }}"> 
+                <label for="saldo"> Saldo</label>
+                <input readonly name="saldo" type="text" size="10" value= "{{ cliente.cargos - cliente.abonos | currency }}"> 
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <label for="compra">Compra</label>
+                <input readonly name="compra" type="text" size="80" value= "{{compracli_z}}"> 
+            </td>
+        </tr>
+    </table>
+    
+</div>
+<div class = "movtos">
     <div id="movimientos">
-        <mat-tab-group>
+        <mat-tab-group mat-align-tabs="start">
             <mat-tab label="Movimientos">
                 <table border="1">
-                    <tr>
+                    <tr bgColor="lightgray">
                         <th>Fecha</th>
                         <th>Concepto</th>
                         <th>Usr</th>
@@ -134,7 +146,7 @@
                 </table>   
         
             </mat-tab>
-            <mat-tab>
+            <mat-tab  >
                 <ng-template mat-tab-label>
                     <span (click)="busca_observcli(cliente.idcli)">Observaciones</span>
                 </ng-template>
@@ -149,7 +161,7 @@
                     </tr>
                 </table>   
             </mat-tab>
-            <mat-tab>
+            <mat-tab >
                 <ng-template mat-tab-label>
                     <span (click)="busca_plazos(cliente.idcli)">Plazos</span>
                 </ng-template>
@@ -168,7 +180,7 @@
                     </tr>
                 </table>   
             </mat-tab>
-            <mat-tab label="Reportes Servicio">
+            <mat-tab  label="Reportes Servicio">
                 <p>Estos son los reportes de Servicio</p>
             </mat-tab>
             <mat-tab label="Datos Solicitud">
@@ -322,4 +334,6 @@
             </mat-tab>
         </mat-tab-group>
     </div>
+</div>
+
 </div>

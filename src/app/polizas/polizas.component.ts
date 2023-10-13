@@ -125,11 +125,14 @@ export class PolizasComponent implements OnInit {
   totalimports_z=0;
 
   msg_z ="";
-  listavencimientos_z = [ {
-        "letra" : "",
-        "vence" : ""
-      }
-  ]
+
+  letras = [{
+    letra: "",
+    vence: "",
+    fecven: new Date,
+    pagado: false,
+    vencido: false,
+  }]
 
 
   datospago = {
@@ -388,11 +391,12 @@ export class PolizasComponent implements OnInit {
        if(this.cliente.diasgracia > 0) this.conpromo_z = true;
 
        this.busca_aval(this.cliente.idcli);
-       this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.qom_z, 1, this.nulets_z, this.cliente.diasgracia));
+       this.ltpag_z = Math.floor ((this.abonos_z - this.engan_z - this.serv_z  ) / this.prlet_z);
+       this.letras = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.qom_z, 1, this.nulets_z, this.cliente.diasgracia, this.ltpag_z));
        //console.log('FechaStr:', this.strfechavta, 'Vencimientos:', this.listavencimientos_z);
        
        if(this.abonos_z >= (this.engan_z + this.serv_z) ) {
-          this.ltpag_z = Math.floor ((this.abonos_z - this.engan_z - this.serv_z  ) / this.prlet_z);
+
           this.imp1_z = (this.ltpag_z * this.prlet_z) + this.engan_z + this.serv_z;
           //console.log("Debug LtaPag:" + ltpag_z.toString() + " Imp:" + this.currencyPipe.transform(imp1_z, '$'));
           //console.log("Debug LtaPag:" + this.ltpag_z.toString() + " Imp:" + this.imp1_z.toString());

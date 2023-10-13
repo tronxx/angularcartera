@@ -446,6 +446,17 @@ export class CapvtasComponent implements OnInit {
 
   }
 
+  busca_porcentaje_comision(nulets: number) : number {
+    let porcomis = 0;
+    this.factoresvtacrd.forEach(element => {
+      if(element.plazo == nulets) {
+        porcomis = element.porcomis;
+      }
+    });
+    return (porcomis);
+
+  }
+
   eliminar_renfac(mirenfac: Nvorenfac) {
     let idren = mirenfac.id;
     const dialogref = this.dialog.open(DialogBodyComponent, {
@@ -831,6 +842,23 @@ async grabar_cliente(datoscliente: string): Promise <any> {
 
     let factura_z = JSON.parse(this.datosfactura_z);
     factura_z.idcli = nvocli.idcli;
+    const preciolista = nvocli.clienterespu.preciolista;
+    const porcomis = this.busca_porcentaje_comision(this.nulet);
+    const comision = Math.round( preciolista * porcomis ) / 100;
+    console.log("Voy a agregar Comision Precio Lista", preciolista, "Comision", comision, "porcomis", porcomis);
+    
+    let comisionagregada = false;
+    let paramcomisi = {
+      modo: "agregar_cli_agente",
+      idcli: res.idcli,
+      idvnd: -1,
+      codvnd: this.codvnd,
+      comis: comision
+    }
+    this.servicioclientes.agregar_cli_agente(JSON.stringify(paramcomisi)).subscribe( resalta=> {
+      comisionagregada = true;
+
+    });
 
     let params_z = {
       modo:"crear_cli_fac_capvtas",

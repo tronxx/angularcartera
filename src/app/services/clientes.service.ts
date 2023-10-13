@@ -586,8 +586,8 @@ ClientesService {
       window.open(miurl, "_blank");
   }
 
-  busca_vencimientos (fechavta:string, qom:string, inicial:number, final:number, diasgracia:number) {
-    return (this.configuracion.generavencimientos(fechavta, qom, inicial, final, diasgracia));
+  busca_vencimientos (fechavta:string, qom:string, inicial:number, final:number, diasgracia:number, letraspagadas: number) {
+    return (this.configuracion.generavencimientos(fechavta, qom, inicial, final, diasgracia, letraspagadas));
   }
 
   busca_cliagentes_altas( parametros: string): Observable<Cliagentes[]> {
