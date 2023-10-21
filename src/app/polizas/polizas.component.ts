@@ -17,7 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Compania } from '../models/config';
 import { AgregarenpolComponent} from './agregarenpol/agregarenpol.component';
 import { SpinnerComponent } from '../common/spinner/spinner.component';
-
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-polizas',
@@ -134,6 +134,8 @@ export class PolizasComponent implements OnInit {
     vencido: false,
   }]
 
+  grabando = false;
+
 
   datospago = {
     "idcli":0,
@@ -224,7 +226,6 @@ export class PolizasComponent implements OnInit {
 
   buscar_poliza() {
 
-    
       //this.buscar_codigos_poliza();
       var params = {
         "modo":"acceder_poliza",
@@ -235,8 +236,8 @@ export class PolizasComponent implements OnInit {
       if(this.tda_z == "") {
         this.alerta("El Código de la Póliza no puede estar vacío");
         return;
-
       }
+      this.grabando = true;
       this.serviciopolizas.buscapoliza(JSON.stringify(params)).subscribe(
         respu => {
           this.errorespoliza=[];
@@ -252,6 +253,7 @@ export class PolizasComponent implements OnInit {
             this.idpoliza = this.poliza.idpoliza;
             this.buscar_renpol();
           }
+          this.grabando = false;
         }
       );
   }

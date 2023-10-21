@@ -562,6 +562,11 @@ calcula_bonif_extra () {
   let message_z = "";
   let miltaini_z = Number( this.datospago.ltaini);
   let miltafin_z = Number(this.datospago.ltafin);
+  let saldoactual = 0;
+  if(this.cliente) {
+     saldoactual = this.cliente.cargos - this.cliente.abonos;
+  }
+
   if(this.datospago.dias > this.diasbon) return;
 
   if (miltafin_z  != this.nulets_z) return;
@@ -574,9 +579,13 @@ calcula_bonif_extra () {
   bonifextra_z = Math.round( bonifextra_z - 0.50);
   if(bonifextra_z < 0.5) bonifextra_z = 0; 
   if(bonifextra_z) {
-    message_z = "Cliente con Bonificacion Extra " + formatNumber (bonifextra_z, 'en-US', '1.0-0');
-    message_z = message_z + " Bonificacion Normal: " + formatNumber((miltafin_z - miltaini_z + 1) * this.bonifi_z , 'en-US', '1.0-0');
-    message_z = message_z + " Meses Adelanto " + mesesanticip_z.toString();
+    let saldacon = saldoactual - this.datospago.recobon - bonifextra_z;
+    message_z = "Cliente con Bonificacion Extra<br>" ;
+    message_z += "Saldo Actual " + formatNumber (saldoactual, 'en-US', '1.0-0') + "<br>";
+    message_z += "Bonificacion Extra " + formatNumber (bonifextra_z, 'en-US', '1.0-0') + "<br>";
+    message_z += " Bonificacion Normal: " + formatNumber((miltafin_z - miltaini_z + 1) * this.bonifi_z , 'en-US', '1.0-0') + "<br>";
+    message_z += " Meses Adelanto " + mesesanticip_z.toString()  + "<br>";
+    message_z += " Salda Con: " +  formatNumber (saldacon, 'en-US', '1.0-0');
     this.alerta(message_z);
     this.datospago.recobon += bonifextra_z;
     this.calculaNeto();

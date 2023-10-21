@@ -9,7 +9,7 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select name="promot" placeholder="Cobratario" [(ngModel)]= "promotor" >
+                    <mat-select name="promot" placeholder="Cobratario" [(ngModel)]= "promotor" > 
                         <mat-option *ngFor="let promotor of promotores" value="{{promotor.cvepromo}}"
                           selected="promotsel == promotor.cvepromo"
                         >

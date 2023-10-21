@@ -19,6 +19,7 @@ import { DetallesrelcobComponent } from './caprelcob/detallesrelcob/detallesrelc
 import { ListarelcobComponent } from './caprelcob/listarelcob/listarelcob.component';
 import { SabanvtasComponent } from './sabanvtas/sabanvtas.component';
 import { LiqrelcobComponent } from './caprelcob/liqrelcob/liqrelcob.component'
+import { ReportescliComponent } from './reportescli/reportescli.component';
 
 const routes: Routes = [
   { path: 'conscli', component: ConscliComponent, canActivate : [AuthGuard]  },
@@ -39,6 +40,7 @@ const routes: Routes = [
   { path: 'listarelcob', component: ListarelcobComponent, canActivate : [AuthGuard] },
   { path: 'detallesrelcob/:idrelcob', component: DetallesrelcobComponent, canActivate : [AuthGuard] },
   { path: 'liqrelcob/:idrelcob', component: LiqrelcobComponent, canActivate : [AuthGuard] },
+  { path: 'reportescli/:numcli', component: ReportescliComponent, canActivate : [AuthGuard] },
   { path: 'sabanavtas', component: SabanvtasComponent, canActivate : [AuthGuard] },
   { path: 'main', component: MainComponent },
   {path: '', redirectTo: 'main', pathMatch: 'full'}

@@ -4,15 +4,21 @@
             <mat-card>
                 <mat-card-title>Datos del Cliente</mat-card-title>
                 <h1> Agregar Cliente a Relación </h1>
-                <label for="codigo">Código
-                    <input matInput placeholder="Codigo" type="text" 
-                    name="codigo" id="codigo" (blur)="buscarcliente()" [(ngModel)] ="codcli_z"> 
-                </label>
-                
-                <button mat-raised-button color="primary" (click)="busqueda_por_nombre()">
-                    <mat-icon aria-hidden="false" aria-label="Example home icon">search</mat-icon>
-                    Buscar por Nombre
-                </button>
+                <div class="row">
+                    <label for="codigo">Código
+                        <input matInput placeholder="Codigo" type="text" 
+                        name="codigo" id="codigo"  [(ngModel)] ="codcli_z"> 
+                    </label>
+                    <button mat-raised-button color="primary" (click)="buscarcliente()">
+                        <mat-icon aria-hidden="false" aria-label="Example home icon">search</mat-icon>
+                        Buscar por Código
+                    </button>
+                    <button mat-raised-button color="primary" (click)="busqueda_por_nombre()">
+                        <mat-icon aria-hidden="false" aria-label="Example home icon">search</mat-icon>
+                        Buscar por Nombre
+                    </button>
+                        
+                </div>
                 <div *ngIf="cliente">
                     <table border="1">
                         <tr>
@@ -38,16 +44,24 @@
                                 Vencimientos:<br>
                                 <div class="boxscroll">
                                     <table border="1">
-                                        <tr>
+                                        <tr bgColor="lightgray">
                                             <th>Letra</th>
                                             <th>Vence</th>
+                                            <th>Pagado</th>
+
                                         </tr>
                                         
                                         <tr *ngFor="let mivencimiento of listavencimientos_z">
                                             <td>{{mivencimiento.letra}}/{{cliente.nulet}}</td>
                                             <td>{{mivencimiento.vence}}</td>
+                                            <td >
+                                                <mat-icon *ngIf="mivencimiento.pagado">done</mat-icon>
+                                                <mat-icon *ngIf="mivencimiento.vencido" color="warn">close</mat-icon>
+                                            </td>
+                
                                         </tr>
-                                    </table>                                </div>
+                                    </table>                                
+                                </div>
                             </td>
                     </tr>
                     <tr>

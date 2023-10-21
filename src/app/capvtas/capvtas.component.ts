@@ -137,6 +137,7 @@ export class CapvtasComponent implements OnInit {
   articuloscotizados : Nvorenfac[] = [];
   articulocotizado?: Nvorenfac;
   esvalido=false;
+  grabando=false;
   esmoto = "S";
   datosfactura_z = "";
   nvoclistatus = "*";
@@ -775,6 +776,7 @@ async grabar_cliente(datoscliente: string): Promise <any> {
   let mismessages_z =[""];
   let opcion_z = "";
   let prlista_z = 0;
+  this.grabando=true;
   
   this.articuloscotizados.forEach(ren => {
     if(ren.codigo != "AUXILIAR") {
@@ -844,7 +846,7 @@ async grabar_cliente(datoscliente: string): Promise <any> {
     factura_z.idcli = nvocli.idcli;
     const preciolista = nvocli.clienterespu.preciolista;
     const porcomis = this.busca_porcentaje_comision(this.nulet);
-    const comision = Math.round( preciolista * porcomis ) / 100;
+    const comision = Math.round( preciolista * porcomis /100 );
     console.log("Voy a agregar Comision Precio Lista", preciolista, "Comision", comision, "porcomis", porcomis);
     
     let comisionagregada = false;

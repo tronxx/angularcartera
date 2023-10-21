@@ -197,9 +197,10 @@
                 <mat-icon aria-hidden="false" aria-label="Example new icon">receipt</mat-icon>
                  Acompletar datos Factura
                 </button>
-            <button [disabled]="!yapedidatos" mat-raised-button color="primary" (click)="aceptar()"  >
+            <button [disabled]="!yapedidatos || grabando" mat-raised-button color="primary" (click)="aceptar()"  >
                 <mat-icon aria-hidden="false" aria-label="Example new icon">check_circle_outline</mat-icon>
                  Proceder a Levantar la Venta
+                 <mat-spinner *ngIf="grabando" diameter="35"></mat-spinner>
                 </button>
                 <p>Para Proceder a Levantar la Venta debe Acompletar los datos de Factura</p>
             </div>

@@ -120,7 +120,6 @@ calcular_datos_cliente() {
     ltpag_z = Math.floor ((this.cliente.abonos - this.cliente.enganche - this.cliente.servicio  ) / this.cliente.canle);
     this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.cliente.qom, 1, this.cliente.nulet, this.cliente.diasgracia, ltpag_z));
     
-    maxlet_z = ltpag_z + 3;
     ii_z = 1;
     for(let mivence_z of this.listavencimientos_z) {
       ii_z = Number( mivence_z.letra);
@@ -132,6 +131,7 @@ calcular_datos_cliente() {
         }
       } 
     }
+    maxlet_z = ltpag_z + 3;
     this.impxlet_z = prlet_z;
     if(ultimaletravencida_z < ltpag_z) ultimaletravencida_z = ltpag_z;
     if(this.cliente.abonos >= (this.cliente.enganche  + this.cliente.servicio) ) {
@@ -164,6 +164,7 @@ calcular_datos_cliente() {
     this.importe_z = impxcob_z;
     this.ltaini_z = sigletra_z;
     this.ltafin_z = ultimaletravencida_z;
+    if(this.ltafin_z < this.ltaini_z) this.ltafin_z = this.ltaini_z;
 
   }
 }

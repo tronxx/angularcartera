@@ -86,7 +86,7 @@ export class ListarelcobComponent implements OnInit {
 
   }
 
-    detalles_relcob(relcob: Relcob) {
+  detalles_relcob(relcob: Relcob) {
     let minvourl_z = [
       '/detallesrelcob/' + relcob.idcarrelcob
     ];
@@ -120,13 +120,23 @@ export class ListarelcobComponent implements OnInit {
       respu => {
         this.codigospolizas = respu;
         this.micodpol = this.codigospolizas[0];
-        this.codpol_z = this.micodpol.clave;
+        this.codpol_z = this.codigospolizas[0].clave;
         //console.log("Codigos Polizas:", respu);
       }
     )
   }
 
+  seleccionar_codigo() {
+    for(let micodigo of this.codigospolizas) {
+      if(micodigo.clave == this.codpol_z ) {
+        this.micodpol = micodigo;
+      }
+    }
+  }
+
   agregar_relcob() {
+    console.log("micodpol:", this.micodpol);
+    
     const dialogmov = this.dialog.open(DlgdatosrelcobComponent, {
       width:'650px',
       data: JSON.stringify(this.micodpol)

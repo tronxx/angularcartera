@@ -68,7 +68,7 @@
                 <label for="idcli">idcli</label>
                 <input type="text" size="5" readonly id="idcli" value = "{{cliente.idcli}}">
             </td>
-            <td>
+            <td *ngIf="cliente.qom != contado">
                 Vencimientos:<br>
                 <div class="boxscroll">
                     <table border="1">
@@ -181,7 +181,7 @@
                 </table>   
             </mat-tab>
             <mat-tab  label="Reportes Servicio">
-                <p>Estos son los reportes de Servicio</p>
+                <a routerLink="/reportescli/{{cliente.numcli}}"><button mat-raised-button color="primary" > Ver Reportes de Servicio</button></a> 
             </mat-tab>
             <mat-tab label="Datos Solicitud">
                 <ng-template mat-tab-label>
@@ -330,7 +330,7 @@
                 </div>
             </mat-tab>
             <mat-tab label="Comisiones Vendedores">
-                <p>Estos son los reportes de Servicio</p>
+                <p>Aqui van las comisiones de Vendedores</p>
             </mat-tab>
         </mat-tab-group>
     </div>

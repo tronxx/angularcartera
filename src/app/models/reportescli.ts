@@ -1,0 +1,44 @@
+export interface Reportescli {
+
+ubica: string;
+numero: number;
+codcli: string;
+fecha: string;
+articulo: string;
+serie: string;
+sintomas: string;
+direccion: string;
+poblacion: string;
+concargo: string;
+importe: number;
+status: string;
+fecha_resuelto: string;
+concargo_mds: string;
+cargomds: number;
+obser1: string;
+clialm: string;
+taller: string;
+fecha_taller: string;
+visita1: string;
+fecha_visita1: string;
+resultado_visita1: string;
+visita2: string;
+fecha_visita2: string;
+resultado_visita2: string;
+visita3: string;
+fecha_visita3: string;
+resultado_visita3: string;
+situacion: string;
+devuelve_taller: string;
+fecha_dev_taller: string;
+recogido: string;
+fecha_recoja: string;
+observaciones_recoja: string;
+con_articulo_servicio: string;
+descri_articulo_servicio: string;
+linea: string;
+diaservicio: string;
+observaciones_solucion: string;
+taller_servicio: string;
+promotor: string;
+}

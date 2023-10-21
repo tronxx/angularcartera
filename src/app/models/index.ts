@@ -35,3 +35,5 @@ export { RegimenFiscal } from './regimenfiscal';
 export { Rutasmor } from './rutasmor';
 export { Desrutasmor } from './desrutamor';
 export * from './sabanavtas';
+export * from './reportescli';
+export * from './renposer';

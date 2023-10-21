@@ -35,6 +35,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatOptionModule } from '@angular/material/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 import {CdkMenu, CdkMenuItem, CdkMenuTrigger} from '@angular/cdk/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
@@ -84,6 +85,7 @@ import { LiqrelcobComponent } from './caprelcob/liqrelcob/liqrelcob.component';
 import { DlgplazosComponent } from './common/dlgplazos/dlgplazos.component';
 import { DlgacumsabanasComponent } from './sabanvtas/dlgacumsabanas/dlgacumsabanas.component';
 import { DlgcomiscobComponent } from './caprelcob/liqrelcob/dlgcomiscob/dlgcomiscob.component';
+import { ReportescliComponent } from './reportescli/reportescli.component';
 
 
 @NgModule({
@@ -140,6 +142,7 @@ import { DlgcomiscobComponent } from './caprelcob/liqrelcob/dlgcomiscob/dlgcomis
     DlgplazosComponent,
     DlgacumsabanasComponent,
     DlgcomiscobComponent,
+    ReportescliComponent,
   ],
   imports: [
     BrowserModule,
@@ -164,6 +167,7 @@ import { DlgcomiscobComponent } from './caprelcob/liqrelcob/dlgcomiscob/dlgcomis
     MatNativeDateModule,
     MatAutocompleteModule,
     ReactiveFormsModule,
+    MatProgressSpinnerModule,
     CdkMenu,
     CdkMenuTrigger,
     BrowserAnimationsModule,

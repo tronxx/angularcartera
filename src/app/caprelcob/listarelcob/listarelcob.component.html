@@ -1,9 +1,9 @@
 <div>
     <label for="tienda">Tienda</label>
-    <select name="tienda" id="tienda" [(ngModel)]="micodpol" >
-        <option *ngFor="let mitienda of codigospolizas" value="{{mitienda}}" 
-        [selected]="mitienda.clave == codpol_z">
-            {{mitienda.clave}} {{mitienda.nombre}}
+    <select name="tienda" id="tienda" (blur)="seleccionar_codigo()" [(ngModel)]= "codpol_z" > 
+        <option *ngFor="let micodpol of codigospolizas" value="{{micodpol.clave}}" 
+            selected="micodpol.clave == codpol_z">
+            {{micodpol.clave}} {{micodpol.nombre}}
         </option>
     </select>
     

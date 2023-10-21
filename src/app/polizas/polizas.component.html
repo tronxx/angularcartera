@@ -18,8 +18,12 @@
     Empresa: {{ claveempresa}}
     <button mat-raised-button 
       color="primary" *ngIf="!polizaactiva_z" 
+      [disabled]="grabando"
       (click)="aceptarpoliza()"
-    >Aceptar</button>
+    >
+      <mat-spinner *ngIf="grabando" diameter="35"></mat-spinner>
+      Aceptar
+    </button>
     <div id="errorespoliza" [hidden]="!hayerrorpoliza()" >
         <label for="errorespoliza" > {{errorespoliza}} </label>
     </div>

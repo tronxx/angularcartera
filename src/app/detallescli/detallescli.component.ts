@@ -50,6 +50,7 @@ export class DetallescliComponent implements OnInit {
   esstatus1 = true;
   conpromocion = false;
   mub = 0;
+  contado = "C";
 
   letras = [{
     letra: "",

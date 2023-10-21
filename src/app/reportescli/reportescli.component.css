@@ -1,0 +1,18 @@
+.reporte {
+    width: 100%;
+    max-height: 50%;
+    text-align: left;
+    word-wrap: break-word;
+    overflow: auto;
+}
+
+.movtos {
+    width: 100%;
+    text-align: left;
+    word-wrap: break-word;
+    overflow: auto;
+}
+
+.trselected {
+    background-color: green;
+}

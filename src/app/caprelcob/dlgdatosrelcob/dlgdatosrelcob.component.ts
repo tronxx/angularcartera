@@ -23,6 +23,7 @@ export class DlgdatosrelcobComponent implements OnInit {
   tienda? : CodigoPoliza;
   promotor? : Promotor;
   promotores : Promotor[] = [];
+  promotsel = "";
   fecha = this.datePipe.transform(new Date(),"yyyy-MM-dd");
 
 

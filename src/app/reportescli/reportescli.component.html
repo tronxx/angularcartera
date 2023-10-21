@@ -1,0 +1,52 @@
+<div>
+    <a routerLink="/detallescli/{{codigo}}"><button mat-raised-button color="primary" > Regresar </button></a> 
+    <div class="reporte">
+        <table id="reportescli" border="1">
+            <tr bgColor="lightgray">
+                <th>Reporte</th>
+                <th>Fecha</th>
+                <th>Producto</th>
+                <th>Síntomas</th>
+                <th>Resuelto</th>
+            </tr>
+            <tr *ngFor="let reporte of reportescli" (click)="busca_movtos(reporte)"
+              [class.trselected] = "reporte.numero == numrep"
+            >
+                <td>{{reporte.numero}}</td>
+                <td>{{reporte.fecha}}</td>
+                <td>{{reporte.articulo}} {{reporte.serie}} </td>
+                <td>{{reporte.sintomas}} </td>
+                <td> 
+                    <div *ngIf="reporte.status==statuspagado">
+                        <mat-icon >done</mat-icon>
+                        {{reporte.fecha_resuelto}}
+                            
+                    </div>
+                </td>
+            </tr>
+        </table>
+    
+    </div>
+    <div class="movtos">
+        <table border="1">
+            <tr bgColor="lightgray">
+                <th>Fecha</th>
+                <th>Tda</th>
+                <th>Operacion</th>
+                <th>Observaciones</th>
+                <th>Taller</th>
+                <th>Operador</th>
+                <th>Importe</th>
+            </tr>
+            <tr *ngFor="let renpol of renglonesrenposer">
+                <td>{{renpol.fecha}}</td>
+                <td>{{renpol.tda}}</td>
+                <td>{{renpol.descrimovto}}</td>
+                <td>{{renpol.observs}}</td>
+                <td> {{renpol.taller_o_promotor}} </td>
+                <td> {{renpol.atiende}} </td>
+                <td> {{renpol.importe | currency}} </td>
+            </tr>
+        </table>
+    </div>
+</div>
