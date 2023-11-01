@@ -1,4 +1,4 @@
-<div mat-dialog-content>
+<div mat-dialog-content class="dialog">
 
     <div name="relacion">
             <mat-card>
@@ -7,7 +7,8 @@
                 <div class="row">
                     <label for="codigo">Código
                         <input matInput placeholder="Codigo" type="text" 
-                        name="codigo" id="codigo"  [(ngModel)] ="codcli_z"> 
+                        name="codigo" id="codigo" (blur)="buscarcliente()" 
+                        [(ngModel)] ="codcli_z"> 
                     </label>
                     <button mat-raised-button color="primary" (click)="buscarcliente()">
                         <mat-icon aria-hidden="false" aria-label="Example home icon">search</mat-icon>

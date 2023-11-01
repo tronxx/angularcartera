@@ -580,12 +580,12 @@ calcula_bonif_extra () {
   if(bonifextra_z < 0.5) bonifextra_z = 0; 
   if(bonifextra_z) {
     let saldacon = saldoactual - this.datospago.recobon - bonifextra_z;
-    message_z = "Cliente con Bonificacion Extra<br>" ;
-    message_z += "Saldo Actual " + formatNumber (saldoactual, 'en-US', '1.0-0') + "<br>";
-    message_z += "Bonificacion Extra " + formatNumber (bonifextra_z, 'en-US', '1.0-0') + "<br>";
-    message_z += " Bonificacion Normal: " + formatNumber((miltafin_z - miltaini_z + 1) * this.bonifi_z , 'en-US', '1.0-0') + "<br>";
-    message_z += " Meses Adelanto " + mesesanticip_z.toString()  + "<br>";
-    message_z += " Salda Con: " +  formatNumber (saldacon, 'en-US', '1.0-0');
+    message_z = "Cliente con Bonificacion Extra \n" ;
+    message_z += " Saldo Actual " + formatNumber (saldoactual, 'en-US', '1.0-0') + " \n"; 
+    message_z += " Bonificacion Extra " + formatNumber (bonifextra_z, 'en-US', '1.0-0') + " \n"; 
+    message_z += " Bonificacion Normal: " + formatNumber((miltafin_z - miltaini_z + 1) * this.bonifi_z , 'en-US', '1.0-0')  + " \n"; 
+    message_z += " Meses Adelanto " + mesesanticip_z.toString() + " \n"; 
+    message_z += " Salda Con: " +  formatNumber (saldacon, 'en-US', '1.0-0') + " \n"; 
     this.alerta(message_z);
     this.datospago.recobon += bonifextra_z;
     this.calculaNeto();
@@ -658,7 +658,7 @@ async busca_recargos_letra(idcli_z : number, numletra_z: string): Promise<number
 
 alerta(mensaje: string) {
   const dialogref = this.dialog.open(DialogBodyComponent, {
-    width:'350px',
+    width:'50%',
     data: mensaje
   });
   dialogref.afterClosed().subscribe(res => {
