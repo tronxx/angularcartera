@@ -15,8 +15,8 @@
       "MesesMinimoCarta": 9,
       "CartaSaldadosMesesAntes": 2,
       "DiasBonificacion":5,
-      "promodic_inicio": "2022-12-01",
-      "promodic_fin": "2022-12-31",
+      "promodic_inicio": "2023-11-01",
+      "promodic_fin": "2023-12-31",
       "promodic_dias":"15",
       "mesesminimo":"5"
     }

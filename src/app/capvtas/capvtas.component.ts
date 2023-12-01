@@ -81,6 +81,12 @@ export class CapvtasComponent implements OnInit {
   articulo? : Articulo;
   ofertas: Ofertas[] = [];
   
+  promocion_z = {
+    promodic_inicio: "2022-12-01",
+    promodic_fin: "2022-12-31",
+    promodic_dias:"15",
+    promodic_mesesminimo:5
+  }
 
   codcartera_z = "";
   pidprecio_z = false;
@@ -316,6 +322,14 @@ export class CapvtasComponent implements OnInit {
     let ii_z =0;
     let milinea = this.linea_z;
     this.esvalido=false;
+    let conse_z = this.codcartera_z.substring(8,10);
+    let consecorrecto_z = Number(conse_z).toString().padStart(2, "0");
+    if ( conse_z != consecorrecto_z) {
+      this.hayerror = true;
+      this.msgerror_z =  "El codigo del cliente es incorrecto, el Consecutivo tiene:" +  
+      conse_z + " y debería ser " + consecorrecto_z;
+    }
+
     this.servicio = Number(this.servicio);
     if(Number(this.servicio)  < 0) {
         this.alerta("El Servicio No puede ser negativo, lo convierto en a cero");
@@ -585,6 +599,8 @@ obtencatalogos() {
     }
 
   );
+  this.promocion_z = this.configuracion.obtenpromocion();
+
 
   
 }
@@ -831,6 +847,8 @@ async grabar_cliente(datoscliente: string): Promise <any> {
 
   this.servicioclientes.agrega_nuevo_cliente(JSON.stringify(nvocli)).subscribe( res =>{
     mirespu = res;
+
+    this.grabar_promocion_cliente(this.codcartera_z, this.qom, this.nulet);
     let paramsmodif_z = {
       numcli: res.codigo,
       statusfacalmomento: "SI"
@@ -979,9 +997,45 @@ precios_abiertos() {
 
 }
 
+
+
 async agregar_factura(datosagente: string): Promise <any> {
   
 
 }
+
+grabar_promocion_cliente(codigo: String, qom:string, letras: number) {
+  let mesesvta = letras;
+  if(qom == "Q") mesesvta = mesesvta * 2;
+  if(qom == 'C') return;
+  let fvta_z = "20" + codigo.substring(2,4) + "-" + 
+    codigo.substring(4,6) + "-" + 
+    codigo.substring(6,8);
+  
+  //console.log("Grabando promocion cliente Fechavta:", fvta_z, " Meses", mesesvta);
+  
+  if(fvta_z < this.promocion_z.promodic_inicio ||
+    fvta_z  > this.promocion_z.promodic_fin)
+  return;
+  
+  if(mesesvta < this.promocion_z.promodic_mesesminimo) return;
+  //this.alerta("Se va a grabar la promocion");
+
+    var params_z = {
+        modo : "grabar_dias_promocion",
+        diasgracia: this.promocion_z.promodic_dias,
+        codigo: codigo
+    }
+    console.log("Grabar promocion", params_z);
+    
+    this.servicioclientes.altas_agregar_dias_promocion(JSON.stringify(params_z)).subscribe(
+      respu => {
+        console.log("Se agrego los dias de promocion");
+      }
+    );
+  
+}
+
+
 
 }

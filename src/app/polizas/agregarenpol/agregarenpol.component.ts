@@ -368,6 +368,7 @@ export class AgregarenpolComponent implements OnInit {
     this.calculaConcepto();
     this.recibido = this.datospago.neto;
     this.calcula_cambio();
+    this.calcula_comision();
 
  }
 
