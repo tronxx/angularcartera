@@ -60,6 +60,22 @@ export class RelcobService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  busca_siguiente_folio_reltrasp ( params: string): Observable<any> {
+    
+    var miurl = this.url + "relcob/servicios.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=JSON.stringify(params);
+    
+    return this.http.post<any>(miurl, params, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('fetched Relaciones Cobranza')),
+      catchError(this.handleError<Relcob[]>('Ocurrio un error en Post obtener codigos polizas'))
+
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+
   agrega_nueva_relcob ( params: string): Observable<any> {
     let miurl = this.url + "relcob/servicios.php"
     const headers = { 'content-type': 'text/plain'};
@@ -158,6 +174,18 @@ export class RelcobService {
     "&titulo="+misparams.titulo;
     window.open(miurl, "_blank");
   }
+
+  imprimir_req_caja  (params:string) {
+    let misparams = JSON.parse(params);
+    //console.log("Debug: Estoy en obtentxtcomplmentopol ", params);
+    const modo = "imprimir_relacion_reqcaja"
+    var miurl = this.url + "relcob/servicios.php?"+
+    "modo=" + modo +
+    "&idrelacion="+misparams.idrelacion +
+    "&rotarpdf="+misparams.rotarpdf 
+    window.open(miurl, "_blank");
+  }
+
 
   obtener_poblciones_rutas_morosos ( params: string): Observable<Desrutasmor[]> {
     

@@ -1,0 +1,78 @@
+<div *ngIf = "relcob">
+    <label>Relacion De: </label>
+    <label *ngIf = "codigopoliza" > 
+       <b> {{codigopoliza.clave }} {{codigopoliza.nombre}} </b>
+    </label>
+    <label > Fecha: <b>{{relcob.fecha}}</b>  </label>
+    <label > 
+        Para Caja: <b> {{relcob.promot}} {{relcob.nombrepromo}} </b> 
+        Folio: <b> {{relcob.folio}} </b>
+    </label>
+    <button  mat-raised-button  color="primary"
+      (click)="agregar_cliente_a_relcob()">Agregar Cliente
+    </button>
+    <button mat-raised-button color="primary" 
+     (click)="imprimir_relcob()" >
+      <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+      Imprimir
+    </button>
+    <label for="rotarfac">
+        <mat-icon aria-hidden="false" aria-label="Example new icon">autorenew</mat-icon>
+        Rotar al Imprimir
+        <input type="checkbox" name="rotarfac" id="rotarfac" [(ngModel)]="sirotarpdf" >
+     </label>
+
+
+</div>
+<div>
+    <table border="1">
+        <thead  style = "background-color: silver;" >
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Poblacion</th>
+                <th>Entregó</th>
+                <th>Vence Plazo</th>
+                <th>Otorgó Plazo</th>
+                <th>Letras</th>
+                <th>Días</th>
+                <th>Precio<br> x Letra </th>
+                <th>Importe</th>
+                <th>Últimpo <br>Pago </th>
+                <th>Penúltimpo <br>Pago </th>
+                <th>Reporte</th>
+                <th>Acciones</th>
+            </tr>
+    
+        </thead>
+        <tr *ngFor="let renrelco  of renglonesrelcob">
+            <td>{{renrelco.codigo}}</td>
+            <td>{{renrelco.nombre}}</td>
+            <td>{{renrelco.poblacion}}</td>
+            <td>{{renrelco.promot}}</td>
+            <td>{{renrelco.venceplazo}} </td>
+            <td>{{renrelco.promoplazo}} </td>
+            <td align="right">{{renrelco.letras}}</td>
+            <td align="right">{{renrelco.diasven}}</td>
+            <td align="right">{{renrelco.impxlet | currency}}</td>
+            <td align="right">{{renrelco.importe | currency}} </td>
+            <td>{{renrelco.ultimoabono}} </td>
+            <td>{{renrelco.penultimoabono}} </td>
+            <td>{{renrelco.reporte}} </td>
+            <td>
+                <button  mat-raised-button *ngIf="renrelco.estado != estadocerrado_z"
+                color="warn"
+                (click)="eliminar_renglon_relcob(renrelco)">
+                <mat-icon aria-hidden="false" aria-label="Example new icon">delete</mat-icon>
+                Eliminar Cliente</button>
+            
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="overlay" *ngIf="creandoRelacion"  >
+    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+</div>
+
+
+

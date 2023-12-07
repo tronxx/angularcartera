@@ -24,6 +24,7 @@ export class MainComponent implements OnInit {
     { link: "/nvavta", titulo: "Facturacion", active:"active"  },
     { link: "/listarelcob", titulo: "Relacion de Cobranza", active:"active"  },
     { link: "/sabanavtas", titulo: "Sabana de Ventas", active:"active"  },
+    { link: "/morosos", titulo: "Menú de Morosos", active:"active"  },
 
   ];
 

@@ -7,17 +7,39 @@
                 <mat-form-field>
                     <input matInput placeholder="Fecha" type="date" name="fecha" id="fecha" [(ngModel)] ="fecha"> 
                 </mat-form-field>
-
-                <mat-form-field>
-                    <mat-select name="promot" placeholder="Cobratario" [(ngModel)]= "promotor" > 
-                        <mat-option *ngFor="let promotor of promotores" value="{{promotor.cvepromo}}"
-                          selected="promotsel == promotor.cvepromo"
+                <div *ngIf="tiporel == TIPORELCOB">
+                    <mat-form-field>
+                        <mat-select name="promot" placeholder="Cobratario" [(ngModel)]= "promotor" > 
+                            <mat-option *ngFor="let promotor of promotores" value="{{promotor.cvepromo}}"
+                              selected="promotsel == promotor.cvepromo"
+                            >
+                            {{promotor.cvepromo}} {{promotor.nombre}}
+                            </mat-option>
+    
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="tiporel == TIPOREQ">
+                    <mat-form-field>
+                        <mat-label>Tienda</mat-label>
+                        <mat-select name="tienda" placeholder="Tienda" [(ngModel)]= "cajareq" 
+                        (blur)="buscar_siguiente_folio()"> 
+                            <mat-option *ngFor="let caja of cajas" value="{{caja.clave}}"
+                              selected="cajareq= caja.clave"
+                            >
+                            {{caja.clave}} {{caja.nombre}}
+                            </mat-option>
+    
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Folio</mat-label>
+                        <input matInput placeholder="Folio" type="number" name="folio" id="folio" 
+                        [(ngModel)] = "folio"
                         >
-                        {{promotor.cvepromo}} {{promotor.nombre}}
-                        </mat-option>
+                    </mat-form-field>
+                </div>
 
-                    </mat-select>
-                </mat-form-field>
             </mat-card>
         </div>
     </form>

@@ -86,6 +86,9 @@ import { DlgplazosComponent } from './common/dlgplazos/dlgplazos.component';
 import { DlgacumsabanasComponent } from './sabanvtas/dlgacumsabanas/dlgacumsabanas.component';
 import { DlgcomiscobComponent } from './caprelcob/liqrelcob/dlgcomiscob/dlgcomiscob.component';
 import { ReportescliComponent } from './reportescli/reportescli.component';
+import { MorososComponent } from './morosos/morosos.component';
+import { ReqcajasComponent } from './reqcajas/reqcajas.component';
+import { DetallesreqcajaComponent } from './reqcajas/detallesreqcaja/detallesreqcaja.component';
 
 
 @NgModule({
@@ -143,6 +146,9 @@ import { ReportescliComponent } from './reportescli/reportescli.component';
     DlgacumsabanasComponent,
     DlgcomiscobComponent,
     ReportescliComponent,
+    MorososComponent,
+    ReqcajasComponent,
+    DetallesreqcajaComponent,
   ],
   imports: [
     BrowserModule,

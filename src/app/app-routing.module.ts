@@ -20,6 +20,9 @@ import { ListarelcobComponent } from './caprelcob/listarelcob/listarelcob.compon
 import { SabanvtasComponent } from './sabanvtas/sabanvtas.component';
 import { LiqrelcobComponent } from './caprelcob/liqrelcob/liqrelcob.component'
 import { ReportescliComponent } from './reportescli/reportescli.component';
+import { MorososComponent } from './morosos/morosos.component';
+import { ReqcajasComponent } from './reqcajas/reqcajas.component';
+import { DetallesreqcajaComponent } from './reqcajas/detallesreqcaja/detallesreqcaja.component';
 
 const routes: Routes = [
   { path: 'conscli', component: ConscliComponent, canActivate : [AuthGuard]  },
@@ -42,6 +45,9 @@ const routes: Routes = [
   { path: 'liqrelcob/:idrelcob', component: LiqrelcobComponent, canActivate : [AuthGuard] },
   { path: 'reportescli/:numcli', component: ReportescliComponent, canActivate : [AuthGuard] },
   { path: 'sabanavtas', component: SabanvtasComponent, canActivate : [AuthGuard] },
+  { path: 'morosos', component: MorososComponent, canActivate : [AuthGuard] },
+  { path: 'reqcajas', component: ReqcajasComponent, canActivate : [AuthGuard] },
+  { path: 'detallereqcajas/:idrelcob', component: DetallesreqcajaComponent, canActivate : [AuthGuard] },
   { path: 'main', component: MainComponent },
   {path: '', redirectTo: 'main', pathMatch: 'full'}
 ];

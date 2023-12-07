@@ -33,6 +33,7 @@ export class ListarelcobComponent implements OnInit {
   micodpol?: CodigoPoliza;
   codpol_z= "";
   idcodpol = 0;
+  tiporel = 710;
   fechaini = this.datePipe.transform(new Date(),"yyyy-MM") + "-01";
   fechafin = this.datePipe.transform(new Date(),"yyyy-MM-dd");
   usrreg_z = {
@@ -73,7 +74,7 @@ export class ListarelcobComponent implements OnInit {
       "fechainicial": this.fechaini,
       "fechafinal": this.fechafin,
       "codpol": this.micodpol?.clave,
-      "tiporel":"710"
+      "tiporel":this.tiporel
     };
     console.log("Bucar relaciones cobranza:", params);
     
@@ -150,7 +151,7 @@ export class ListarelcobComponent implements OnInit {
           codpol: this.micodpol?.clave,
           promotor: res.promotor,
           idusuario: this.usrreg_z.idusuario,
-          tiporel: 710
+          tiporel: this.tiporel
 
         }
         console.log("Los parametros a pasar son: ", params_z);

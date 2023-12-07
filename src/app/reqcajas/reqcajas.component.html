@@ -1,0 +1,45 @@
+<div>
+    <label for="tienda">Tienda</label>
+    <select name="tienda" id="tienda" (blur)="seleccionar_codigo()" [(ngModel)]= "codpol_z" > 
+        <option *ngFor="let micodpol of codigospolizas" value="{{micodpol.clave}}" 
+            selected="micodpol.clave == codpol_z">
+            {{micodpol.clave}} {{micodpol.nombre}}
+        </option>
+    </select>
+    
+    <label for="fecha">Fecha Inicial</label>
+    <input type="date" name="fechaini" id="fechaini" [(ngModel)]="fechaini" >
+    <label for="fecha">Fecha Final</label>
+    <input type="date" name="fechafin" id="fechafin" [(ngModel)]="fechafin" >
+    <button *ngIf="micodpol" mat-raised-button 
+    color="primary"
+    (click)="buscarrelcobs()">Aceptar</button>
+
+</div>
+<div>
+    <button mat-raised-button color="primary" (click)="agregar_relcob()" >
+        <mat-icon aria-hidden="false" aria-label="Example new icon">add_box</mat-icon>
+        Nueva Relacion
+    </button>
+    <table border="1">
+        <tr bgColor="lightgray">
+            <th>Fecha</th>
+            <th>Folio</th>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+        <tr *ngFor="let relcob  of relcobs">
+            <td>{{relcob.fecha}} </td>
+            <td>{{relcob.folio}} </td>
+            <td>{{relcob.promot}} </td>
+            <td>{{relcob.nombrepromo}} </td>
+            <td>
+                <button mat-raised-button color="primary"
+                (click)="detalles_relcob(relcob)">Detalles</button>
+                
+            </td>
+        </tr>
+    </table>
+</div>
