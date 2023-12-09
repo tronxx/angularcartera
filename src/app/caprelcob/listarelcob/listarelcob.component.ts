@@ -92,7 +92,7 @@ export class ListarelcobComponent implements OnInit {
       '/detallesrelcob/' + relcob.idcarrelcob
     ];
     //this.alerta("Voy a hacer route navigate: " + minvourl_z + " Respu:" + JSON.stringify(mirespu_z));
-    console.log("Voy a ir a mi url:", minvourl_z);
+    //console.log("Voy a ir a mi url:", minvourl_z);
     
     this.router.navigate(minvourl_z)
   }
@@ -102,7 +102,7 @@ export class ListarelcobComponent implements OnInit {
       '/liqrelcob/' + relcob.idcarrelcob
     ];
     //this.alerta("Voy a hacer route navigate: " + minvourl_z + " Respu:" + JSON.stringify(mirespu_z));
-    console.log("Voy a ir a mi url:", minvourl_z);
+    //console.log("Voy a ir a mi url:", minvourl_z);
     
     this.router.navigate(minvourl_z)
   }
@@ -137,10 +137,15 @@ export class ListarelcobComponent implements OnInit {
 
   agregar_relcob() {
     console.log("micodpol:", this.micodpol);
-    
+    let params_z = {
+      codpol: this.micodpol,
+      idusuario: this.usrreg_z.idusuario,
+      tiporel: this.tiporel
+    }
+
     const dialogmov = this.dialog.open(DlgdatosrelcobComponent, {
       width:'650px',
-      data: JSON.stringify(this.micodpol)
+      data: JSON.stringify(params_z)
     });
     dialogmov.afterClosed().subscribe(res => {
       if (res) {
@@ -154,15 +159,21 @@ export class ListarelcobComponent implements OnInit {
           tiporel: this.tiporel
 
         }
-        console.log("Los parametros a pasar son: ", params_z);
+        
 
         this.servicosRelcob.agrega_nueva_relcob(JSON.stringify(params_z)).subscribe(
           result => {
-            console.log("Se ha agregado la nueva relacion", result);
-            this.buscarrelcobs();
+            const idrelcob = result.idrelcob;
+            const  minvourl_z = [
+              `/detallereqcajas/${idrelcob}`
+            ];
+            //this.alerta("Voy a hacer route navigate: " + minvourl_z + " Respu:" + JSON.stringify(mirespu_z));
+            //console.log("Voy a ir a mi url:", minvourl_z);
+            
+            this.router.navigate(minvourl_z)
           }
         );
-        console.log("Regresando de dlgdatosrelcob", res);
+        //console.log("Regresando de dlgdatosrelcob", res);
       }
     });
       

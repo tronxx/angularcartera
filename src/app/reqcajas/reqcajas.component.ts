@@ -141,15 +141,20 @@ export class ReqcajasComponent implements OnInit {
           tiporel: this.tiporel
 
         }
-        console.log("Los parametros a pasar son: ", params_z);
 
         this.servicosRelcob.agrega_nueva_relcob(JSON.stringify(params_z)).subscribe(
           result => {
-            console.log("Se ha agregado la nueva relacion", result);
-            this.buscarrelcobs();
+            const idrelcob = result.idrelcob;
+            const  minvourl_z = [
+              `/detallereqcajas/${idrelcob}`
+            ];
+            //this.alerta("Voy a hacer route navigate: " + minvourl_z + " Respu:" + JSON.stringify(mirespu_z));
+            //console.log("Voy a ir a mi url:", minvourl_z);
+            
+            this.router.navigate(minvourl_z)
           }
         );
-        console.log("Regresando de dlgdatosrelcob", res);
+        
       }
     });
       
@@ -161,7 +166,7 @@ export class ReqcajasComponent implements OnInit {
       '/detallereqcajas/' + relcob.idcarrelcob
     ];
     //this.alerta("Voy a hacer route navigate: " + minvourl_z + " Respu:" + JSON.stringify(mirespu_z));
-    console.log("Voy a ir a mi url:", minvourl_z);
+    //console.log("Voy a ir a mi url:", minvourl_z);
     
     this.router.navigate(minvourl_z)
   }

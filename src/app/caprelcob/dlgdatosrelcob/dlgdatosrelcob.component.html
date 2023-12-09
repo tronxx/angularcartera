@@ -8,7 +8,7 @@
                     <input matInput placeholder="Fecha" type="date" name="fecha" id="fecha" [(ngModel)] ="fecha"> 
                 </mat-form-field>
                 <div *ngIf="tiporel == TIPORELCOB">
-                    <mat-form-field>
+                    <mat-form-field style="width: 100%;">
                         <mat-select name="promot" placeholder="Cobratario" [(ngModel)]= "promotor" > 
                             <mat-option *ngFor="let promotor of promotores" value="{{promotor.cvepromo}}"
                               selected="promotsel == promotor.cvepromo"
@@ -20,7 +20,7 @@
                     </mat-form-field>
                 </div>
                 <div *ngIf="tiporel == TIPOREQ">
-                    <mat-form-field>
+                    <mat-form-field style="width: 100%;">
                         <mat-label>Tienda</mat-label>
                         <mat-select name="tienda" placeholder="Tienda" [(ngModel)]= "cajareq" 
                         (blur)="buscar_siguiente_folio()"> 
