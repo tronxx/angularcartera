@@ -89,6 +89,7 @@ import { ReportescliComponent } from './reportescli/reportescli.component';
 import { MorososComponent } from './morosos/morosos.component';
 import { ReqcajasComponent } from './reqcajas/reqcajas.component';
 import { DetallesreqcajaComponent } from './reqcajas/detallesreqcaja/detallesreqcaja.component';
+import { PidefirmaComponent } from './pidefirma/pidefirma.component';
 
 
 @NgModule({
@@ -149,6 +150,7 @@ import { DetallesreqcajaComponent } from './reqcajas/detallesreqcaja/detallesreq
     MorososComponent,
     ReqcajasComponent,
     DetallesreqcajaComponent,
+    PidefirmaComponent,
   ],
   imports: [
     BrowserModule,
