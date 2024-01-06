@@ -1,0 +1,22 @@
+<canvas
+  #canvas
+  (touchstart)="startDrawing($event)"
+  (touchmove)="moved($event)"
+  width="700"
+  height="200"
+></canvas>
+
+<p class="error-message" *ngIf="signatureNeeded">Signature is required</p>
+
+<button (click)="clearPad()">Clear</button>
+<button (click)="savePad()">Enviar</button>
+
+<div *ngIf="signatureNeeded === false">
+  <p>Signature in Base64Encoded Format</p>
+  <img src="{{ signatureImg }}" alt="" srcset="" />
+
+  <p> {{exito}} </p>
+  <p> {{error}} </p>
+
+</div>
+

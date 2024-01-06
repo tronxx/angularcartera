@@ -682,6 +682,21 @@ ClientesService {
     );
   }
 
+  enviar_firma(img: string, codigo: string) : Observable<any> {
+    const apiUrl = this.configuracion.obtenurl() + '/altas/recibe_firma.php';
+    //const headers = { 'content-type': 'multipart/form-data; boundary=something'};
+    const base64Image = img;
+
+    const headers = { 'content-type': 'text/plain'};
+    const imageData = {
+      image: base64Image,
+      additionalContent: codigo // Contenido adicional
+
+    };
+    return this.http.post<any>(apiUrl, imageData, {'headers':headers});
+
+  }
+
   eliminar_cli_agente( parametros: string): Observable<Cliagentes[]> {
     
     let respu_z = "";

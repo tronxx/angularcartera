@@ -165,7 +165,7 @@ export class ListarelcobComponent implements OnInit {
           result => {
             const idrelcob = result.idrelcob;
             const  minvourl_z = [
-              `/detallereqcajas/${idrelcob}`
+              `/detallesrelcob/${idrelcob}`
             ];
             //this.alerta("Voy a hacer route navigate: " + minvourl_z + " Respu:" + JSON.stringify(mirespu_z));
             //console.log("Voy a ir a mi url:", minvourl_z);

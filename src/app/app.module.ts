@@ -37,6 +37,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
+
 import {CdkMenu, CdkMenuItem, CdkMenuTrigger} from '@angular/cdk/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
 import { DlgedoctaComponent } from './common/dlgedocta/dlgedocta.component';
@@ -89,8 +90,8 @@ import { ReportescliComponent } from './reportescli/reportescli.component';
 import { MorososComponent } from './morosos/morosos.component';
 import { ReqcajasComponent } from './reqcajas/reqcajas.component';
 import { DetallesreqcajaComponent } from './reqcajas/detallesreqcaja/detallesreqcaja.component';
-import { PidefirmaComponent } from './pidefirma/pidefirma.component';
-
+import { PidefirmaComponent } from './altacli/pidefirma/pidefirma.component';
+import { SignaturePadComponent } from './common/signaturepad/signaturepad.component';
 
 @NgModule({
   declarations: [
@@ -151,6 +152,7 @@ import { PidefirmaComponent } from './pidefirma/pidefirma.component';
     ReqcajasComponent,
     DetallesreqcajaComponent,
     PidefirmaComponent,
+    SignaturePadComponent,
   ],
   imports: [
     BrowserModule,

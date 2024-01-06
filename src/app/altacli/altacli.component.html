@@ -500,6 +500,17 @@
                       </table>
                 </div>
             </mat-tab>
+            <mat-tab *ngIf="clientecred" label="Firmas">
+                <label for="">Firma del Cliente {{firmacliente}} </label> <br>
+                <button  mat-raised-button color="primary" (click)="pedir_firma('cliente')" >Firmar Cliente</button>
+                <img [src]="getImagenURLfirmaCliente('cliente')" alt="Firma del Cliente">
+                <br>
+                <label for="">Firma del Aval {{firmaaval}} </label> <br>
+                <button mat-raised-button color="primary" (click)="pedir_firma('aval')" >Firmar Aval</button>
+                <img [src]="getImagenURLfirmaAval('aval')" alt="Firma del Aval">
+
+            </mat-tab>
+
 
         </mat-tab-group>
     </div>

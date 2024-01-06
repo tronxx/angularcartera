@@ -32,6 +32,7 @@ import { DlgimpriletrasComponent } from '../common/dlgimpriletras/dlgimpriletras
 import { ConfiguracionService } from '../services/configuracion.service'
 import { SpinnerComponent } from '../common/spinner/spinner.component';
 import { PidepasswdComponent } from '../common/pidepasswd/pidepasswd.component';
+import { PidefirmaComponent } from './pidefirma/pidefirma.component';
 
 @Component({
   selector: 'app-altacli',
@@ -109,6 +110,8 @@ export class AltacliComponent implements OnInit {
   letrasyaimpresas_z : number[] = [];  
   diasmes_z = [ {dia: 1}];
   mescum = "";
+  firmacliente = "";
+  firmaaval = "";
 
   numcli_z = "";
   nvocli = {
@@ -238,6 +241,8 @@ export class AltacliComponent implements OnInit {
           this.buscastatuscerrado();
           this.buscastatusmodificable();
           this.buscadiasgracia();
+          this.firmacliente = `${this.servicioclientes.url}uploads/firmas/${this.numcli_z}_cliente_firma.jpg` +  '?timestamp=' + new Date().getTime();
+          this.firmaaval = `${this.servicioclientes.url}uploads/firmas/${this.numcli_z}_aval_firma.jpg` +  '?timestamp=' + new Date().getTime();
 
           //this.busca_aval(this.cliente.idcli);
           //this.busca_movclis(this.cliente.idcli);
@@ -261,6 +266,22 @@ export class AltacliComponent implements OnInit {
     );
 
   }
+
+  getImagenURLfirmaCliente(clioaval: string) {
+    
+    this.firmacliente = `${this.servicioclientes.url}uploads/firmas/${this.numcli_z}_${clioaval}_firma.jpg` +  '?timestamp=' + new Date().getTime();
+    this.firmaaval = `${this.servicioclientes.url}uploads/firmas/${this.numcli_z}_aval_firma.jpg` +  '?timestamp=' + new Date().getTime();
+      return(this.firmacliente);
+  
+  }
+
+  getImagenURLfirmaAval(clioaval: string) {
+    
+    this.firmaaval = `${this.servicioclientes.url}uploads/firmas/${this.numcli_z}_aval_firma.jpg` +  '?timestamp=' + new Date().getTime();
+      return(this.firmaaval);
+  
+  }
+
 
   checa_nuevo_codigo(numcli_z: String ) {
     let result ={
@@ -1133,6 +1154,31 @@ modificar_status_facalmomento() {
       }
    );
 
+}
+
+pedir_firma( modo: string) {
+  this.sinpassword = true;
+  let cod_z = this.numcli_z.substring(0,2);
+   let params_z = {
+    "modo": modo, 
+    "codigo":this.numcli_z
+   }
+   const dlgdatosrenfac= this.dialog.open(PidefirmaComponent, {
+    width: '800px',
+    height: '800px',
+    data: JSON.stringify(params_z)
+   });
+   dlgdatosrenfac.afterClosed().subscribe(res => {
+       
+       if(res) {
+        this.getImagenURLfirmaCliente("cliente");
+        this.getImagenURLfirmaAval("aval");
+
+   
+       }
+       
+      }
+   );
 }
 
 }
