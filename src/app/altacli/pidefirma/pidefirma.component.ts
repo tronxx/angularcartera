@@ -31,6 +31,7 @@ export class PidefirmaComponent implements OnInit {
   codigo="";
   modo="";
   clave="";
+  tipoimagen="";
 
   constructor(
     public dialogRef: MatDialogRef<PidefirmaComponent>,
@@ -44,6 +45,7 @@ export class PidefirmaComponent implements OnInit {
     let params_z = JSON.parse(this.message);
     this.modo   = params_z.modo;
     this.codigo = params_z.codigo;
+    this.tipoimagen = params_z.tipoimagen
     this.clave  = `${this.codigo}_${this.modo}_firma.jpg`;
     
   }
@@ -85,7 +87,7 @@ export class PidefirmaComponent implements OnInit {
     let exito = "";
     let error = "";
 
-    this.servicioclientes.enviar_firma(img, codigo).subscribe(res => {
+    this.servicioclientes.enviar_firma(img, codigo, this.tipoimagen).subscribe(res => {
         exito = res;
 
     });

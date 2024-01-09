@@ -30,6 +30,15 @@ export class DlgreltraspComponent implements OnInit {
     this.cargacatalogo();
     this.datos.title = this.message;
     this.fecha = this.configuracion.fecha_a_str(new Date, "YYYY-mm-dd");
+    let misdatosrelvta = {
+      cvecia:this.configuracion.getcvecia(),
+      numeroreporte:"",
+    } 
+    let cverelvta_z = "reltrasp_" + misdatosrelvta.cvecia;
+
+    let registro_z = localStorage.getItem(cverelvta_z) || "{}";
+    var misdatosiniciales_z = JSON.parse(registro_z);
+    this.reltrasp = misdatosiniciales_z.numeroreporte;
   }
 
   cargacatalogo() {
@@ -62,6 +71,13 @@ export class DlgreltraspComponent implements OnInit {
       clavetrasp = this.reltrasp.clave;
 
     }
+    let misdatosrelvta = {
+      cvecia:this.configuracion.getcvecia(),
+      numeroreporte:clavetrasp,
+    } 
+    let cverelvta_z = "reltrasp_" + misdatosrelvta.cvecia;
+    localStorage.setItem(cverelvta_z, JSON.stringify( misdatosrelvta));
+
     let resultado = {
       "numeroreporte": clavetrasp,
       "fecha": this.fecha

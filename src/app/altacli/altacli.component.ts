@@ -1161,11 +1161,12 @@ pedir_firma( modo: string) {
   let cod_z = this.numcli_z.substring(0,2);
    let params_z = {
     "modo": modo, 
-    "codigo":this.numcli_z
+    "codigo":this.numcli_z,
+    "tipoimagen": "firmas"
    }
    const dlgdatosrenfac= this.dialog.open(PidefirmaComponent, {
-    width: '800px',
-    height: '800px',
+    width: '500px',
+    height: '300px',
     data: JSON.stringify(params_z)
    });
    dlgdatosrenfac.afterClosed().subscribe(res => {

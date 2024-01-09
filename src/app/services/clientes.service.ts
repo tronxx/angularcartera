@@ -682,7 +682,7 @@ ClientesService {
     );
   }
 
-  enviar_firma(img: string, codigo: string) : Observable<any> {
+  enviar_firma(img: string, codigo: string, tipoimagen: string) : Observable<any> {
     const apiUrl = this.configuracion.obtenurl() + '/altas/recibe_firma.php';
     //const headers = { 'content-type': 'multipart/form-data; boundary=something'};
     const base64Image = img;
@@ -690,6 +690,7 @@ ClientesService {
     const headers = { 'content-type': 'text/plain'};
     const imageData = {
       image: base64Image,
+      tipoimagen: tipoimagen,
       additionalContent: codigo // Contenido adicional
 
     };
