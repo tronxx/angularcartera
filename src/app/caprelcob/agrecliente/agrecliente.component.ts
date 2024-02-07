@@ -108,7 +108,7 @@ calcular_datos_cliente() {
   let ultimaletravencida_z = 0;
   let impletven_z = 0;
   let ii_z = 1;
-  let maxlet_z = 0;
+  let maxlet_z = 3;
   let fvence_z = "";
   let fechahoy_z = new Date();
   let fecmax_z = this.configuracion.SumaDiasaFecha(fechahoy_z, -5);
@@ -120,17 +120,14 @@ calcular_datos_cliente() {
     ltpag_z = Math.floor ((this.cliente.abonos - this.cliente.enganche - this.cliente.servicio  ) / this.cliente.canle);
     this.listavencimientos_z = JSON.parse (this.configuracion.generavencimientos(this.cliente.fechavta, this.cliente.qom, 1, this.cliente.nulet, this.cliente.diasgracia, ltpag_z));
     
-    ii_z = 1;
+    ii_z = 0;
     for(let mivence_z of this.listavencimientos_z) {
-      ii_z = Number( mivence_z.letra);
-      if(ii_z > ltpag_z && ii_z <= maxlet_z) {
-        fvence_z = this.configuracion.fecha_a_str( mivence_z.fecven, "YYYYmmdd");
-        if (fvence_z <= strfecmax_z) {
-          ultimaletravencida_z = ii_z;
-         
-        }
-      } 
+      if(mivence_z.vencido && ii_z <= maxlet_z) {
+        ultimaletravencida_z = Number( mivence_z.letra);
+        ii_z++;
+      }
     }
+
     maxlet_z = ltpag_z + 3;
     this.impxlet_z = prlet_z;
     if(ultimaletravencida_z < ltpag_z) ultimaletravencida_z = ltpag_z;

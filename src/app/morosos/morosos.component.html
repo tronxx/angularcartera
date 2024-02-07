@@ -2,8 +2,31 @@
 <div>
     <ul>
         <li *ngFor="let menu of menus">
-            <a routerLink="{{menu.link}}"> {{menu.titulo}} </a> 
+            <a routerLink="{{menu.link}}"> <button mat-raised-button color="primary" >{{menu.titulo}}</button>  </a> 
         </li>
     </ul>
     
+</div>
+<div>
+    <ul>
+        <li>
+            <button mat-raised-button color="primary" (click)="imprimir_poliza()">
+                <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+                Imprimir  Poliza
+            </button>
+        </li>
+        <li>
+            <button mat-raised-button color="primary" (click)="imprimir_acum_comis_morosos()">
+                <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+                Imprimir  Acumulado Semanal de Comisiones Morosos
+            </button>
+        </li>
+        <li>
+            <button mat-raised-button color="primary" (click)="imprimir_comis_morosos_x_dia()">
+                <mat-icon aria-hidden="false" aria-label="Example new icon">print</mat-icon>
+                Imprimir  Comisiones Morosos x Dia
+            </button>
+        </li>
+    </ul>
+
 </div>

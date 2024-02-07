@@ -1,0 +1,20 @@
+<div mat-dialog-content>{{title_z}} <br>
+    <form >
+        <label for ="polizaini" >Póliza Inicial</label>
+        <input name="polizaini" type="text" [(ngModel)]="polizaini">
+        <label for ="polizafin" >Póliza Final</label>
+        <input name="polizafin" type="text" [(ngModel)]="polizafin">
+        <label for="fechaini"> Fecha Inicial </label>
+        <input type="date"  name="fechaini"  [(ngModel)]="fechaini" id="fechaini">
+        <label for="fechafin"> Fecha Final  </label>
+        <input type="date"  name="fechafin"  [(ngModel)]="fechafin" id="fechafin">
+    </form>
+
+    <br>
+
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>
+    <button mat-raised-button  color="primary"   (click)="closeyes()">Aceptar</button>
+</div>
+

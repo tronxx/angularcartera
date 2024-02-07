@@ -223,7 +223,6 @@ export class PolizasService {
     window.open(miurl, "_blank");
   }
 
-
   obtencarta(params:string) {
     let empresa = "xx";
     if (this.cia) {

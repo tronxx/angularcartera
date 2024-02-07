@@ -1,0 +1,15 @@
+<div mat-dialog-content>
+    
+    <webcam [height]="500" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" *ngIf="showWebcam"
+    [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable" [videoOptions]="videoOptions" (cameraSwitched)="cameraWasSwitched($event)"
+    (initError)="handleInitError($event)"></webcam>
+  
+    
+    <div mat-dialog-actions  style="display: flex; justify-content: flex-end;">
+        <button mat-raised-button style="margin-right: 5px;"  color="warn" >Cancelar</button>
+        <button mat-raised-button  color="primary"  >Aceptar</button>
+        <button (click)="showNextWebcam(true);" title="Take Picture">💼Voltear Camara></button>
+    </div>
+
+
+</div>

@@ -1,13 +1,12 @@
 <div mat-dialog-content>{{title_z}} <br>
+
+    <label for="">Póliza de {{codigopol}} {{nombrepol}} </label><br>
     <label for="fechapol">
         Fecha Poliza
         <input size="20" type="date"  name="fechapol"  [(ngModel)]="fechapol_z" id="fechapol">
     </label>
     <br>
-    <mat-radio-group fxLayout="column" aria-label="Seleccione el Tipo de Impresion" [(ngModel)]="tipoimpresion">
-        <mat-radio-button value="pdf">Modo pdf</mat-radio-button>
-        <mat-radio-button value="txt">Modo Matriz Puntos</mat-radio-button>
-    </mat-radio-group><br>
+
 </div>
 <div mat-dialog-actions>
     <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>

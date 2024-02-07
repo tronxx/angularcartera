@@ -243,7 +243,7 @@ ClientesService {
   imprimir_edocta_altas(params:string) {
     let misparams = JSON.parse(params);
     console.log("Debug: Estoy en Imprimir Estado de Cuenta altas ", params);
-    var miurl = this.url + "altas/serviciosaltas.php?modo=imprimir_edocta_altas" + 
+    let miurl = this.url + "altas/serviciosaltas.php?modo=imprimir_edocta_altas" + 
       "&numcli="+misparams.numcli;
       console.log("Debug url: ", miurl);
       window.open(miurl, "_blank");
@@ -252,9 +252,17 @@ ClientesService {
   imprimir_letras_altas(params:string) {
     let misparams = JSON.parse(params);
     console.log("Debug: Estoy en Imprimir letras altas ", params);
-    var miurl = this.url + "altas/serviciosaltas.php?modo=impresion_letras" + 
-      "&codigo="+misparams.numcli + "&letrainicial="+misparams.letrainicial+
-      "&letrafinal=" + misparams.letrafinal;
+    let miurl = this.url;
+    if(misparams.modopdf) {
+      miurl += "altas/imprimeletras.php?";
+    } else {
+      miurl += "altas/serviciosaltas.php?";
+    }
+    miurl += "modo=impresion_letras" + 
+      "&codigo=" + misparams.numcli + 
+      "&letrainicial="+misparams.letrainicial +
+      "&letrafinal=" + misparams.letrafinal +
+      "&idcli=" + misparams.idcli;
       console.log("Debug url: ", miurl);
       window.open(miurl, "_blank");
   }
@@ -288,6 +296,37 @@ ClientesService {
     );
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
+
+  obtener_status_imagenes_grabadas ( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+   
+    return this.http.post<any>(miurl, parametros, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('obtener_status_imagenes_grabadas')),
+      catchError(this.handleError<any>('Ocurrio un error en Post obtener_status_imagenes_grabadas'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
+  grabar_status_imagenes_grabadas ( parametros: string): Observable<any> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/serviciosaltas.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+   
+    return this.http.post<any>(miurl, parametros, {'headers':headers}).
+    pipe(
+      tap(_ => this.log('grabar_status_imagenes_grabadas')),
+      catchError(this.handleError<any>('Ocurrio un error en Post grabar_status_imagenes_grabadas'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
 
   obtenubivta ( parametros: string): Observable<Ubivta[]> {
     

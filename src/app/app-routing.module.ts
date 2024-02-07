@@ -23,6 +23,7 @@ import { ReportescliComponent } from './reportescli/reportescli.component';
 import { MorososComponent } from './morosos/morosos.component';
 import { ReqcajasComponent } from './reqcajas/reqcajas.component';
 import { DetallesreqcajaComponent } from './reqcajas/detallesreqcaja/detallesreqcaja.component';
+import { ImagenesComponent } from './capvtas/imagenes/imagenes.component';
 
 const routes: Routes = [
   { path: 'conscli', component: ConscliComponent, canActivate : [AuthGuard]  },
@@ -48,6 +49,7 @@ const routes: Routes = [
   { path: 'morosos', component: MorososComponent, canActivate : [AuthGuard] },
   { path: 'reqcajas', component: ReqcajasComponent, canActivate : [AuthGuard] },
   { path: 'detallereqcajas/:idrelcob', component: DetallesreqcajaComponent, canActivate : [AuthGuard] },
+  { path: 'imagenes', component: ImagenesComponent, canActivate : [AuthGuard] },
   { path: 'main', component: MainComponent },
   {path: '', redirectTo: 'main', pathMatch: 'full'}
 ];

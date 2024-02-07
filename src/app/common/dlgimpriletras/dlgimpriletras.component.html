@@ -1,10 +1,17 @@
 <div mat-dialog-content>{{title}} <br>
+    <form >
+
     <label for="ltaini" >Letra Inicial</label>
-    <input type="number" size="5" [(ngModel)]="ltaini">
+    <input type="number" size="5" name="ltaini" [(ngModel)]="ltaini">
     <label for="">Letra 0 es Saldo de Enganche</label>
     <br>
     <label for="ltafin">Letra Final</label>
-    <input type="number" size="5" [(ngModel)]="ltafin">
+    <input type="number" size="5" name="ltafin" [(ngModel)]="ltafin">
+    <br>
+    <label for="">Letras en Formato pdf</label>
+    <input type="checkbox" name="enpdf" [(ngModel)] = "enpdf" >
+    </form>
+
 </div>
 <div mat-dialog-actions>
     <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>

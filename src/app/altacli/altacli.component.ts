@@ -67,6 +67,13 @@ export class AltacliComponent implements OnInit {
   linksolicitud = "";
   conpromocion_z = false;
   diasgra_z = 0;
+
+  inefrentecliente = "";
+  inereversocliente = "";
+  inefrenteaval = "";
+  inereversoaval = "";
+
+
   promocion_z = {
     promodic_inicio: "2022-12-01",
     promodic_fin: "2022-12-31",
@@ -241,8 +248,7 @@ export class AltacliComponent implements OnInit {
           this.buscastatuscerrado();
           this.buscastatusmodificable();
           this.buscadiasgracia();
-          this.firmacliente = `${this.servicioclientes.url}uploads/firmas/${this.numcli_z}_cliente_firma.jpg` +  '?timestamp=' + new Date().getTime();
-          this.firmaaval = `${this.servicioclientes.url}uploads/firmas/${this.numcli_z}_aval_firma.jpg` +  '?timestamp=' + new Date().getTime();
+          this.actualizar_imagenes();
 
           //this.busca_aval(this.cliente.idcli);
           //this.busca_movclis(this.cliente.idcli);
@@ -270,7 +276,6 @@ export class AltacliComponent implements OnInit {
   getImagenURLfirmaCliente(clioaval: string) {
     
     this.firmacliente = `${this.servicioclientes.url}uploads/firmas/${this.numcli_z}_${clioaval}_firma.jpg` +  '?timestamp=' + new Date().getTime();
-    this.firmaaval = `${this.servicioclientes.url}uploads/firmas/${this.numcli_z}_aval_firma.jpg` +  '?timestamp=' + new Date().getTime();
       return(this.firmacliente);
   
   }
@@ -1040,6 +1045,7 @@ async imprimir_letras() {
     return;
   }
   nulets = this.cliente.nulet;
+  let idcli = this.cliente.idcli;
   this.letrasyaimpresas_z = [];
   if(this.sinpassword) {
     await this.buscar_letras_impresas();
@@ -1089,9 +1095,11 @@ async imprimir_letras() {
         return;
       }
       let params_z = {
-        "numcli": this.numcli_z,
-        "letrainicial": res.ltaini,
-        "letrafinal": res.ltafin
+        numcli: this.numcli_z,
+        idcli: idcli,
+        letrainicial: res.ltaini,
+        letrafinal: res.ltafin,
+        modopdf: res.formapdf
       };
       this.servicioclientes.imprimir_letras_altas(JSON.stringify(params_z));
     }
@@ -1174,6 +1182,31 @@ pedir_firma( modo: string) {
        if(res) {
         this.getImagenURLfirmaCliente("cliente");
         this.getImagenURLfirmaAval("aval");
+   
+       }
+       
+      }
+   );
+}
+
+pedir_imagen( modo: string) {
+  this.sinpassword = true;
+  let cod_z = this.numcli_z.substring(0,2);
+   let params_z = {
+    "modo": modo, 
+    "codigo":this.numcli_z,
+    "tipoimagen": "ine"
+   }
+   const dlgdatosrenfac= this.dialog.open(PidefirmaComponent, {
+    width: '500px',
+    height: '300px',
+    data: JSON.stringify(params_z)
+   });
+   dlgdatosrenfac.afterClosed().subscribe(res => {
+       
+       if(res) {
+        this.getImagenURLfirmaCliente("cliente");
+        this.getImagenURLfirmaAval("aval");
 
    
        }
@@ -1181,5 +1214,39 @@ pedir_firma( modo: string) {
       }
    );
 }
+
+actualizar_imagenes() {
+  this.getImagenURLIneFrenteCliente('ine_frente_cliente')
+  this.getImagenURLIneReversoCliente('ine_reverso_cliente')
+  this.getImagenURLIneFrenteAval('ine_frente_aval')
+  this.getImagenURLIneReversoAval('ine_reverso_aval')
+}
+
+
+getImagenURLIneFrenteCliente(modo: string) {
+  this.inefrentecliente = this.getImagenURLIne(modo)
+}
+
+getImagenURLIneReversoCliente(modo: string) {
+  this.inereversocliente = this.getImagenURLIne(modo)
+}
+
+getImagenURLIneFrenteAval(modo: string) {
+  this.inefrenteaval = this.getImagenURLIne(modo)
+}
+
+getImagenURLIneReversoAval(modo: string) {
+  this.inereversoaval = this.getImagenURLIne(modo)
+}
+
+
+getImagenURLIne(modo: string) {
+  let id = Math.round( Math.random() * 1000);
+  let imagin =  `${this.servicioclientes.url}uploads/ine/${this.numcli_z}_${modo}.jpg?id=${id}`;
+  return(imagin);
+
+}
+
+
 
 }

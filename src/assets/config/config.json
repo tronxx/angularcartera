@@ -1,7 +1,8 @@
 [
   
     {
-      "Urldatos":"https://mdscartera.ddns.net/www/cgi/mdssandbox/cartera/",
+      "Urldatos":"http://mds1/www/cgi/cartera/",
+      "xUrldatos":"https://mdscartera.ddns.net/www/cgi/mdssandbox/cartera/",
       "Empresa": "Diaz y Solis SA de CV",
       "Rfc": "MDS870209190",
       "Direc": "Calle 67 x 60 y 62 Centro",

@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatIconModule } from '@angular/material/icon';
 import {MatRadioModule} from '@angular/material/radio';
 import { Cliente } from '../../models/clientes';
+import { FormsModule } from '@angular/forms';
 import { ClientesService } from '../../services/clientes.service';
 
 @Component({
@@ -17,6 +18,7 @@ export class DlgimpriletrasComponent implements OnInit {
   ltafin = 0;
   letrasimpresas = [];
   title ="";
+  enpdf = true;
   constructor(
     public dialogRef: MatDialogRef<DlgimpriletrasComponent>,
     @Inject(MAT_DIALOG_DATA) public message : string
@@ -33,8 +35,9 @@ export class DlgimpriletrasComponent implements OnInit {
 
   closeyes () {
     let resultado = {
-      'ltaini': this.ltaini,
-      'ltafin': this.ltafin
+      ltaini: this.ltaini,
+      ltafin: this.ltafin,
+      formapdf: this.enpdf
     }
     this.dialogRef.close(resultado);
 

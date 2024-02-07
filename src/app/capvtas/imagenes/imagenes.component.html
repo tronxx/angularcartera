@@ -1,0 +1,83 @@
+
+<h1>Imágenes del Cliente</h1>
+<form #formularioCliente="ngForm">
+    <div class="datoscliente">
+        <label class="ancho80" for="codcartera">Codigo Cliente</label>
+        <input type="text" name="codcartera" id="codcartera" size="10" 
+        [(ngModel)]="codcartera_z" >
+        <button  mat-raised-button color="primary" (click)="aceptar_codigo()" >Aceptar</button>
+        <button [disabled]="!puedepedirimagenes" mat-raised-button color="primary" (click)="grabar_imagenes()" >Grabar</button>
+    
+    </div>
+
+</form>
+
+<div class="grid-container">
+    <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Firma del Cliente</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image src={{firmacliente}} alt="Firma del Cliente">
+        <mat-card-actions>
+            <button [disabled]="!puedepedirimagenes"  mat-raised-button color="primary" (click)="pedir_firma('cliente')" >Firmar Cliente</button>
+        </mat-card-actions>
+    </mat-card>
+    <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Firma del Aval</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image src={{firmaaval}} alt="Firma del Aval">
+        <mat-card-actions>
+            <button [disabled]="!puedepedirimagenes"  mat-raised-button color="primary" (click)="pedir_firma('aval')" >Firmar Aval</button>
+        </mat-card-actions>
+    </mat-card>
+</div>
+<div class="grid-container">
+
+    <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Ine Frente Cliente</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image src={{inefrentecliente}} alt="Ine frente Cliente">
+        <mat-card-actions>
+            <button  [disabled]="!puedepedirimagenes"  mat-raised-button color="primary" (click)="pedir_foto_ine('ine_frente_cliente')" >Tomar Foto</button>
+        </mat-card-actions>
+    </mat-card>
+    <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Ine Reverso Cliente</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image src={{inereversocliente}} alt="Ine Reverso Cliente">
+        <mat-card-actions>
+            <button [disabled]="!puedepedirimagenes"  mat-raised-button color="primary" (click)="pedir_foto_ine('ine_reverso_cliente')" >Tomar Foto</button>
+        </mat-card-actions>
+    </mat-card>
+</div>
+<div class="grid-container">
+        <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Ine Frente Aval</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image src={{inefrenteaval}} alt="Ine Frente Aval">
+        <mat-card-actions>
+            <button  [disabled]="!puedepedirimagenes" mat-raised-button color="primary" (click)="pedir_foto_ine('ine_frente_aval')" >Tomar Foto</button>
+        </mat-card-actions>
+    </mat-card>
+    <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Ine Reverso Aval</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image src={{inereversoaval}} alt="Ine Reverso Aval">
+        <mat-card-actions>
+            <button [disabled]="!puedepedirimagenes"  mat-raised-button color="primary" (click)="pedir_foto_ine('ine_reverso_aval')" >Tomar Foto</button>
+        </mat-card-actions>
+    </mat-card>
+    
+</div>
+

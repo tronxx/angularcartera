@@ -27,3 +27,28 @@ fieldset {
 .editgray {
     background-color:cyan;
 }
+
+@media (min-width: 600px) {
+    .cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+.cards {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1rem;
+}
+
+.card {
+    border: 3px;
+    border-color: black;
+    padding: 1rem;
+    height: auto;
+}
+
+.grid-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  

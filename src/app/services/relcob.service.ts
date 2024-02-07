@@ -186,6 +186,19 @@ export class RelcobService {
     window.open(miurl, "_blank");
   }
 
+  imprimir_acumulado_comisiones_morosos  (params:string) {
+    let misparams = JSON.parse(params);
+    //console.log("Debug: Estoy en obtentxtcomplmentopol ", params);
+    const modo = "imprimir_relacion_reqcaja"
+    var miurl = this.url + "relcob/concomis.php?"+
+    `modo=${misparams.modo}`+
+    `&fechainicial=${misparams.fechainicial}`+
+    `&fechafinal=${misparams.fechafinal}`+
+    `&polizainicial=${misparams.polizaini}`+
+    `&polizafinal=${misparams.polizafin}`;
+    window.open(miurl, "_blank");
+  }
+
 
   obtener_poblciones_rutas_morosos ( params: string): Observable<Desrutasmor[]> {
     

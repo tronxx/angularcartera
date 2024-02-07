@@ -36,7 +36,8 @@ import { MatOptionModule } from '@angular/material/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { WebcamModule } from 'ngx-webcam';
 
 import {CdkMenu, CdkMenuItem, CdkMenuTrigger} from '@angular/cdk/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
@@ -92,6 +93,11 @@ import { ReqcajasComponent } from './reqcajas/reqcajas.component';
 import { DetallesreqcajaComponent } from './reqcajas/detallesreqcaja/detallesreqcaja.component';
 import { PidefirmaComponent } from './altacli/pidefirma/pidefirma.component';
 import { SignaturePadComponent } from './common/signaturepad/signaturepad.component';
+import { CamaraComponent } from './altacli/camara/camara.component';
+import { ImagenesComponent } from './capvtas/imagenes/imagenes.component';
+import { TomafotosComponent } from './common/tomafotos/tomafotos.component';
+import { CameraComponent } from './common/camera/camera.component';
+import { DlgacumpolComponent } from './common/dlgacumpol/dlgacumpol.component';
 
 @NgModule({
   declarations: [
@@ -153,6 +159,11 @@ import { SignaturePadComponent } from './common/signaturepad/signaturepad.compon
     DetallesreqcajaComponent,
     PidefirmaComponent,
     SignaturePadComponent,
+    CamaraComponent,
+    ImagenesComponent,
+    TomafotosComponent,
+    CameraComponent,
+    DlgacumpolComponent,
   ],
   imports: [
     BrowserModule,
@@ -183,6 +194,9 @@ import { SignaturePadComponent } from './common/signaturepad/signaturepad.compon
     BrowserAnimationsModule,
     MatMomentDateModule,    
     SpinnerModule,
+    MatSidenavModule,
+    WebcamModule,
+    
   ],
   providers: [ 
     UsuariosService, 

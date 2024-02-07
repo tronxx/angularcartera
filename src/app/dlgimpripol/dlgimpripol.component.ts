@@ -14,6 +14,8 @@ export class DlgimpripolComponent implements OnInit {
   fechapol_z = "";
   tipoimpresion = "txt";
   title_z = "";
+  codigopol="";
+  nombrepol="";
 
   constructor(
     public dialogRef: MatDialogRef<DlgimpripolComponent>,
@@ -25,6 +27,8 @@ export class DlgimpripolComponent implements OnInit {
   ngOnInit(): void {
     this.fechapol_z = this.configuracion.fecha_a_str(new Date(), "YYYY-mm-dd");
     let misparam_z = JSON.parse(this.message);
+    this.codigopol = misparam_z.codtda;
+    this.nombrepol = misparam_z.nombrepol;
     this.title_z = misparam_z.title;
 
   }
