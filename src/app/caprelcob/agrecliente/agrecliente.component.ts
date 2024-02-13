@@ -122,7 +122,7 @@ calcular_datos_cliente() {
     
     ii_z = 0;
     for(let mivence_z of this.listavencimientos_z) {
-      if(mivence_z.vencido && ii_z <= maxlet_z) {
+      if(mivence_z.vencido && ii_z < maxlet_z) {
         ultimaletravencida_z = Number( mivence_z.letra);
         ii_z++;
       }

@@ -47,7 +47,11 @@ export class ConsupolComponent implements OnInit {
   rectimbrado_z = "";
   statuspol_z = "";
   claveempresa = "";
-  
+
+  datosalerta = {
+    alertapoliza : true
+  }
+
   cobratario = {
     "idpromot": 0,
     "cvepromo":"",
@@ -98,6 +102,9 @@ export class ConsupolComponent implements OnInit {
   ngOnInit(): void {
     var mistorage_z  = localStorage.getItem('token') || "{}";
     this.usrreg_z =  JSON.parse(mistorage_z);
+    let mialerta   = localStorage.getItem('alertapoliza') || '{ "alertapoliza":"true" }';
+    this.datosalerta =  JSON.parse(mialerta);
+
     this.errorespoliza=[];
     this.buscar_codigos_poliza();
     this.cia_z =  this.serviciopolizas.obtendatoscia();
@@ -284,6 +291,9 @@ checa_fecha_timbre(mensaje: string) {
     "timbrarpolizafechaespecial":timbrarpolizafechaespecial,
     "fechatimbrepol":fectimbre_z
   };
+  if(dias <= 3) {
+    this.cierra_poliza(JSON.stringify(params));
+  }
   if(dias > 3) {
     mensaje = "Fecha de Timbrado minimo es " + this.datepipe.transform(fecminima_z,"yyyy-MM-dd"); 
     mensaje += " Desea Timbrar con esta fecha ?: ";
@@ -299,8 +309,6 @@ checa_fecha_timbre(mensaje: string) {
         this.cierra_poliza(JSON.stringify(params));
       }
     });
-  } else {
-    this.cierra_poliza(JSON.stringify(params));
   }
 }
 
@@ -337,18 +345,23 @@ cierra_poliza( params_z: string) {
       this.rectimbrado_z = mirespu_z.timbradorecargo;
       this.statuspol_z =  mirespu_z.status;
       console.log("Ya se timbró la poliza", this.uuidpol_z, "Empresa:", this.claveempresa);
-      if(this.uuidpol_z && this.uuidpol_z != "-1" ) {
-          let paramcompl_z = { "uuid": this.uuidpol_z };
-          if(this.claveempresa == "EC") {
-            this.serviciopolizas.obten_pdf_cfdi(JSON.stringify(paramcompl_z));
-          } else {
-            this.serviciopolizas.obtenpdfcomplmentopol(JSON.stringify(paramcompl_z));  
-          }
+      if(this.datosalerta.alertapoliza) {
+        this.mensaje_cfdi("Ahora la impresion del CFDI se descarga por separado\n, Desea no volver a mostrar este mensaje ?");
       }
-      if(this.uuidrec_z && this.uuidrec_z != "-1" ) {
-        let paramrec_z = { "uuid": this.uuidrec_z };
-        this.serviciopolizas.obten_pdf_cfdi(JSON.stringify(paramrec_z));  
-      }
+
+      // 8-Feb-2024 Se bloquea que se descargue el cfdi
+      // if(this.uuidpol_z && this.uuidpol_z != "-1" ) {
+      //     let paramcompl_z = { "uuid": this.uuidpol_z };
+      //     if(this.claveempresa == "EC") {
+      //       this.serviciopolizas.obten_pdf_cfdi(JSON.stringify(paramcompl_z));
+      //     } else {
+      //       this.serviciopolizas.obtenpdfcomplmentopol(JSON.stringify(paramcompl_z));  
+      //     }
+      // }
+      // if(this.uuidrec_z && this.uuidrec_z != "-1" ) {
+      //   let paramrec_z = { "uuid": this.uuidrec_z };
+      //   this.serviciopolizas.obten_pdf_cfdi(JSON.stringify(paramrec_z));  
+      // }
       let params = {
         "modo":"obtener_datos_poliza",
         "fechapoliza":this.fechapol_z,
@@ -397,6 +410,22 @@ alerta(mensaje: string)  {
   return (yesno_z);
 
 }
+
+mensaje_cfdi(mensaje: string) {
+  const dialogref = this.dialog.open(DialogBodyComponent, {
+    width:'350px',
+    data: mensaje
+  });
+  dialogref.afterClosed().subscribe(res => {
+    if(res) {
+      this.datosalerta.alertapoliza = false;
+      localStorage.setItem("alertapoliza", JSON.stringify( this.datosalerta));
+    }
+    //console.log("Debug", res);
+  });
+
+}
+
 
 
 }

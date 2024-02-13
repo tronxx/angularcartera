@@ -92,6 +92,7 @@ export class AgregarenpolComponent implements OnInit {
   compracli_z = "";
   recibido=0;
   cambio=0;
+  importecobrado = 0;
 
 
   tipospagos =[ 
@@ -369,7 +370,17 @@ export class AgregarenpolComponent implements OnInit {
     this.recibido = this.datospago.neto;
     this.calcula_cambio();
     this.calcula_comision();
+    this.importecobrado = this.datospago.neto;
 
+ }
+
+ calculaImporteAcuentaMoroso() {
+  this.datospago.importe = this.importecobrado -  this.datospago.recobon;
+  this.datospago.neto = this.importecobrado;
+ }
+
+ checa_si_es_acuenta_moroso() {
+  return (this.datospago.tipopago == "A" && this.esmoroso)
  }
 
  tipopagoSelectionChange(event: MatSelectChange) {

@@ -100,6 +100,17 @@
                                 </mat-form-field >
                         </div>
                         <div class="row">
+                            <div *ngIf = "checa_si_es_acuenta_moroso()">
+                                <mat-form-field>
+                                    <mat-label>Importe Cobrado</mat-label>
+                                    <input matInput placeholder="Importe Cobrado" 
+                                    type="number" name="importecobrado" id="importecobrado" 
+                                    [(ngModel)]= "importecobrado"
+                                    (blur)="calculaImporteAcuentaMoroso()"
+                                    > 
+                                </mat-form-field>
+    
+                            </div>
                             <mat-form-field>
                                 <mat-label>Concepto</mat-label>
                                 <input matInput placeholder="Concepto" 

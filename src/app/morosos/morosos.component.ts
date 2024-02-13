@@ -60,6 +60,8 @@ export class MorososComponent implements OnInit {
   ngOnInit(): void {
     var mistorage_z  = localStorage.getItem('token') || "{}";
     this.usrreg_z =  JSON.parse(mistorage_z);
+    let mialerta   = localStorage.getItem('alertapoliza') || '{ "alertapoliza":"true" }';
+
     this.buscar_codigos_poliza();
     this.cia_z =  this.serviciopolizas.obtendatoscia();
     if (this.usrreg_z.nivel == "S") this.datospolenabled_z=true;

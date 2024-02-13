@@ -58,6 +58,9 @@ export class LiqrelcobComponent implements OnInit {
   uuidrec_z = "";
   rotarpdftxt = "Rotar pdf"
   sirotarpdf = false;
+  datosalerta = {
+    alertapoliza : true
+  }
   
   creandoRelacion = false;
 
@@ -93,9 +96,12 @@ export class LiqrelcobComponent implements OnInit {
     console.log("idrelcob", this.idrelcob_z);
     var mistorage_z  = localStorage.getItem('token') || "{}";
     this.usrreg_z =  JSON.parse(mistorage_z);
+
     if(this.usrreg_z.nivel == "S") this.no_master = false;
     this.cia_z =  this.serviciospolizas.obtendatoscia();
     this.claveempresa = this.cia_z.Clave
+    let mialerta   = localStorage.getItem('alertapoliza') || '{ "alertapoliza":"true" }';
+    this.datosalerta =  JSON.parse(mialerta);
     this.buscar_relacion();
   }
 
@@ -248,18 +254,22 @@ export class LiqrelcobComponent implements OnInit {
         let rectimbrado_z = mirespu_z.timbradorecargo;
         let statuspol_z =  mirespu_z.status;
         console.log("Ya se timbró la poliza", uuidpol_z);
-        if(uuidpol_z && uuidpol_z != "-1" ) {
-            let paramcompl_z = { "uuid": uuidpol_z };
-            if(this.claveempresa == "EC") {
-              this.serviciospolizas.obten_pdf_cfdi(JSON.stringify(paramcompl_z));
-            } else {
-              this.serviciospolizas.obtentxtcomplmentopol(JSON.stringify(paramcompl_z));  
-            }
+        if(this.datosalerta.alertapoliza) {
+          this.mensaje_cfdi("Ahora la impresion del CFDI se descarga por separado\n, Desea no volver a mostrar este mensaje ?");
         }
-        if(this.uuidrec_z && this.uuidrec_z != "-1" ) {
-          let paramrec_z = { "uuid": this.uuidrec_z };
-          this.serviciospolizas.obten_pdf_cfdi(JSON.stringify(paramrec_z));  
-        }
+        // 8-Feb-2024 Se bloquea que se descargue el cfdi
+        // if(uuidpol_z && uuidpol_z != "-1" ) {
+        //     let paramcompl_z = { "uuid": uuidpol_z };
+        //     if(this.claveempresa == "EC") {
+        //       this.serviciospolizas.obten_pdf_cfdi(JSON.stringify(paramcompl_z));
+        //     } else {
+        //       this.serviciospolizas.obtentxtcomplmentopol(JSON.stringify(paramcompl_z));  
+        //     }
+        // }
+        // if(this.uuidrec_z && this.uuidrec_z != "-1" ) {
+        //   let paramrec_z = { "uuid": this.uuidrec_z };
+        //   this.serviciospolizas.obten_pdf_cfdi(JSON.stringify(paramrec_z));  
+        // }
         this.manda_imprimir_poliza();
     }
     );
@@ -720,8 +730,6 @@ export class LiqrelcobComponent implements OnInit {
     })
   }
   
-
-
   alerta(mensaje: string) {
     const dialogref = this.dialog.open(DialogBodyComponent, {
       width:'350px',
@@ -732,5 +740,21 @@ export class LiqrelcobComponent implements OnInit {
     });
   
   }
+
+  mensaje_cfdi(mensaje: string) {
+    const dialogref = this.dialog.open(DialogBodyComponent, {
+      width:'350px',
+      data: mensaje
+    });
+    dialogref.afterClosed().subscribe(res => {
+      if(res) {
+        this.datosalerta.alertapoliza = false;
+        localStorage.setItem("alertapoliza", JSON.stringify( this.datosalerta));
+      }
+      //console.log("Debug", res);
+    });
+  
+  }
+
   
 }
