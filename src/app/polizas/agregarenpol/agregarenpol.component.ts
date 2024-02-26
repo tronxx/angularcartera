@@ -368,19 +368,27 @@ export class AgregarenpolComponent implements OnInit {
     }
     this.calculaConcepto();
     this.recibido = this.datospago.neto;
+    
     this.calcula_cambio();
     this.calcula_comision();
-    this.importecobrado = this.datospago.neto;
 
  }
 
  calculaImporteAcuentaMoroso() {
+  
   this.datospago.importe = this.importecobrado -  this.datospago.recobon;
   this.datospago.neto = this.importecobrado;
+  console.log("Estoy en calculaImporteAcuentaMoroso", this.importecobrado, this.datospago.recobon, this.datospago.neto);
  }
 
  checa_si_es_acuenta_moroso() {
-  return (this.datospago.tipopago == "A" && this.esmoroso)
+  let esacuentamoroso = false;
+
+  if (this.datospago.tipopago == "A" && this.esmoroso) {
+    //this.importecobrado = this.datospago.neto;
+    esacuentamoroso = true;
+  }
+  return (esacuentamoroso);
  }
 
  tipopagoSelectionChange(event: MatSelectChange) {
@@ -557,6 +565,7 @@ activar_tipopago(tipospagodisp:string[]) {
     } else {
       this.datospago.importe = this.prlet_z * nuletxpag_z;
     }
+    this.importecobrado = this.datospago.neto;
 
   }
   this.datospago.neto = this.datospago.importe + this.datospago.recobon * factor_z;

@@ -693,7 +693,7 @@ busca_tipos_tarjetas() {
       if(respu) {
         respu.forEach(mitc => {
           if(mitc.plazo <= plazomax) {
-            console.log("Agregando Tarjetas:", mitc);
+            //console.log("Agregando Tarjetas:", mitc);
             this.tarjetastc.push(mitc);
           }
         });

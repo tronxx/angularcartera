@@ -366,7 +366,7 @@ export class PolizasService {
   obten_impresion_poliza_caja(params:string) {
     let misparams = JSON.parse(params);
     console.log("Debug: Estoy en obtentxtcomplmentopol ", params);
-    var miurl = this.url + "polizas/servicios.php?modo=obtener_txt_poliza_caja&fechapoliza="+misparams.fechapoliza+"&tdapol="+misparams.tdapol;
+    var miurl = this.url + "polizas/impresionpoliza.php?modo=impresion_poliza_caja&fechapoliza="+misparams.fechapoliza+"&tdapol="+misparams.tdapol;
     miurl = miurl + "&modopdf="+misparams.modopdf;
     window.open(miurl, "_blank");
   }
