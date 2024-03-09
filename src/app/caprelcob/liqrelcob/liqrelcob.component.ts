@@ -182,7 +182,7 @@ export class LiqrelcobComponent implements OnInit {
 
   manda_imprimir_poliza() {
     const params_z = {
-      modo: "imprimir_poliza_morosos",
+      modo: "impresion_poliza_morosos",
       fechapoliza:this.fechapol,
       tdapol:this.poliza?.tda
     }

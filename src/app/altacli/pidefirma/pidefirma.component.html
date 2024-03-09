@@ -2,6 +2,7 @@
     
     <h1>Firme en el Pad modo: {{modo}} codigo:{{codigo}}</h1>  
     <canvas
+    style="border: 2px solid black;"
     #canvas
     (touchstart)="startDrawing($event)"
     (touchmove)="moved($event)"

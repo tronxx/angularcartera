@@ -215,7 +215,7 @@ export class PolizasService {
   imprimir_poliza_morosos (params:string) {
     let misparams = JSON.parse(params);
     console.log("Debug: Estoy en imprimir_poliza_morosos ", params);
-    let miurl = this.url + "polizas/servicios.php?"+
+    let miurl = this.url + "polizas/impresionpoliza.php?"+
     "modo="+misparams.modo;
     miurl += "&fechapoliza="+misparams.fechapoliza;
     miurl += "&tdapol=" + misparams.tdapol;
@@ -374,7 +374,7 @@ export class PolizasService {
   obten_impresion_despacho_caja(params:string) {
     let misparams = JSON.parse(params);
     console.log("Debug: Estoy en obtentxtcomplmentopol ", params);
-    var miurl = this.url + "polizas/servicios.php?modo=obtener_despacho_poliza_caja&fechapoliza="+misparams.fechapoliza+"&tdapol="+misparams.tdapol;
+    var miurl = this.url + "polizas/impresionpoliza.php?modo=obtener_despacho_poliza_caja&fechapoliza="+misparams.fechapoliza+"&tdapol="+misparams.tdapol;
     window.open(miurl, "_blank");
   }
 

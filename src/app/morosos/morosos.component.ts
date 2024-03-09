@@ -119,7 +119,7 @@ export class MorososComponent implements OnInit {
             }
             if(mirespu_z.status == "C") {
               const params_z = {
-                modo: "imprimir_poliza_morosos",
+                modo: "impresion_poliza_morosos",
                 fechapoliza:res.fecha,
                 tdapol:this.tda_z,
               }
