@@ -10,6 +10,7 @@ import { DatePipe } from '@angular/common';
 import { ConfiguracionService } from '../../services/configuracion.service';
 import { PidefirmaComponent } from '../../altacli/pidefirma/pidefirma.component';
 import { TomafotosComponent } from '../../common/tomafotos/tomafotos.component';
+import { PidepasswdComponent } from '../../common/pidepasswd/pidepasswd.component';
 
 @Component({
   selector: 'app-imagenes',
@@ -25,7 +26,9 @@ export class ImagenesComponent implements OnInit {
   inereversocliente = "";
   inefrenteaval = "";
   inereversoaval = "";
+  nuevocodigo = "";
   puedepedirimagenes = false;
+  pedircambiocodigo = false;
 
   usrreg_z = {
     "idusuario":0,
@@ -195,6 +198,48 @@ export class ImagenesComponent implements OnInit {
      );
  
   }
+
+  cambiar_codigo() {
+    let params = {
+      'codigoanterior': this.codcartera_z,
+      'codigonuevo': this.nuevocodigo
+    }
+    this.servicioclientes.cambio_codigo_imagenes(JSON.stringify(params)).subscribe(res => {
+      let table = ""
+      res.forEach(miren => {
+        table += miren.clave + " " +  miren.exito + "\n"
+      })
+      this.alerta(table);
+    });
+    this.pedircambiocodigo = false;
+  }
+
+  pedir_cambiar_codigo() {
+    this.pedircambiocodigo = false;
+    let cod_z = this.codcartera_z.substring(0,2);
+     let params_z = {
+      "ubicacion": "LI"
+     }
+     const dlgdatosrenfac= this.dialog.open(PidepasswdComponent, {
+      width: '400px',
+      data: JSON.stringify(params_z)
+     });
+     dlgdatosrenfac.afterClosed().subscribe(res => {
+        //console.log("Regresando de Pide Password", res);
+         
+         if(res) {
+           this.pedircambiocodigo = true;
+         }
+         
+        }
+     );
+  
+  }
+
+  no_aceptar_cambio_codigo() {
+    this.pedircambiocodigo = false;
+  }
+  
 
   alerta(mensaje: string) {
     const dialogref = this.dialog.open(DialogBodyComponent, {

@@ -11,6 +11,18 @@
     </div>
 
 </form>
+<button  mat-raised-button color="primary" (click)="pedir_cambiar_codigo()" >Cambio de Codigo</button>
+
+<form action="" *ngIf="pedircambiocodigo" >
+    <label for="antercod">Codigo Anterior </label>
+    <input type="text" name="antercod" id="codcartera" size="10" 
+    [(ngModel)]="codcartera_z" >
+
+    <label for="nuevocodigo">Codigo Nuevo</label>
+    <input type="text" name="nuevocodigo"[(ngModel)]="nuevocodigo" >
+    <button  mat-raised-button color="warn" (click)="no_aceptar_cambio_codigo()" >Cancelar</button>
+    <button  mat-raised-button color="primary" (click)="cambiar_codigo()" >Aceptar</button>
+</form>
 
 <div class="grid-container">
     <mat-card class="example-card">

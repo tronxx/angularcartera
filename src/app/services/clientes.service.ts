@@ -1085,6 +1085,30 @@ ClientesService {
     // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
   }
 
+  cambio_codigo_imagenes( parametros: string): Observable<any[]> {
+    
+    let respu_z = "";
+    let miurl = this.url + "altas/renombra.php"
+    const headers = { 'content-type': 'text/plain'};
+    const body=parametros;
+    console.log("Debug: Estoy en crea_factura_capvtas parametros:", parametros);
+    let misparams = JSON.parse(parametros);
+    misparams = {
+      'modo':'renombrar',
+      'codigoanterior': misparams.codigoanterior,
+      'codigonuevo': misparams.codigonuevo
+    }
+
+    console.log("Debug: Estoy en renombrar imagenes ", misparams);
+  
+    return this.http.post<any>(miurl, JSON.stringify( misparams), {'headers':headers}).
+    pipe(
+      tap(_ => this.log('renombrar imagenes')),
+      catchError(this.handleError<any>('Ocurrio un error en Post renombrar imagenes'))
+    );
+    // return this.http.post(this.url + 'usuarios/busca_usuarios.php', body,{'headers':headers});
+  }
+
 
   agregar_renfac_altas( parametros: string): Observable<any> {
     
