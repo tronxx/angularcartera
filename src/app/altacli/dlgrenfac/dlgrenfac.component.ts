@@ -62,6 +62,7 @@ export class DlgrenfacComponent implements OnInit {
   
   nuevorenfac = {
     renfac: this.renfac,
+    preciolista: 0,
     esmoto: "",
     piva: 16,
     linea: "",

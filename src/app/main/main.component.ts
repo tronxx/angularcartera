@@ -13,6 +13,8 @@ import { SpinnerComponent } from '../common/spinner/spinner.component';
 })
 export class MainComponent implements OnInit {
 
+  //     { link: "/nvavtav2", titulo: "Facturacion 2", active:"active"  },
+
   menus_z = [
     { link: "/conscli", titulo: "Clientes", active:"active" },
     { link: "/login", titulo: "Acceso", active:""  },

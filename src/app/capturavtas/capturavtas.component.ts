@@ -23,7 +23,7 @@ import { Articulo } from '../models';
 import { Ofertas } from '../models';
 import { Vendedor } from '../models';
 
-import { DlgDatosvtaComponent } from './dlg-datosvta/dlg-datosvta.component';
+import { DlgDatosvtaComponent } from '../capvtas/dlg-datosvta/dlg-datosvta.component';
 import { DlgrenfacComponent } from '../altacli/dlgrenfac/dlgrenfac.component';
 import { DlgbusarticuloComponent } from '../common/dlgbusarticulo/dlgbusarticulo.component';
 import { DatossolicitComponent } from '../altacli/datossolicit/datossolicit.component';
@@ -58,11 +58,14 @@ interface Nvorenfac {
 
 
 @Component({
-  selector: 'app-capvtas',
-  templateUrl: './capvtas.component.html',
-  styleUrls: ['./capvtas.component.css']
+  selector: 'app-capturavtas',
+  templateUrl: './capturavtas.component.html',
+  styleUrls: ['./capturavtas.component.css']
 })
-export class CapvtasComponent implements OnInit {
+
+
+
+export class CapturavtasComponent {
 
   vendedores : Vendedor[] = [];
   vendedor? : Vendedor;
@@ -80,6 +83,7 @@ export class CapvtasComponent implements OnInit {
   tabladesctoscont : Tabladesctocont[] = [];
   articulo? : Articulo;
   ofertas: Ofertas[] = [];
+  nopuedecambiartc = false;
   
   promocion_z = {
     promodic_inicio: "2022-12-01",
@@ -91,7 +95,6 @@ export class CapvtasComponent implements OnInit {
   codcartera_z = "";
   pidprecio_z = false;
   pideoferta_z = false;
-  nopuedecambiartc = false;
   
   antcod_z = "";
   codcli_z = "";
@@ -170,7 +173,6 @@ export class CapvtasComponent implements OnInit {
     { clave:"Q", descri:"Quincenal"}
   ]
 
-
   constructor(
     public dialog: MatDialog, 
     private configuracion: ConfiguracionService,
@@ -202,13 +204,12 @@ export class CapvtasComponent implements OnInit {
 
 
   xagregar_renfac() {
-    // console.log("El codigo es", this.codigo_z);
     if(this.ticte == "TC" && this.mitarjetatc == "-1") {
       this.alerta("debe seleccionar el tipo de tarjeta de crédito");
       return;
     }
     this.nopuedecambiartc = true;
-
+    console.log("El codigo es", this.codigo_z);
     let params_z = {
       "escomplementodatos": "NO",
       "pedircodigo": "SI",
@@ -796,6 +797,7 @@ regresar() {
   ];
   //this.alerta("Voy a hacer route navigate: " + minvourl_z + " Respu:" + JSON.stringify(mirespu_z));
   this.route.navigate(minvourl_z)
+
 
 }
 

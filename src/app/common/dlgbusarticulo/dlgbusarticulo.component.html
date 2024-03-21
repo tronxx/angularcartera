@@ -25,6 +25,7 @@
                 <th>Descripcion</th>
                 <th>Linea</th>
                 <th>Precio.U</th>
+                <th>Oferta</th>
             </tr>
         </thead>
         <tbody>
@@ -37,6 +38,7 @@
                 <td>{{miarticulo.descri}} </td>
                 <td>{{miarticulo.linea}} </td>
                 <td>{{ miarticulo.preciou | currency }} </td>
+                <td> {{ busca_oferta(miarticulo.codigo) | currency }} </td>
             </tr>
         </tbody>
     </table>

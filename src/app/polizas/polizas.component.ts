@@ -510,7 +510,8 @@ export class PolizasComponent implements OnInit {
             this.uuid_z = respu.uuid;
             console.log("Debug: uuid", this.uuid_z);
             if( this.uuid_z.length > 3 ) {
-              this.imprimir_txt();
+              this.descarga_pdf(this.uuid_z);
+              //this.imprimir_txt();
             } else {
               if(this.datospago.tipomov == "B" && 
                 this.datospago.recobon > 0 && this.claveempresa == "EC") {
@@ -549,10 +550,16 @@ export class PolizasComponent implements OnInit {
     this.serviciopolizas.obtencarta(JSON.stringify( params));
   }
 
+  descarga_pdf(uuid: string) {
+    let params = { "uuid": this.uuid_z};
+    this.serviciopolizas.obten_pdf_cfdi(JSON.stringify( params));
+  }
+
   imprimir_txt() {
     console.log("Debug: Estoy en Imprimir txt ", this.uuid_z );
-    let params = { "uuid": this.uuid_z};
-    this.serviciopolizas.obtentxtcfdi(JSON.stringify( params));
+    this.descarga_pdf(this.uuid_z);
+    //let params = { "uuid": this.uuid_z};
+    //this.serviciopolizas.obtentxtcfdi(JSON.stringify( params));
   }
 
   obtener_txt_bon_electro(parametros_z: any) {

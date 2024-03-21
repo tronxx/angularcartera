@@ -38,30 +38,32 @@
             </option>
         </select>
         <br>
-
-        <label class="ancho80" for="ticte">Tipo Cte</label>
-        <select name="ticte" id="ticte" value="{{ticte}}" 
-             [(ngModel)]= "ticte" (blur)="selecciona_tarjetas_tc()" >
-            <option *ngFor="let miticte of tictes_z" value="{{miticte.clave}}"
-              [selected]="ticte == miticte.clave">
-              {{miticte.clave}} {{miticte.descri}}
-              </option>
-        </select>
-        <br>
-        <div *ngIf="contarjetatc">
-            <label class="ancho80" for="tipotc">Tarjeta</label>
-            <select name="tipotc" id="tipotc" value="{{mitarjetatc}}"
-            [disabled]="nopuedecambiartc" 
-             [(ngModel)]= "mitarjetatc"  (blur)="calcular_totales()"  >
-               <option *ngFor="let mitipotc of tarjetastc" value="{{mitipotc.clave}}"
-               [selected]="mitarjetatc == mitipotc.clave">
-               {{mitipotc.clave}} {{mitipotc.descri}}
-               </option>
+        <div class="datoseconomicos" >
+            <label class="ancho80" for="ticte">Tipo Cte</label>
+            <select name="ticte" id="ticte" value="{{ticte}}"  [disabled]="nopuedecambiartc"
+                 [(ngModel)]= "ticte" (blur)="selecciona_tarjetas_tc()" >
+                <option *ngFor="let miticte of tictes_z" value="{{miticte.clave}}"
+                  [selected]="ticte == miticte.clave">
+                  {{miticte.clave}} {{miticte.descri}}
+                  </option>
             </select>
+            <br>
+            <div *ngIf="contarjetatc">
+                <label class="ancho80" for="tipotc">Tarjeta</label>
+                <select name="tipotc" id="tipotc" value="{{mitarjetatc}}"  [disabled]="nopuedecambiartc"
+                 [(ngModel)]= "mitarjetatc"  (blur)="calcular_totales()"  >
+                   <option *ngFor="let mitipotc of tarjetastc" value="{{mitipotc.clave}}"
+                   [selected]="mitarjetatc == mitipotc.clave">
+                   {{mitipotc.clave}} {{mitipotc.descri}}
+                   </option>
+                </select>
+            </div>
+    
         </div>
+
         <br>
         <div>
-            <div>
+            <div >
                 <label for="Articulo">Articulo: 
                     <input type="text"  name="Articulo" [(ngModel)]= "codigo_z">
                 </label>
@@ -208,4 +210,5 @@
     
     </form>
 </div>
+
 

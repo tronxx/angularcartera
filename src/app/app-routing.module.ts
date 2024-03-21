@@ -24,6 +24,7 @@ import { MorososComponent } from './morosos/morosos.component';
 import { ReqcajasComponent } from './reqcajas/reqcajas.component';
 import { DetallesreqcajaComponent } from './reqcajas/detallesreqcaja/detallesreqcaja.component';
 import { ImagenesComponent } from './capvtas/imagenes/imagenes.component';
+import { CapturavtasComponent } from './capturavtas/capturavtas.component';
 
 const routes: Routes = [
   { path: 'conscli', component: ConscliComponent, canActivate : [AuthGuard]  },
@@ -41,6 +42,7 @@ const routes: Routes = [
   { path: 'listaaltas', component: RelvtasComponent, canActivate : [AuthGuard] },
   { path: 'polengan', component: PolenganComponent, canActivate : [AuthGuard] },
   { path: 'nvavta', component: CapvtasComponent, canActivate : [AuthGuard] },
+  { path: 'nvavtav2', component: CapturavtasComponent, canActivate : [AuthGuard] },
   { path: 'listarelcob', component: ListarelcobComponent, canActivate : [AuthGuard] },
   { path: 'detallesrelcob/:idrelcob', component: DetallesrelcobComponent, canActivate : [AuthGuard] },
   { path: 'liqrelcob/:idrelcob', component: LiqrelcobComponent, canActivate : [AuthGuard] },
