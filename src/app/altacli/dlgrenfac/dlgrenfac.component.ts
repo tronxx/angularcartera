@@ -53,6 +53,7 @@ export class DlgrenfacComponent implements OnInit {
   yabusqueinven = false;
   datoshabilitados = true;
   aceptarok = true;
+  mostraroferta = false;
   ticte = "";
   qom = "";
   nlets = 0;
@@ -81,6 +82,7 @@ export class DlgrenfacComponent implements OnInit {
   conoferta = "S";
   almacen = "";
   articuloenoferta_z = false;
+  preciooferta_z = 0;
   elpreciooferta_z = 0;
   noescomplementodatos_z = false;
   factortvtacrd? : Factorvtacred;
@@ -194,10 +196,13 @@ export class DlgrenfacComponent implements OnInit {
       this.renfac.codigo = this.articulo.codigo;
       this.renfac.concepto = this.articulo.descri;
       this.renfac.preciou = this.articulo.preciou;
+      this.nuevorenfac.preciolista = this.articulo.preciou;
       this.linea_z = this.articulo.linea;
       this.foliorequerido = true;
       this.nuevorenfac.oferta = "N";
       console.log("Este cliente ticte:", this.ticte);
+      this.preciooferta_z = this.busca_oferta (this.articulo.codigo);
+      this.mostraroferta = (this.preciooferta_z > 0);
       
       if (this.ticte == "XC" ) {
         this.elpreciooferta_z = this.busca_oferta (this.articulo.codigo);

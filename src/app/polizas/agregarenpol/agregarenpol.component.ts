@@ -515,7 +515,7 @@ activar_tipopago(tipospagodisp:string[]) {
       this.tipomovcerrado = true;
       this.ultltaoculto_z = true;
       this.datospago.ltafin = this.datospago.ltaini;
-      this.bonif_cerrada = false;
+      if(this.bonifi_z > 0 )  this.bonif_cerrada = false; else this.bonif_cerrada = true; 
     }
 
     nuletxpag_z = Number(this.datospago.ltafin) -  Number(this.datospago.ltaini ) + 1;
@@ -704,6 +704,10 @@ validarpago() {
   if(prletconrec_z != ulletconrec_z) {
     this.errores_z.push("No puede mezclar letras atrasadas y al día");
   }
+  if(this.datospago.importe < this.datospago.recobon && this.datospago.tipopago == "B" ) {
+    this.errores_z.push("Bonificación Excesiva ");
+
+  }
 
   this.aceptarpago = !this.errorespago();
   return(!this.errorespago());
@@ -741,9 +745,12 @@ calcula_bonif_o_rec(miletra_z:number) {
 
 define_bonif_abierta() {
   this.validarpago();
+  let bonifcliente = 0;
+  if(this.cliente) bonifcliente = this.cliente.bonificacion;
   let miltafin_z = Number(this.datospago.ltafin);
+  //this.alerta("Tipo pago sel:" + this.tipopagosel_z + bonifcliente.toString());
   this.bonif_cerrada = true;
-  if(this.tipopagosel_z == "A") {
+  if(this.tipopagosel_z == "A" || (this.tipopagosel_z == "S" && bonifcliente < 1 ) ) {
     this.bonif_cerrada = true;
   } else {
     if(this.datospago.conceptocompl == "CARTA" && (this.nulets_z == miltafin_z)) {
@@ -753,7 +760,6 @@ define_bonif_abierta() {
 }
 
 sel_tipopago() {
-  // this.alerta("1.- this.tipomovsel_z:" + this.tipomovsel_z + " Recobon:" + this.recobon_z.toString());
   let numerodeletras_z = Number(this.datospago.ltafin) - Number (this.datospago.ltaini) + 1;
   if(this.tipomovsel_z == "N") {
     this.datospago.recobon = 0;
@@ -770,13 +776,13 @@ sel_tipopago() {
       this.tipomovsel_z = "R";
     } else {
       this.datospago.recobon = this.recobon_z * numerodeletras_z;
-      if(this.bonifi_z > 0 )  this.bonif_cerrada = false; else this.bonif_cerrada = true; 
     }
     
   }
+  if(this.bonifi_z > 0 )  this.bonif_cerrada = false; else this.bonif_cerrada = true; 
+  // this.alerta("Bonificacion del Cliente:" + this.bonifi_z.toString() + " Bonif Cerrada:" + this.bonif_cerrada);
   //this.sigletra_z = Number (this.datospago.ltaini);
   this.calculaNeto();
-  // this.alerta("this.tipomovsel_z:" + this.tipomovsel_z);
 }
 
 calcula_cambio() {

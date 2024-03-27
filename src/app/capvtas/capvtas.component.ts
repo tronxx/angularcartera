@@ -37,6 +37,7 @@ interface Nvorenfac {
   codigo: string;
   concepto: string;
   canti: number;
+  preciolista: number;
   precionormal: number;
   preciou: number;
   esmoto: string;
@@ -241,6 +242,7 @@ export class CapvtasComponent implements OnInit {
           let idren = this.articuloscotizados.length;
           this.articulocotizado = <Nvorenfac> {};
           this.articulocotizado.codigo = res.renfac.codigo;
+          this.articulocotizado.preciolista = res.preciolista;
           this.articulocotizado.esmoto = res.esmoto;
           this.articulocotizado.id = idren;
           this.articulocotizado.canti = 1;
@@ -377,6 +379,7 @@ export class CapvtasComponent implements OnInit {
           hayoferta = true;
           importe = (miren.proferta * (1 + this.factoroferta /100 ) / (miren.piva / 100 + 1));
         } else {
+          miren.precionormal = miren.preciolista;          
           importe = miren.precionormal * (1 + this.factoroferta /100 ) / (miren.piva / 100 + 1);
         }
         iva =  importe * (miren.piva / 100);

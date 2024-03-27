@@ -1,16 +1,19 @@
-<div class="grid-container">
-  <div class="card">
-    <ul class="menu">
-    
-      <li *ngFor="let opcion of menus_z" >
-       <a mat-button routerLink="{{opcion.link}}"> 
-         {{opcion.titulo}} 
-       </a> 
-      </li>
-     </ul>
-   
-  </div>
-  <div class="card">
-    <img src="assets/images/logo.png" alt="">
-  </div>
+<div class="grid-container"  style="display: flex; justify-content: flex-start;">
+        <div class="card">
+          <ul class="menu">
+          
+            <li *ngFor="let opcion of menus_z" >
+             <a mat-button routerLink="{{opcion.link}}"> 
+               {{opcion.titulo}} 
+             </a> 
+            </li>
+           </ul>
+         
+        </div>
+      
+        <div class="card">
+          <img src="assets/images/logo.png" alt="">
+        </div>
+      
+  
 </div>

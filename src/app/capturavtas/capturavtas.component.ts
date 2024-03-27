@@ -37,6 +37,7 @@ interface Nvorenfac {
   codigo: string;
   concepto: string;
   canti: number;
+  preciolista: number;
   precionormal: number;
   preciou: number;
   esmoto: string;
@@ -227,6 +228,8 @@ export class CapturavtasComponent {
     let proferta = 0;
     dlgdatosrenfac.afterClosed().subscribe(res => {
       if (res) {
+        //console.log("estoy en xagregar_renfac", res);
+        
         
         if(res.linea == "MOTO" && ( this.linea_z !="" && res.renfac.codigo != "AUXILIAR") ) {
           this.alerta("La Linea Moto no se puede mezclar");
@@ -237,11 +240,10 @@ export class CapturavtasComponent {
             proferta = this.busca_oferta(this.codigo_z);
           } 
           //this.busca_oferta(res.renfac.codigo)
-        
-          
           let idren = this.articuloscotizados.length;
           this.articulocotizado = <Nvorenfac> {};
           this.articulocotizado.codigo = res.renfac.codigo;
+          this.articulocotizado.preciolista = res.preciolista;
           this.articulocotizado.esmoto = res.esmoto;
           this.articulocotizado.id = idren;
           this.articulocotizado.canti = 1;
@@ -279,7 +281,7 @@ export class CapturavtasComponent {
 
   
           this.articuloscotizados.push(this.articulocotizado);
-          console.log("Nuevorenfac:", this.articulocotizado);
+          // console.log("A Nuevorenfac:", this.articulocotizado);
 
           //console.log("Articulos Cotizados:", this.articuloscotizados);
           if(this.articulocotizado.codigo != "AUXILIAR") this.calcular_totales();
@@ -371,6 +373,8 @@ export class CapturavtasComponent {
     messages_z.push("01- Ya seleccione factorDescto:" + this.factordscto.toString());
     
     milinea = "-1"
+    console.log("articulos cotizados:", this.articuloscotizados);
+    
     this.articuloscotizados.forEach(miren => {
       ii_z = miren.id;
       if(miren.codigo != "AUXILIAR") {
@@ -378,6 +382,9 @@ export class CapturavtasComponent {
           hayoferta = true;
           importe = (miren.proferta * (1 + this.factoroferta /100 ) / (miren.piva / 100 + 1));
         } else {
+          //console.log("Recalculando Precio Lista", miren.preciolista);
+          
+          miren.precionormal = miren.preciolista;
           importe = miren.precionormal * (1 + this.factoroferta /100 ) / (miren.piva / 100 + 1);
         }
         iva =  importe * (miren.piva / 100);

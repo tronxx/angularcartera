@@ -112,9 +112,9 @@
                         <input matInput type="number" name="preciou" id="preciou"
                         [disabled]="!pedirprecio"
                         [(ngModel)]="renfac.preciou">
-                        <label for="" *ngIf="articuloenoferta_z">
+                        <label for="" *ngIf="mostraroferta">
                             <mat-icon > local_offer</mat-icon>
-                            Este Producto está en Oferta {{ this.elpreciooferta_z | currency}}
+                            Este Producto está en Oferta {{ this.preciooferta_z | currency}}
                         </label>
     
                     </mat-form-field>
@@ -123,7 +123,7 @@
         </div> 
     </form>
 </div>
-<div mat-dialog-actions>
+<div mat-dialog-actions style="display: flex; justify-content: space-around; justify-items: center;">
     <button mat-raised-button  color="warn" (click)="closeno()">Cancelar</button>
     <button mat-raised-button 
     [disabled]="!datoshabilitados || !this.aceptarok "
